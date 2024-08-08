@@ -1,6 +1,4 @@
 import { Request, Response } from 'express';
-import bcryptjs from 'bcryptjs';
-import generateToken from '../../Functions/JWT/generateToken.js';
 import User from '../../Models/AuthModels/userModel.js';
 
 interface UserLoginRequestBody {

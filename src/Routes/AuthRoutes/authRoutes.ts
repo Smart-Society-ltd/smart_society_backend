@@ -1,6 +1,6 @@
 import express from "express";
 import sendOtp from "../../Controllers/OtpController/sendOtp.js";
-// import verifyOtp from "../../Controllers/OtpController/verifyOtp.js";
+import verifyOtp from "../../Controllers/OtpController/verifyOtp.js";
 import tempRegisterSociety from "../../Controllers/AuthController/tempRegisterSociety.js";
 import { listPendingRegistrations, processRegistration } from "../../Controllers/AuthController/pendingSocietyRequest.js";
 import userLogin from "../../Controllers/AuthController/userLogin.js";
@@ -10,13 +10,13 @@ import { pendingUsers, processUsers } from "../../Controllers/AuthController/pen
 const router = express.Router();
 
 router.post("/sendOtp", sendOtp);
-// router.post("/verifyOtp", verifyOtp);
+router.post("/verifyOtp", verifyOtp);
 router.post("/registerSociety/tempRegisterSociety", tempRegisterSociety);
 router.get("/registerSociety/pending", listPendingRegistrations);
 router.post("/registerSociety/process", processRegistration);
 router.post("/login", userLogin);
 router.post("/userRegister", userRegister);
-router.post("/userRegister/pending", pendingUsers);
+router.get("/userRegister/pending", pendingUsers);
 router.post("/userRegister/process", processUsers);
 
 export default router;

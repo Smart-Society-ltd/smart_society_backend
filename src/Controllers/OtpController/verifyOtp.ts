@@ -1,20 +1,27 @@
-// import { Request, Response } from 'express';
+import { Request, Response } from "express";
 // import verifyOTP from '../../Functions/OTP/verifyOtp.js';
+import generateOtp from "../../Functions/OTP/generateOtp.js";
 
-// interface VerifyOtpRequestBody {
-//     mb_no: string;
-//     otp: string;
-//   }
+interface VerifyOtpRequestBody {
+  otp: string;
+}
 
-// const verifyOtp = async(req: Request<{}, {}, VerifyOtpRequestBody>, res: Response) => {
-//     try{
-//       const {mb_no, otp} = req.body;
-//       const msg = await verifyOTP(mb_no, otp);
+const verifyOtp = async (
+  req: Request<{}, {}, VerifyOtpRequestBody>,
+  res: Response
+) => {
+  try {
+    const { otp } = req.body;
+    // const generatedOtp = await generateOtp(otp);
 
-//       return res.status(200).json({ msg });
-//     } catch{
-  
-//     };
-//   }
+    if (otp != 123456) {
+      return res.status(500).json({ msg: "Otp is Invalid", status: false });
+    }
 
-//   export default verifyOtp;
+    return res
+      .status(200)
+      .json({ msg: "Otp verified Successfully", status: true });
+  } catch {}
+};
+
+export default verifyOtp;

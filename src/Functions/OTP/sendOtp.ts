@@ -1,8 +1,8 @@
 import Twilio from 'twilio';
 import otp from './generateOtp.js';
 
-const accountSid = 'ACfa89837a3aeac425b75a35e880f2c737';
-const authToken = '7ff569ca3359ae8873b56048dd2accc6';
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = Twilio(accountSid, authToken);
 
 const sendOTP = async (mb_no) => {
