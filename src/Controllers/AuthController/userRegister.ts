@@ -1,4 +1,3 @@
-// userRegister.ts
 import { Request, Response } from 'express';
 import bcryptjs from 'bcryptjs';
 import TempUser from '../../Models/AuthModels/tempUserModel.js';

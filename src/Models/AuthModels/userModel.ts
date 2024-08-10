@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "Email is Required"],
       unique: true,
     },
     password: {
@@ -26,28 +26,36 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     society_code: {
-      type:String,
-      required: true
+      type: String,
+      required: true,
     },
     role: {
       type: String,
       required: true,
     },
-    flat_no:{
+    flat_no: {
       type: String,
-      required: true,
+      // required: true,
     },
-    flat_type:{
+    flat_type: {
       type: String,
-      required: true,
+      // required: true,
     },
-    floor_no:{
+    floor_no: {
       type: String,
-      required: true,
+      // required: true,
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verifyToken: String,
+    verifyTokenExpiry: Date,
+    forgetPasswordToken: String,
+    forgetPasswordTokenExpiry: Date,
   },
   { timestamps: true }
 );
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 export default User;

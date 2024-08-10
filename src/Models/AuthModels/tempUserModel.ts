@@ -35,11 +35,11 @@ const tempUserSchema = new mongoose.Schema(
     },
     flat_type:{
       type: String,
-      required: true,
+      // required: true,
     },
     floor_no:{
       type: String,
-      required: true,
+      // required: true,
     },
   },
   { timestamps: true }
