@@ -40,7 +40,6 @@ interface Society {
 
 const listPendingRegistrations = async (req: Request, res: Response) => {
   try {
-    // Fetch all pending registrations from the 'tempRegistrations' collection
     const pendingRegistrations = await tempSociety.find();
 
     return res.status(200).json({ data: pendingRegistrations });
@@ -69,6 +68,7 @@ const processRegistration = async (req: Request<{ id: string }>, res: Response) 
       email,
       password,
       society_code,
+      isVerified: true,
       role: "admin",
     });
 

@@ -6,6 +6,5 @@ const otp = otpGenerator.generate(6, {
     specialChars: false,
     lowerCaseAlphabets: false
   });
-  console.log(otp);
 
 export default otp;

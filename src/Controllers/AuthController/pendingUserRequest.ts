@@ -14,7 +14,6 @@ const pendingUsers = async (req: Request, res: Response) => {
   }
 };
 
-
 const processUsers = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.body;
@@ -23,7 +22,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
       return res.status(404).json({ msg: "Registration request not found", status: false });
     }
 
-    const {name, mb_no, email, password, society_code, floor_no, flat_no, flat_type} = tempUsers;
+    const {name, mb_no, email, password, society_code, flat_no} = tempUsers;
 
     const newUser = new User({
       username: `user_${Math.random().toString(36).substr(2, 8)}`,
@@ -33,9 +32,8 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
       password,
       society_code,
       role: "user",
-      floor_no,
+      isVerified: true,
       flat_no,
-      flat_type
     });
 
     const savedUser = await newUser.save();
