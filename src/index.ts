@@ -24,4 +24,3 @@ async function main() {
 }
 
 app.use('/api/auth', authRoutes);
-app.use('/api/maintainance', authRoutes);
