@@ -7,6 +7,8 @@ import userLogin from "../../Controllers/AuthController/userLogin.js";
 import userRegister from "../../Controllers/AuthController/userRegister.js";
 import { pendingUsers, processUsers } from "../../Controllers/AuthController/pendingUserRequest.js";
 
+import authMiddleware from '../../MiddleWare/authMiddlewar.js';
+
 const router = express.Router();
 
 router.post("/sendOtp", sendOtp);
@@ -16,7 +18,7 @@ router.get("/registerSociety/pending", listPendingRegistrations);
 router.post("/registerSociety/process", processRegistration);
 router.post("/login", userLogin);
 router.post("/userRegister", userRegister);
-router.get("/userRegister/pending", pendingUsers);
-router.post("/userRegister/process", processUsers);
+router.get("/userRegister/pending", authMiddleware, pendingUsers);
+router.post("/userRegister/process", authMiddleware, processUsers);
 
 export default router;

@@ -35,15 +35,12 @@ const userSchema = new mongoose.Schema(
     },
     flat_no: {
       type: String,
-      // required: true,
     },
     flat_type: {
       type: String,
-      // required: true,
     },
     floor_no: {
       type: String,
-      // required: true,
     },
     isVerified: {
       type: Boolean,

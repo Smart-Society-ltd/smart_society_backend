@@ -7,6 +7,10 @@ const pendingUsers = async (req: Request, res: Response) => {
   try {
     const {society_code} = req.body;
     const pendingUsers = await TempUser.find({society_code});
+
+    if(pendingUsers.length === 0){
+      return res.status(200).json({ msg: "No pending users found for the given society code." });
+    }
     return res.status(200).json({ data: pendingUsers });
   } catch (error) {
     console.error('Error listing pending registrations:', error);
@@ -37,7 +41,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     });
 
     const savedUser = await newUser.save();
-    const token = generateToken(savedUser);
+    const token = generateToken(newUser);
 
     await TempUser.findByIdAndDelete(id);
 
