@@ -4,7 +4,7 @@ import Maintenance from '../../Models/MaintenanceModel/userMaintenanceModel.js';
 
 const getUserMaintenance = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.params;
 
     if (!userId) {
       return res.status(400).json({ msg: 'userId is required' });

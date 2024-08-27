@@ -5,7 +5,7 @@ import getUserMaintenance from "../../Controllers/MaintenanceController/userMain
 
 const router = express.Router();
 
-router.get("/society", getSocietyMaintenance);
-router.get("/user", getUserMaintenance);
+router.get("/society/:society_code", getSocietyMaintenance);
+router.get("/user/:userId", getUserMaintenance);
 
 export default router;
