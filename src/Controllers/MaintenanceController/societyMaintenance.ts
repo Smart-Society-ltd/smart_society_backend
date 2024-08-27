@@ -10,11 +10,11 @@ const getSocietyMaintenance = async (
   req: Request<SocietyMaintenanceRequestParams>,
   res: Response
 ) => {
-  try {
-    const { society_code } = req.body;
+  try {   
+    const { society_code } = req.params;
 
     const checkSocietyCode = await Society.findOne({ society_code: society_code });
-    if (!checkSocietyCode) {
+     if (!checkSocietyCode) {
       return res.status(400).json({
         error: "Invalid Society Id",
         status: false,

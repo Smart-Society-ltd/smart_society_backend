@@ -10,7 +10,7 @@ interface SendOtpRequestBody {
 const sendOtp = async (req: Request<{}, {}, SendOtpRequestBody>, res: Response) => {
   try {
     const { mb_no } = req.body;
-    // const msg = await sendOTP(mb_no);
+    
     if(!mb_no){
       return res.status(500).json({ error: "Mobile no is required to send otp"});
     }

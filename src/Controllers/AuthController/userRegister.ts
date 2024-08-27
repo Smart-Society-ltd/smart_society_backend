@@ -10,7 +10,7 @@ interface UserRegisterRequestBody {
   name: string;    
   mb_no: string;    
   email: string;    
-  password: string;    
+  // password: string;    
   society_code: string;    
   flat_no: string;
   flat_type: string;
@@ -20,7 +20,7 @@ interface UserRegisterRequestBody {
 
 const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: Response) => {
   try {
-    const { name, mb_no, email, password, society_code, flat_no } = req.body;
+    const { name, mb_no, email, society_code, flat_no } = req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -34,13 +34,13 @@ const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: 
       return res.status(404).json({ error: "Invalid Society Code" });
     }
 
-    const hashedPassword = bcryptjs.hashSync(password, 10);
+    // const hashedPassword = bcryptjs.hashSync(password, 10);
 
     const newUser = new TempUser({
       name,
       mb_no,
       email,
-      password: hashedPassword,
+      // password: hashedPassword,
       society_code,
       role: "user",
       flat_no,

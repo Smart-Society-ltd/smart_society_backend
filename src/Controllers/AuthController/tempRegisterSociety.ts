@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import bcryptjs from "bcryptjs";
+// import bcryptjs from "bcryptjs";
 import tempSociety from "../../Models/AuthModels/tempRegistrationModel.js";
 import User from "../../Models/AuthModels/userModel.js";
 
@@ -7,7 +7,6 @@ interface RegisterRequestBody {
   name: string;
   mb_no: string;
   email: string;
-  password: string;
   society_name: string;
   society_add: string;
   society_city: string;
@@ -24,7 +23,7 @@ const tempRegisterSociety = async (
       name,
       mb_no,
       email,
-      password,
+      // password,
       society_name,
       society_add,
       society_city,
@@ -41,13 +40,13 @@ const tempRegisterSociety = async (
         .json({ msg: "User with this email already exists", status: false });
     }
 
-    const hashedPassword = bcryptjs.hashSync(password, 10);
+    // const hashedPassword = bcryptjs.hashSync(password, 10);
 
     const newTempRegistration = new tempSociety({
       name,
       mb_no,
       email,
-      password: hashedPassword,
+      // password: hashedPassword,
       society_name,
       society_add,
       society_city,

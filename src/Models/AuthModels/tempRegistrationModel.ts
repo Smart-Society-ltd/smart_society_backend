@@ -4,7 +4,6 @@ interface TempRegistration extends Document {
   name: string;
   mb_no: string;
   email: string;
-  password: string;
   society_name: string;
   society_add: string;
   society_city: string;

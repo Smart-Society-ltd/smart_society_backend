@@ -9,7 +9,7 @@ interface TempRegistration {
   name: string;
   mb_no: string;
   email: string;
-  password: string;
+  // password: string;
   society_name: string;
   society_add: string;
   society_city: string;
@@ -22,7 +22,7 @@ interface User {
   name: string;
   mb_no: string;
   email: string;
-  password: string;
+  // password: string;
   society_code: string;
   role: string;
 }
@@ -59,14 +59,13 @@ const processRegistration = async (req: Request<{ id: string }>, res: Response) 
 
     const society_code = `SS${Date.now()}${Math.random().toString(36).substr(2, 5)}`;
 
-    const { name, mb_no, email, password, society_name, society_add, society_city, society_state, society_pincode } = tempRegistration;
+    const { name, mb_no, email, society_name, society_add, society_city, society_state, society_pincode } = tempRegistration;
 
     const newAdmin = new User({
       username: `user_${Math.random().toString(36).substr(2, 8)}`,
       name,
       mb_no,
       email,
-      password,
       society_code,
       isVerified: true,
       role: "admin",
