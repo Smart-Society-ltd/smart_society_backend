@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import User from '../../Models/AuthModels/userModel.js';
+import generateToken from '../../Functions/JWT/generateToken.js';
 
 interface UserLoginRequestBody {
   mb_no: string;
@@ -15,10 +16,13 @@ const userLogin = async (req: Request<{}, {}, UserLoginRequestBody>, res: Respon
       return res.status(400).json({ msg: "User with this number does not exist", status: false });
     }
 
+    const token = generateToken(user);
+
     return res.status(200).json({
       msg: "Login successful",
       status: true,
-      user
+      user,
+      token
     });
   } catch (error) {
     console.error('Error logging in user:', error);

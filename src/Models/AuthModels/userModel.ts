@@ -21,10 +21,6 @@ const userSchema = new mongoose.Schema(
       required: [true, "Email is Required"],
       unique: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
     society_code: {
       type: String,
       required: true,
@@ -35,15 +31,12 @@ const userSchema = new mongoose.Schema(
     },
     flat_no: {
       type: String,
-      // required: true,
     },
     flat_type: {
       type: String,
-      // required: true,
     },
     floor_no: {
       type: String,
-      // required: true,
     },
     isVerified: {
       type: Boolean,

@@ -11,7 +11,7 @@ const verifyOtp = async (
   res: Response
 ) => {
   try {
-    const { otp } = req.body;
+    const { mb_no, otp } = req.body;
     // const generatedOtp = await generateOtp(otp);
 
     if (otp != 123456) {

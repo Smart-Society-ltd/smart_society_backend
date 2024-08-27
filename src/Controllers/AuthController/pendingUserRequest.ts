@@ -5,8 +5,12 @@ import TempUser from '../../Models/AuthModels/tempUserModel.js';
 
 const pendingUsers = async (req: Request, res: Response) => {
   try {
-    const {society_code} = req.body;
+    const {society_code} = req.params;
     const pendingUsers = await TempUser.find({society_code});
+
+    if(pendingUsers.length === 0){
+      return res.status(200).json({ msg: "No pending users found for the given society code." });
+    }
     return res.status(200).json({ data: pendingUsers });
   } catch (error) {
     console.error('Error listing pending registrations:', error);
@@ -22,14 +26,13 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
       return res.status(404).json({ msg: "Registration request not found", status: false });
     }
 
-    const {name, mb_no, email, password, society_code, flat_no} = tempUsers;
+    const {name, mb_no, email, society_code, flat_no} = tempUsers;
 
     const newUser = new User({
       username: `user_${Math.random().toString(36).substr(2, 8)}`,
       name,
       mb_no,
       email,
-      password,
       society_code,
       role: "user",
       isVerified: true,
@@ -37,7 +40,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     });
 
     const savedUser = await newUser.save();
-    const token = generateToken(savedUser);
+    const token = generateToken(newUser);
 
     await TempUser.findByIdAndDelete(id);
 

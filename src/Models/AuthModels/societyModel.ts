@@ -24,18 +24,19 @@ const societySchema = new mongoose.Schema(
       },
     society_code: {
       type:String,
-      required: true
+      required: true,
+      unique:true,
     },
     admin_id: {
       type: String,
       required: true,
+      unique:true
     },
     no_of_flats: {
       type: String,
     },
     no_of_flats_sold:{
       type: String,
-      // required: true,
     }
   },
   { timestamps: true }

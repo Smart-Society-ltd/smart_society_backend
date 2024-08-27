@@ -17,10 +17,6 @@ const tempUserSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
     society_code: {
       type:String,
       required: true
@@ -35,11 +31,9 @@ const tempUserSchema = new mongoose.Schema(
     },
     flat_type:{
       type: String,
-      // required: true,
     },
     floor_no:{
       type: String,
-      // required: true,
     },
   },
   { timestamps: true }

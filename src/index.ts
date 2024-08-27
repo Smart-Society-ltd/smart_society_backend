@@ -1,8 +1,9 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './Routes/AuthRoutes/authRoutes.js'
-import mongoose from 'mongoose';
+import maintenanceRoute from './Routes/MaintenanceRoutes/maintenanceRoutes.js'
 
 dotenv.config();
 
@@ -24,4 +25,4 @@ async function main() {
 }
 
 app.use('/api/auth', authRoutes);
-app.use('/api/maintainance', authRoutes);
+app.use('/api/maintenance', maintenanceRoute);

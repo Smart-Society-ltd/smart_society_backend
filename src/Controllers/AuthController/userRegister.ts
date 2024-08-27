@@ -2,13 +2,15 @@ import { Request, Response } from 'express';
 import bcryptjs from 'bcryptjs';
 import TempUser from '../../Models/AuthModels/tempUserModel.js';
 import User from '../../Models/AuthModels/userModel.js';
+import Society from '../../Models/AuthModels/societyModel.js';
+import { error } from 'console';
 
 interface UserRegisterRequestBody {
   username: string;
   name: string;    
   mb_no: string;    
   email: string;    
-  password: string;    
+  // password: string;    
   society_code: string;    
   flat_no: string;
   flat_type: string;
@@ -18,22 +20,27 @@ interface UserRegisterRequestBody {
 
 const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: Response) => {
   try {
-    const { name, mb_no, email, password, society_code, flat_no } = req.body;
+    const { name, mb_no, email, society_code, flat_no } = req.body;
 
     const existingUser = await User.findOne({ email });
-    const existingTempUser = await TempUser.findOne({ email });
 
-    if (existingUser || existingTempUser) {
+    if (existingUser) {
       return res.status(400).json({ msg: "User with this email already registered", status: false });
     }
 
-    const hashedPassword = bcryptjs.hashSync(password, 10);
+    const society = await Society.findOne({ society_code });
+
+    if (!society) {
+      return res.status(404).json({ error: "Invalid Society Code" });
+    }
+
+    // const hashedPassword = bcryptjs.hashSync(password, 10);
 
     const newUser = new TempUser({
       name,
       mb_no,
       email,
-      password: hashedPassword,
+      // password: hashedPassword,
       society_code,
       role: "user",
       flat_no,

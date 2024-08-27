@@ -1,10 +1,9 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose";
 
 interface TempRegistration extends Document {
   name: string;
   mb_no: string;
   email: string;
-  password: string;
   society_name: string;
   society_add: string;
   society_city: string;
@@ -14,8 +13,8 @@ interface TempRegistration extends Document {
 
 const TempRegistrationSchema: Schema = new Schema({
   name: { type: String, required: true },
-  mb_no: { type: String, required: true },
-  email: { type: String, required: true },
+  mb_no: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   society_name: { type: String, required: true },
   society_add: { type: String, required: true },
@@ -24,4 +23,7 @@ const TempRegistrationSchema: Schema = new Schema({
   society_pincode: { type: String, required: true },
 });
 
-export default mongoose.model<TempRegistration>('TempRegistration', TempRegistrationSchema);
+export default mongoose.model<TempRegistration>(
+  "TempRegistration",
+  TempRegistrationSchema
+);
