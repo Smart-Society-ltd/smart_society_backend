@@ -25,7 +25,7 @@ const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.status(404).json({ msg: "User with this email already registered", status: false });
+      return res.status(409).json({ msg: "User with this email already registered", status: false });
     }
 
     const society = await Society.findOne({ society_code });

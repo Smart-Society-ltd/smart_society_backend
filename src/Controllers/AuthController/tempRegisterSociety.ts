@@ -36,7 +36,7 @@ const tempRegisterSociety = async (
 
     if (existingUser1 || existingUser2) {
       return res
-        .status(404)
+        .status(409)
         .json({ msg: "User with this email already exists", status: false });
     }
 
