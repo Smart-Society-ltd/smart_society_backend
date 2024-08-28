@@ -15,7 +15,6 @@ const TempRegistrationSchema: Schema = new Schema({
   name: { type: String, required: true },
   mb_no: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
   society_name: { type: String, required: true },
   society_add: { type: String, required: true },
   society_city: { type: String, required: true },
