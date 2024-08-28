@@ -7,7 +7,7 @@ interface User extends Document {
 
 const generateToken = (user:User): string => {
   return jwt.sign(
-    { username: user.username }, 
+    { userId: user._id }, 
     process.env.JWT_SECRET
   );
 };
