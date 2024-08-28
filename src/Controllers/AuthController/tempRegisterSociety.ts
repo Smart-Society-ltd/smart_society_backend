@@ -36,11 +36,9 @@ const tempRegisterSociety = async (
 
     if (existingUser1 || existingUser2) {
       return res
-        .status(400)
+        .status(404)
         .json({ msg: "User with this email already exists", status: false });
     }
-
-    // const hashedPassword = bcryptjs.hashSync(password, 10);
 
     const newTempRegistration = new tempSociety({
       name,
