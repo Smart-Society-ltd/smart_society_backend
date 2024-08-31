@@ -16,7 +16,7 @@ const getSocietyMaintenance = async (
     const checkSocietyCode = await Society.findOne({ society_code: society_code });
      if (!checkSocietyCode) {
       return res.status(400).json({
-        error: "Invalid Society Id",
+        msg: "Invalid Society Id",
         status: false,
       });
     }

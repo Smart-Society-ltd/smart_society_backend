@@ -23,7 +23,6 @@ const tempRegisterSociety = async (
       name,
       mb_no,
       email,
-      // password,
       society_name,
       society_add,
       society_city,

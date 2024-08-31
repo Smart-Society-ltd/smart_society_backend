@@ -23,7 +23,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     const { id } = req.body;
     const tempUsers = await TempUser.findOne({ _id: id });
     if (!tempUsers) {
-      return res.status(409).json({ msg: "Registration request not found", status: false });
+      return res.status(404).json({ msg: "Registration request not found", status: false });
     }
 
     const {name, mb_no, email, society_code, flat_no} = tempUsers;
