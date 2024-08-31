@@ -3,10 +3,9 @@ import bcryptjs from 'bcryptjs';
 import TempUser from '../../Models/AuthModels/tempUserModel.js';
 import User from '../../Models/AuthModels/userModel.js';
 import Society from '../../Models/AuthModels/societyModel.js';
-import { error } from 'console';
 
 interface UserRegisterRequestBody {
-  username: string;
+  // username: string;
   name: string;    
   mb_no: string;    
   email: string;    
@@ -31,7 +30,7 @@ const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: 
     const society = await Society.findOne({ society_code });
 
     if (!society) {
-      return res.status(404).json({ error: "Invalid Society Code" });
+      return res.status(404).json({ errorMsg: "Invalid Society Code" });
     }
 
     // const hashedPassword = bcryptjs.hashSync(password, 10);
@@ -51,7 +50,7 @@ const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: 
     return res.status(200).json({ msg: "Request sent to admin successfully", status: true });
   } catch (error) {
     console.error('Error registering user:', error);
-    return res.status(500).json({ msg: "Failed to register user", error: error.message });
+    return res.status(500).json({ errorMsg: "Failed to register user", error: error.message });
   }
 };
 

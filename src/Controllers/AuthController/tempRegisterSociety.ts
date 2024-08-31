@@ -78,7 +78,7 @@ const tempRegisterSociety = async (
   } catch (error) {
     console.error("Error submitting registration request:", error);
     return res.status(500).json({
-      msg: "Failed to submit registration request",
+      errorMsg: "Failed to submit registration request",
       error: error.message,
     });
   }

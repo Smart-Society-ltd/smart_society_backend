@@ -14,7 +14,7 @@ const pendingUsers = async (req: Request, res: Response) => {
     return res.status(200).json({ data: pendingUsers });
   } catch (error) {
     console.error('Error listing pending registrations:', error);
-    return res.status(500).json({ msg: "Failed to list pending registrations", error: error.message });
+    return res.status(500).json({ errorMsg: "Failed to list pending registrations", error: error.message });
   }
 };
 
@@ -29,7 +29,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     const {name, mb_no, email, society_code, flat_no} = tempUsers;
 
     const newUser = new User({
-      username: `user_${Math.random().toString(36).substr(2, 8)}`,
+      // username: `user_${Math.random().toString(36).substr(2, 8)}`,
       name,
       mb_no,
       email,
@@ -48,7 +48,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
 
   } catch (error) {
     console.error('Error processing registration:', error);
-    return res.status(500).json({ msg: "Failed to process registration", error: error.message });
+    return res.status(500).json({ errorMsg: "Failed to process registration", error: error.message });
   }
 };
 

@@ -16,7 +16,7 @@ const getSocietyMaintenance = async (
     const checkSocietyCode = await Society.findOne({ society_code: society_code });
      if (!checkSocietyCode) {
       return res.status(400).json({
-        msg: "Invalid Society Id",
+        errorMsg: "Invalid Society Id",
         status: false,
       });
     }
@@ -44,7 +44,7 @@ const getSocietyMaintenance = async (
     console.error("Error while fetching maintenance data:", error);
     return res
       .status(500)
-      .json({ msg: "Failed to fetch maintenance data", error: error.message });
+      .json({ errorMsg: "Failed to fetch maintenance data", error: error.message });
   }
 };
 
