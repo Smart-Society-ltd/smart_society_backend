@@ -21,11 +21,11 @@ const userLogin = async (req: Request<{}, {}, UserLoginRequestBody>, res: Respon
     const otpEntry = await OtpModel.findOne({ mb_no });
 
     if (!otpEntry) {
-      return res.status(400).json({ msg: "OTP is Invalid", status: false });
+      return res.status(400).json({ errorMsg: "OTP is Invalid", status: false });
     }
 
     if (otpEntry.otp !== otp) {
-      return res.status(400).json({ msg: "Invalid OTP", status: false });
+      return res.status(400).json({ errorMsg: "Invalid OTP", status: false });
     }
 
     const token = generateToken(user);
@@ -40,7 +40,7 @@ const userLogin = async (req: Request<{}, {}, UserLoginRequestBody>, res: Respon
     });
   } catch (error) {
     console.error('Error logging in user:', error);
-    return res.status(500).json({ msg: "Failed to login user", error: error.message });
+    return res.status(500).json({ errorMsg: "Failed to login user", error: error.message });
   }
 };
 
