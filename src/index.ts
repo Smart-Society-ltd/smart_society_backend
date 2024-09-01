@@ -27,4 +27,4 @@ async function main() {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/maintenance', maintenanceRoute);
-app.use('/api/visitor', visitorRoute);
+// app.use('/api/visitor', visitorRoute);
