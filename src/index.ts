@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './Routes/AuthRoutes/authRoutes.js'
 import maintenanceRoute from './Routes/MaintenanceRoutes/maintenanceRoutes.js'
-import visitorRoute from './Routes/VisitorManagement/visitorManagement.js'
+// import visitorRoute from './Routes/VisitorManagement/visitorManagement.js'
 
 dotenv.config();
 
