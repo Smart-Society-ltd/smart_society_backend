@@ -15,7 +15,7 @@ const userLogin = async (req: Request<{}, {}, UserLoginRequestBody>, res: Respon
     const user = await User.findOne({ mb_no });
 
     if (!user) {
-      return res.status(404).json({ msg: "User with this number does not exist", status: false });
+      return res.status(404).json({ errorMsg: "User with this number does not exist", status: false });
     }
 
     const otpEntry = await OtpModel.findOne({ mb_no });
