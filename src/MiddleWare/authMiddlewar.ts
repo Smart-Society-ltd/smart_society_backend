@@ -16,14 +16,14 @@ const authenticateToken = async (req: Request, res: Response, next: NextFunction
     const user = await User.findById(decoded.userId);
     
     if (!user) {
-      return res.status(403).json({ error: 'Invalid user' });
+      return res.status(403).json({ errorMsg: 'Invalid user' });
     }
 
     req.user = user;
 
     next();
   } catch (error) {
-    return res.status(403).json({ error: 'Invalid token' });
+    return res.status(403).json({ errorMsg: 'Invalid token'});
   }
 };
 
