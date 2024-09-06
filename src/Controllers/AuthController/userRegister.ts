@@ -45,9 +45,16 @@ const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: 
       flat_no,
     });
 
+    const admin_id = society.admin_id;
+    const admin = await User.findOne({_id : admin_id});
+
     await newUser.save();
 
-    return res.status(200).json({ msg: "Request sent to admin successfully", status: true });
+    return res.status(200).json({ msg: "Request sent to admin successfully", data : {
+      admin_name: admin.name,
+      admin_mb_no : admin.mb_no,
+      society_name : society.society_name,
+    }, status: true });
   } catch (error) {
     console.error('Error registering user:', error);
     return res.status(500).json({ errorMsg: "Failed to register user", error: error.message });
