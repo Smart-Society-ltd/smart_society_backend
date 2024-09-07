@@ -18,7 +18,7 @@ const getUserMaintenance = async (req: Request, res: Response) => {
 
     res.status(200).json({ data: maintenance });
   } catch (error) {
-    res.status(500).json({ msg: 'Failed to retrieve maintenance data', error: error.message });
+    res.status(500).json({ errorMsg: 'Failed to retrieve maintenance data', error: error.message });
   }
 };
 

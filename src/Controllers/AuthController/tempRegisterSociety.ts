@@ -23,7 +23,6 @@ const tempRegisterSociety = async (
       name,
       mb_no,
       email,
-      // password,
       society_name,
       society_add,
       society_city,
@@ -81,7 +80,7 @@ const tempRegisterSociety = async (
   } catch (error) {
     console.error("Error submitting registration request:", error);
     return res.status(500).json({
-      msg: "Failed to submit registration request",
+      errorMsg: "Failed to submit registration request",
       error: error.message,
     });
   }
