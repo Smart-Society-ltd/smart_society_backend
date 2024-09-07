@@ -4,8 +4,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './Routes/AuthRoutes/authRoutes.js'
 import maintenanceRoute from './Routes/MaintenanceRoutes/maintenanceRoutes.js'
-// import visitorRoute from './Routes/VisitorManagement/visitorManagement.js'
-import userRoute from './Routes/UserRoutes/getUserData.js'
+import visitorRoute from './Routes/VisitorManagement/visitorManagement.js'
+import userRoute from './Routes/UserRoutes/userRoutes.js'
+import societyPricing from './Routes/SocietyRoutes/societyRoutes.js';
 
 dotenv.config();
 
@@ -29,4 +30,5 @@ async function main() {
 app.use('/api/auth', authRoutes);
 app.use('/api/maintenance', maintenanceRoute);
 app.use('/api/user', userRoute);
-// app.use('/api/visitor', visitorRoute);
+app.use('/api/society', societyPricing);
+app.use('/api/visitor', visitorRoute);

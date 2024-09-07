@@ -18,7 +18,6 @@ const authenticateToken = async (req: Request, res: Response, next: NextFunction
     if (!user) {
       return res.status(403).json({ errorMsg: 'Invalid user' });
     }
-
     req.user = user;
 
     next();
