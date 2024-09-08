@@ -39,7 +39,6 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     const { name, mb_no, email, society_code, flat_no } = tempUsers;
 
     const newUser = new User({
-      // username: `user_${Math.random().toString(36).substr(2, 8)}`,
       name,
       mb_no,
       email,
@@ -49,12 +48,12 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
       flat_no,
     });
 
+    await assignFlat(newUser);
+
     const savedUser = await newUser.save();
     const token = generateToken(newUser);
 
     await TempUser.findByIdAndDelete(id);
-
-    await assignFlat(newUser);
 
     return res
       .status(200)

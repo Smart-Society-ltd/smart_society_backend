@@ -1,5 +1,5 @@
 import Society from "../../Models/AuthModels/societyModel.js";
-import Flat from "../../Models/AuthModels/flats.js";
+import Flat from "../../Models/AuthModels/flatsModel.js";
 
 const assignFlat = async (user: any) => {
   try {
@@ -13,22 +13,32 @@ const assignFlat = async (user: any) => {
       throw new Error("No remaining flats available");
     }
 
-    society.remaining_flats -= 1;
-    await society.save();
+    const existingFlat = await Flat.findOne({
+      flat_no: user.flat_no,
+      society_code: user.society_code,
+    });
+
+    if (existingFlat) {
+      throw new Error("Flat already assigned");
+    }
 
     const newFlat = new Flat({
       flat_no: user.flat_no,
       society_code: user.society_code,
-      owner_name: user.name,
+      flat_type: user.flat_type,
+      floor_no: user.floor_no,
+      residents: [user.name], 
     });
+
+    society.remaining_flats -= 1;
+    await society.save();
 
     await newFlat.save();
 
-    console.log(`Flat ${user.flat_no} assigned to ${user.name} successfully`);
     return true;
   } catch (error) {
-    console.error("Error assigning flat:", error.message);
-    throw new Error("Failed to assign flat");
+    console.error("Error assigning flat:", );
+    throw new Error(error.message);
   }
 };
 

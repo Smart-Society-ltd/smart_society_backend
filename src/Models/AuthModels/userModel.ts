@@ -27,12 +27,6 @@ const userSchema = new mongoose.Schema(
     flat_no: {
       type: String,
     },
-    flat_type: {
-      type: String,
-    },
-    floor_no: {
-      type: String,
-    },
     isVerified: {
       type: Boolean,
       default: false,
