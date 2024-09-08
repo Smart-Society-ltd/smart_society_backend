@@ -23,7 +23,7 @@ main().catch(err => console.log(err));
 
 async function main() {
   // await mongoose.connect(process.env.DB_URI);
-  await mongoose.connect("mongodb+srv://admin:admin@cluster0.bp10a.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+  await mongoose.connect(process.env.DB_URI_ATLAS);
   console.log("Successfully conected to database");
 }
 
