@@ -106,7 +106,7 @@ const processRegistration = async (
       society_state,
       society_pincode,
       society_code,
-      admin_id,
+      admin_ids: admin_id,
     });
 
     const savedSociety = await newSociety.save();

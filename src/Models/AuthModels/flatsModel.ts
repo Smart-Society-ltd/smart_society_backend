@@ -4,11 +4,9 @@ const flatSchema = new mongoose.Schema({
   flat_no: {
     type: String,
     required: true,
-    // unique: true,
   },
   flat_type: {
     type: String,
-    // required: true,
   },
   floor_no: {
     type: String,
