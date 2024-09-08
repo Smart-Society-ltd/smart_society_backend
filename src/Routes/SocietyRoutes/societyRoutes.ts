@@ -12,3 +12,4 @@ router.get("/pricing", societyPricing);
 router.put("/update", authMiddleware, updateSociety);
 
 export default router;
+ 
