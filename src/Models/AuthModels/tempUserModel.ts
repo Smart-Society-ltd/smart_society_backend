@@ -18,26 +18,26 @@ const tempUserSchema = new mongoose.Schema(
       unique: true,
     },
     society_code: {
-      type:String,
-      required: true
+      type: String,
+      required: true,
     },
     role: {
       type: String,
       required: true,
     },
-    flat_no:{
+    flat_no: {
       type: String,
       required: true,
     },
-    flat_type:{
+    flat_type: {
       type: String,
     },
-    floor_no:{
+    floor_no: {
       type: String,
     },
   },
   { timestamps: true }
 );
 
-const TempUser = mongoose.model('TempUser', tempUserSchema);
+const TempUser = mongoose.model("TempUser", tempUserSchema);
 export default TempUser;

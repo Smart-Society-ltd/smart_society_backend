@@ -13,6 +13,6 @@
       "@routes/*": ["./Routes/*"]
     }                     
     },
-    "include": ["src/**/*.ts"],       
+    "include": ["src/**/*.ts", "src/Routes/SocietyRoutes"],       
     "exclude": ["node_modules"]           
   }

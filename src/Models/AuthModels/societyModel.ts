@@ -4,11 +4,11 @@ const societySchema = new mongoose.Schema(
   {
     society_name: {
       type: String,
-      required: true
+      required: true,
     },
     society_add: {
       type: String,
-      required: true
+      required: true,
     },
     society_city: {
       type: String,
@@ -19,28 +19,32 @@ const societySchema = new mongoose.Schema(
       required: true,
     },
     society_pincode: {
-        type:String,
-        required: true
-      },
-    society_code: {
-      type:String,
+      type: String,
       required: true,
-      unique:true,
+    },
+    society_code: {
+      type: String,
+      required: true,
+      unique: true,
     },
     admin_id: {
       type: String,
       required: true,
-      unique:true
+      unique: true,
     },
-    no_of_flats: {
-      type: String,
+    total_flats: {
+      default: 10,
+      type: Number,
+      required: true,
     },
-    no_of_flats_sold:{
-      type: String,
-    }
+    remaining_flats: {
+      type: Number,
+      required: true,
+      default: 10,
+    },
   },
   { timestamps: true }
 );
 
-const Society = mongoose.model('Society', societySchema);
+const Society = mongoose.model("Society", societySchema);
 export default Society;
