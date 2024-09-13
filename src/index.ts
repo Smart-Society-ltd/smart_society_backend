@@ -31,4 +31,4 @@ app.use('/api/auth', authRoutes);
 app.use('/api/maintenance', maintenanceRoute);
 app.use('/api/user', userRoute);
 app.use('/api/society', societyPricing);
-// app.use('/api/visitor', visitorRoute); 
+// app.use('/api/visitor', visitorRoute);

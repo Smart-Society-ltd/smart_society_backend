@@ -87,7 +87,6 @@ const processRegistration = async (
     const society_code = `${normalizedSocietyName}${count + 1}`;
 
     const newAdmin = new User({
-      // username: `user_${Math.random().toString(36).substr(2, 8)}`,
       name,
       mb_no,
       email,
