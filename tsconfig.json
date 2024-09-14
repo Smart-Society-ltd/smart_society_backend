@@ -1,18 +1,18 @@
 {
-    "compilerOptions": {                    
-      "module": "NodeNext", 
-      "moduleResolution": "NodeNext",
-      "target": "ES2022",
-      "sourceMap": false,                 
-      "outDir": "dist", 
-      "baseUrl": "./src",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "sourceMap": false,
+    "outDir": "dist",
+    "baseUrl": "./src",
     "paths": {
-      "@controllers/*": ["./Controllers/*"],
-      "@models/*": ["./Models/*"],
-      "@functions/*": ["./Functions/*"],
-      "@routes/*": ["./Routes/*"]
-    }                     
-    },
-    "include": ["src/**/*.ts", "src/Routes/SocietyRoutes"],       
-    "exclude": ["node_modules"]           
-  }
+      "@Controllers/*": ["./Controllers/*"],
+      "@Models/*": ["./Models/*"],
+      "@Functions/*": ["./Functions/*"],
+      "@Routes/*": ["./Routes/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/Routes/SocietyRoutes"],
+  "exclude": ["node_modules"]
+}

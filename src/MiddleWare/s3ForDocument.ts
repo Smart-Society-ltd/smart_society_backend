@@ -13,7 +13,7 @@ const s3 = new S3Client({
 const upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: "visitorphoto",
+    bucket: "ssdocument",
     acl: "private",
     metadata: (req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
@@ -22,9 +22,9 @@ const upload = multer({
 
       const societyCode = req.body.society_code || 'default';
 
-      const date = new Date().toISOString().split('T')[0];
+      const folder = req.body.folder_name;
 
-      const fileKey = `${societyCode}/${date}/${
+      const fileKey = `${societyCode}/${folder}/${
         file.originalname
       }`;
       cb(null, fileKey);
