@@ -27,10 +27,9 @@ const societySchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    admin_id: {
-      type: String,
+    admin_ids: {
+      type: [String],
       required: true,
-      unique: true,
     },
     total_flats: {
       default: 10,

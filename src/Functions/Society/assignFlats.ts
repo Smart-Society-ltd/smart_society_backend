@@ -14,8 +14,8 @@ const assignFlat = async (user: any) => {
     }
 
     const existingFlat = await Flat.findOne({
-      flat_no: user.flat_no,
       society_code: user.society_code,
+      flat_no: user.flat_no,
     });
 
     if (existingFlat) {

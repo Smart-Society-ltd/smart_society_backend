@@ -6,6 +6,7 @@ import { listPendingRegistrations, processRegistration } from "../../Controllers
 import userLogin from "../../Controllers/AuthController/userLogin.js";
 import userRegister from "../../Controllers/AuthController/userRegister.js";
 import { pendingUsers, processUsers } from "../../Controllers/AuthController/pendingUserRequest.js";
+import assignSociety from "../../Controllers/AuthController/societyAssign.js";
 
 import authMiddleware from '../../MiddleWare/authMiddlewar.js';
 
@@ -18,6 +19,7 @@ router.get("/registerSociety/pending", listPendingRegistrations);
 router.post("/registerSociety/process", processRegistration);
 router.post("/login", userLogin);
 router.post("/userRegister", userRegister);
+router.post("/assignSociety", assignSociety);
 router.get("/userRegister/pending/:society_code", authMiddleware, pendingUsers);
 router.post("/userRegister/process", authMiddleware, processUsers);
 

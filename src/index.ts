@@ -2,9 +2,10 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import bodyParser from 'body-parser'
 import authRoutes from './Routes/AuthRoutes/authRoutes.js'
 import maintenanceRoute from './Routes/MaintenanceRoutes/maintenanceRoutes.js'
-// import visitorRoute from './Routes/VisitorManagement/visitorManagement.js'
+import visitorRoute from './Routes/VisitorManagement/visitorManagement.js'
 import userRoute from './Routes/UserRoutes/userRoutes.js'
 import societyPricing from './Routes/SocietyRoutes/societyRoutes.js';
 
@@ -14,6 +15,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.listen(process.env.PORT, () => {
   console.log('Server started successfully');
@@ -31,4 +34,4 @@ app.use('/api/auth', authRoutes);
 app.use('/api/maintenance', maintenanceRoute);
 app.use('/api/user', userRoute);
 app.use('/api/society', societyPricing);
-// app.use('/api/visitor', visitorRoute); 
+app.use('/api/visitor', visitorRoute);

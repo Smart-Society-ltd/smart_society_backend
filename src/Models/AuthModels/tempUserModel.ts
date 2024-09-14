@@ -5,7 +5,6 @@ const tempUserSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     mb_no: {
       type: String,
@@ -19,7 +18,7 @@ const tempUserSchema = new mongoose.Schema(
     },
     society_code: {
       type: String,
-      required: true,
+      // required: true,
     },
     role: {
       type: String,
@@ -27,13 +26,7 @@ const tempUserSchema = new mongoose.Schema(
     },
     flat_no: {
       type: String,
-      required: true,
-    },
-    flat_type: {
-      type: String,
-    },
-    floor_no: {
-      type: String,
+      // required: true,
     },
   },
   { timestamps: true }
