@@ -11,6 +11,23 @@ const pendingCheckin = async (req: Request, res: Response) => {
     if (pendingCheckin.length === 0) {
       return res.status(200).json({ msg: "No pending checkin request" });
     }
+
+    const loggedInUserId = req.user?._id;
+    
+    if (!loggedInUserId) {
+      return res.status(401).json({ errorMsg: "Unauthorized user" });
+    }
+
+    const user = await User.findById(loggedInUserId);
+
+    if (!user) {
+      return res.status(404).json({ errorMsg: "User not found" });
+    }
+
+    if(user.flat_no != flat_no){
+      return res.status(404).json({ errorMsg: "User belongs to another flat" });
+    }
+
     return res.status(200).json({ data: pendingCheckin });
   } catch (error) {
     console.error("Error listing pending checkin request:", error);
@@ -44,6 +61,18 @@ const processCheckin = async (req: Request<{ id: string }>, res: Response) => {
       image_url,
       image_key,
     } = checkinRequest;
+
+    const loggedInUserId = req.user?._id;
+    
+    if (!loggedInUserId) {
+      return res.status(401).json({ errorMsg: "Unauthorized user" });
+    }
+
+    const user = await User.findById(loggedInUserId);
+
+    if (!user) {
+      return res.status(404).json({ errorMsg: "User not found" });
+    }
 
     const newCheckin = new Visitor({
       society_code,
