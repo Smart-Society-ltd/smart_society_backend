@@ -35,7 +35,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
         .json({ errorMsg: "Registration request not found", status: false });
     }
 
-    const { name, mb_no, email, role, society_code, flat_no } = tempUsers;
+    const { name, mb_no, email, role, society_code, flat_no, flat_type, floor_no } = tempUsers;
 
     const newUser = new User({
       name,
@@ -59,7 +59,8 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
       await society.save();
     }
 
-    await assignFlat(newUser);
+    const flatId = await assignFlat(newUser, flat_type, floor_no);
+    newUser.flat = flatId;
 
     const savedUser = await newUser.save();
     const token = generateToken(newUser);

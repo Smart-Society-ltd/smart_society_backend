@@ -26,6 +26,11 @@ const userSchema = new mongoose.Schema(
     },
     flat_no: {
       type: String,
+      required: true,
+    },
+    flat: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Flat",
     },
     isVerified: {
       type: Boolean,

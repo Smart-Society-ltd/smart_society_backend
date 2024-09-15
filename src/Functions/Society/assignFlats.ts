@@ -1,7 +1,7 @@
 import Society from "../../Models/AuthModels/societyModel.js";
 import Flat from "../../Models/AuthModels/flatsModel.js";
 
-const assignFlat = async (user: any) => {
+const assignFlat = async (user: any, flat_type: string, floor_no: string) => {
   try {
     const society = await Society.findOne({ society_code: user.society_code });
 
@@ -25,19 +25,19 @@ const assignFlat = async (user: any) => {
     const newFlat = new Flat({
       flat_no: user.flat_no,
       society_code: user.society_code,
-      flat_type: user.flat_type,
-      floor_no: user.floor_no,
-      residents: [user.name], 
+      flat_type: flat_type,
+      floor_no: floor_no,
+      residents: [user.name],
     });
-
+    
     society.remaining_flats -= 1;
     await society.save();
 
     await newFlat.save();
 
-    return true;
+    return newFlat._id;
   } catch (error) {
-    console.error("Error assigning flat:", );
+    console.error("Error assigning flat:");
     throw new Error(error.message);
   }
 };

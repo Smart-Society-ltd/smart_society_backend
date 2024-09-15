@@ -9,6 +9,7 @@ import visitorRoute from "./Routes/VisitorManagement/visitorManagement.js";
 import userRoute from "./Routes/UserRoutes/userRoutes.js";
 import societyPricing from "./Routes/SocietyRoutes/societyRoutes.js";
 import documentRoute from "./Routes/DocumentManagementRoute/documentRoutes.js";
+import neighbourRoute from "./Routes/NeighbourRoutes/neighbourRoutes.js";
 
 dotenv.config();
 
@@ -37,3 +38,4 @@ app.use("/api/user", userRoute);
 app.use("/api/society", societyPricing);
 app.use("/api/visitor", visitorRoute);
 app.use("/api/document", documentRoute);
+app.use("/api/neighbour", neighbourRoute);

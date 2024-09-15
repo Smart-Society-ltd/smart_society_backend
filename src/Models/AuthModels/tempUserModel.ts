@@ -18,7 +18,6 @@ const tempUserSchema = new mongoose.Schema(
     },
     society_code: {
       type: String,
-      // required: true,
     },
     role: {
       type: String,
@@ -26,7 +25,12 @@ const tempUserSchema = new mongoose.Schema(
     },
     flat_no: {
       type: String,
-      // required: true,
+    },
+    floor_no: {
+      type: String,
+    },
+    flat_type: {
+      type: String,
     },
   },
   { timestamps: true }

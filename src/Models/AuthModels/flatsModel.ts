@@ -7,9 +7,11 @@ const flatSchema = new mongoose.Schema({
   },
   flat_type: {
     type: String,
+    required: true,
   },
   floor_no: {
     type: String,
+    required: true,
   },
   society_code: {
     type: String,

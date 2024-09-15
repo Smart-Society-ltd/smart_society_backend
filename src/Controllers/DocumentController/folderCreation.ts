@@ -27,10 +27,6 @@ const FolderCreation = async (req: Request, res: Response) => {
       folder_name,
     });
 
-    if (!user) {
-      return res.status(404).json({ errorMsg: "User not found" });
-    }
-
     if (folderNameCheck)
       res
         .status(404)

@@ -34,4 +34,4 @@ const upload = multer({
 
 const uploadPhotos = upload.single("file");
 
-export default uploadPhotos;
+export {uploadPhotos, s3};

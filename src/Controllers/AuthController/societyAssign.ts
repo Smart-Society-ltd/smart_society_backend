@@ -7,11 +7,13 @@ interface SocietyAssignRequestBody {
   userId: string;    
   society_code: string;    
   flat_no: string;
+  floor_no: string;
+  flat_type: string;
 }
 
 const assignSociety = async (req: Request<{}, {}, SocietyAssignRequestBody>, res: Response) => {
   try {
-    const { id, society_code, flat_no } = req.body;
+    const { id, society_code, flat_no, floor_no, flat_type } = req.body;
 
     const user = await TempUser.findOne({_id : id});
 
@@ -30,6 +32,9 @@ const assignSociety = async (req: Request<{}, {}, SocietyAssignRequestBody>, res
 
     user.society_code = society_code;
     user.flat_no = flat_no;
+    user.floor_no = floor_no;
+    user.flat_type = flat_type;
+    
     await user.save();
 
     return res.status(200).json({ msg: "Request sent to admin successfully", data : {

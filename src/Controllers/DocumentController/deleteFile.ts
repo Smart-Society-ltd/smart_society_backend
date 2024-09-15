@@ -2,14 +2,7 @@ import { Request, Response } from "express";
 import Folder from "../../Models/DocumentModel/folder.js";
 import User from "../../Models/AuthModels/userModel.js";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
-
-const s3 = new S3Client({
-  region: "ap-southeast-2",
-  credentials: {
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  },
-});
+import {s3} from '../../MiddleWare/s3ForDocument.js'
 
 const deleteFile = async (req: Request, res: Response) => {
   try {
