@@ -6,14 +6,15 @@ import {s3} from '../../MiddleWare/s3ForDocument.js'
 
 const deleteFile = async (req: Request, res: Response) => {
   try {
-    const { society_code, folder_name, fileName } = req.body;
+    const { folder_name, fileName } = req.body;
     const loggedInUserId = req.user?._id;
 
     const user = await User.findById(loggedInUserId);
     if (!user) {
       return res.status(401).json({ errorMsg: "Unauthorized user" });
     }
-
+    
+    const society_code = user.society_code;
     if(user.society_code != society_code){
         return res.status(404).json({ errorMsg: "User is from another society" });
     }

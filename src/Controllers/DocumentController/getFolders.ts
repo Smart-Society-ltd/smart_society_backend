@@ -4,8 +4,6 @@ import User from "../../Models/AuthModels/userModel.js";
 
 const getFolders = async (req: Request, res: Response) => {
   try {
-    const { society_code } = req.params;
-
     const loggedInUserId = req.user?._id;
     
     if (!loggedInUserId) {
@@ -17,6 +15,8 @@ const getFolders = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({ errorMsg: "Unauthorized user" });
     }
+
+    const society_code = user.society_code;
 
     const folders = await Folder.find({ society_code }).select("folder_name");
 

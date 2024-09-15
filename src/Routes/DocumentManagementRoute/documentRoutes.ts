@@ -12,7 +12,7 @@ import { uploadPhotos } from "../../MiddleWare/s3ForDocument.js";
 const router = express.Router();
 
 router.post("/folder/create", authenticateToken, folderCreation);
-router.post("/file/add", uploadPhotos, uploadDocument);
+router.post("/file/add", authenticateToken, uploadPhotos, uploadDocument);
 router.get("/folder/get/:society_code", authenticateToken, getFolders);
 router.post("/file/get", authenticateToken, getDocuments);
 router.delete("/file/delete", authenticateToken, deleteFile);
