@@ -8,6 +8,14 @@ import assignFlat from "../../Functions/Society/assignFlats.js";
 const pendingUsers = async (req: Request, res: Response) => {
   try {
     const { society_code } = req.params;
+
+    const loggedInUserId = req.user._id;
+    const user = await User.findById(loggedInUserId);
+
+    if (!user || society_code != user.society_code) {
+      return res.status(401).json({ errorMsg: "Unauthorized user" });
+    }
+
     const pendingUsers = await TempUser.find({ society_code });
 
     if (pendingUsers.length === 0) {
@@ -35,7 +43,29 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
         .json({ errorMsg: "Registration request not found", status: false });
     }
 
-    const { name, mb_no, email, role, society_code, flat_no, flat_type, floor_no } = tempUsers;
+    const loggedInUserId = req.user._id;
+    const user = await User.findById(loggedInUserId);
+
+    const society = await Society.find({ society_code: user.society_code });
+
+    if (!society) {
+      return res.status(404).json({ errorMsg: "Society not found" });
+    }
+
+    const {
+      name,
+      mb_no,
+      email,
+      role,
+      society_code,
+      flat_no,
+      flat_type,
+      floor_no,
+    } = tempUsers;
+
+    if (!user || society_code != user.society_code) {
+      return res.status(401).json({ errorMsg: "Unauthorized user" });
+    }
 
     const newUser = new User({
       name,
