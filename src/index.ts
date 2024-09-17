@@ -11,6 +11,7 @@ import societyPricing from "./Routes/SocietyRoutes/societyRoutes.js";
 import documentRoute from "./Routes/DocumentManagementRoute/documentRoutes.js";
 import neighbourRoute from "./Routes/NeighbourRoutes/neighbourRoutes.js";
 import announcementRoute from "./Routes/AnnonucementRoutes/announcementRoutes.js";
+import complaintRoute from "./Routes/ComplaintRoutes/complaintRoutes.js";
 
 dotenv.config();
 
@@ -41,3 +42,4 @@ app.use("/api/visitor", visitorRoute);
 app.use("/api/document", documentRoute);
 app.use("/api/neighbour", neighbourRoute);
 app.use("/api/announcement", announcementRoute);
+app.use("/api/complaint", complaintRoute);
