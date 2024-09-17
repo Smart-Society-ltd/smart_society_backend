@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
     },
     society_code: {
       type: String,
-      required: true,
+      // required: true,
     },
     role: {
       type: String,
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
     },
     flat_no: {
       type: String,
-      required: true,
+      // required: true,
     },
     flat: {
       type: mongoose.Schema.Types.ObjectId,

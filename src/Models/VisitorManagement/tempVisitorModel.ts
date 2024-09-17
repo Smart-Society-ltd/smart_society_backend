@@ -14,51 +14,56 @@ interface tempVisitor extends Document {
   image_key?: string;
 }
 
-const tempVisitorSchema: Schema = new Schema({
-  society_code: {
-    type: String,
-    required: true,
+const tempVisitorSchema: Schema = new Schema(
+  {
+    society_code: {
+      type: String,
+      required: true,
+    },
+    visitor_name: {
+      type: String,
+      required: true,
+    },
+    visitor_contact_no: {
+      type: String,
+      required: true,
+    },
+    visiting_to: {
+      type: String,
+      required: true,
+    },
+    visit_purpose: {
+      type: String,
+      required: true,
+    },
+    flat_no: {
+      type: String,
+      required: true,
+    },
+    no_of_people: {
+      type: String,
+      required: true,
+    },
+    visitor_address: {
+      type: String,
+      required: true,
+    },
+    checkin_date: {
+      type: Date,
+      default: Date.now,
+    },
+    image_url: {
+      type: String,
+      required: false,
+    },
+    image_key: {
+      type: String,
+      required: false,
+    },
   },
-  visitor_name: {
-    type: String,
-    required: true,
-  },
-  visitor_contact_no: {
-    type: String,
-    required: true,
-  },
-  visiting_to: {
-    type: String,
-    required: true,
-  },
-  visit_purpose: {
-    type: String,
-    required: true,
-  },
-  flat_no: {
-    type: String,
-    required: true,
-  },
-  no_of_people: {
-    type: String,
-    required: true,
-  },
-  visitor_address: {
-    type: String,
-    required: true,
-  },
-  checkin_date: {
-    type: Date,
-    default: Date.now,
-  },
-  image_url: {
-    type: String,
-    required: false,
-  },
-  image_key: {
-    type: String,
-    required: false,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 export default mongoose.model<tempVisitor>("tempVisitor", tempVisitorSchema);

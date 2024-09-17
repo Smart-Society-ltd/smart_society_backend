@@ -6,14 +6,16 @@ import Visitor from "../../Models/VisitorManagement/visitorModel.js";
 const pendingCheckin = async (req: Request, res: Response) => {
   try {
     const { flat_no } = req.params;
-    const pendingCheckin = await tempVisitor.find({ flat_no });
+    const pendingCheckin = await tempVisitor
+      .find({ flat_no })
+      .sort({ createdAt: -1 });
 
     if (pendingCheckin.length === 0) {
       return res.status(200).json({ msg: "No pending checkin request" });
     }
 
     const loggedInUserId = req.user?._id;
-    
+
     if (!loggedInUserId) {
       return res.status(401).json({ errorMsg: "Unauthorized user" });
     }
@@ -24,7 +26,7 @@ const pendingCheckin = async (req: Request, res: Response) => {
       return res.status(404).json({ errorMsg: "User not found" });
     }
 
-    if(user.flat_no != flat_no){
+    if (user.flat_no != flat_no) {
       return res.status(404).json({ errorMsg: "User belongs to another flat" });
     }
 
@@ -63,7 +65,7 @@ const processCheckin = async (req: Request<{ id: string }>, res: Response) => {
     } = checkinRequest;
 
     const loggedInUserId = req.user?._id;
-    
+
     if (!loggedInUserId) {
       return res.status(401).json({ errorMsg: "Unauthorized user" });
     }
