@@ -1,4 +1,17 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+// Define the Society interface extending from Mongoose's Document interface
+interface SocietyInterface extends Document {
+  society_name: string;
+  society_add: string;
+  society_city: string;
+  society_state: string;
+  society_pincode: string;
+  society_code: string;
+  admin_ids: string[];
+  total_flats: number;
+  remaining_flats: number;
+}
 
 const societySchema = new mongoose.Schema(
   {
@@ -32,9 +45,9 @@ const societySchema = new mongoose.Schema(
       required: true,
     },
     total_flats: {
-      default: 10,
       type: Number,
       required: true,
+      default: 10,
     },
     remaining_flats: {
       type: Number,
@@ -45,5 +58,5 @@ const societySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Society = mongoose.model("Society", societySchema);
+const Society = mongoose.model<SocietyInterface>("Society", societySchema);
 export default Society;

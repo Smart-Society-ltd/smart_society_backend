@@ -1,4 +1,10 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+interface OtpInterface extends Document {
+  mb_no: string;
+  otp: string;
+  createdAt: Date;
+}
 
 const otpSchema = new mongoose.Schema(
   {
@@ -19,5 +25,5 @@ const otpSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const OtpModel = mongoose.model("Otp", otpSchema);
+const OtpModel = mongoose.model<OtpInterface>("Otp", otpSchema);
 export default OtpModel;

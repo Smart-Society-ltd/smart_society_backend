@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface Maintenance extends Document {
-  society_code: string;  // Changed to string
+  society_code: string; 
   maintenance_period: string;
   maintenance_basis: string;
   custom_maintenance_values?: {
@@ -13,7 +13,7 @@ export interface Maintenance extends Document {
 const societyMaintenanceSchema = new Schema<Maintenance>(
   {
     society_code: {
-      type: String,  // Changed to String
+      type: String, 
       required: true,
     },
     maintenance_period: {

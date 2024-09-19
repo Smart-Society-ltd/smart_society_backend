@@ -1,4 +1,12 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+interface FlatInterface extends Document {
+  flat_no: string;
+  flat_type: string;
+  floor_no: string;
+  society_code: string;
+  residents: string[];
+}
 
 const flatSchema = new mongoose.Schema({
   flat_no: {
@@ -29,5 +37,5 @@ const flatSchema = new mongoose.Schema({
   }
 });
 
-const Flat = mongoose.model("Flat", flatSchema);
+const Flat = mongoose.model<FlatInterface>("Flat", flatSchema);
 export default Flat;
