@@ -1,30 +1,16 @@
 import mongoose from "mongoose";
 
+interface tempUserInterface extends Document {
+  user_id: string;
+  floor_no: string;
+  flat_type: string;
+}
+
 const tempUserSchema = new mongoose.Schema(
   {
-    name: {
+    user_id: {
       type: String,
       required: true,
-    },
-    mb_no: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    society_code: {
-      type: String,
-    },
-    role: {
-      type: String,
-      required: true,
-    },
-    flat_no: {
-      type: String,
     },
     floor_no: {
       type: String,
@@ -36,5 +22,5 @@ const tempUserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const TempUser = mongoose.model("TempUser", tempUserSchema);
+const TempUser = mongoose.model<tempUserInterface>("TempUser", tempUserSchema);
 export default TempUser;

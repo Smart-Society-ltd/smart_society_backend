@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 import generateToken from "../../Functions/JWT/generateToken.js";
 import User from "../../Models/AuthModels/userModel.js";
 import TempUser from "../../Models/AuthModels/tempUserModel.js";
@@ -16,7 +17,8 @@ const pendingUsers = async (req: Request, res: Response) => {
       return res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
-    const pendingUsers = await TempUser.find({ society_code });
+    const pendingUsers = await User.find({ society_code, isVerified: false })
+      .populate('tempUserId', 'flat_type floor_no');
 
     if (pendingUsers.length === 0) {
       return res
@@ -36,66 +38,32 @@ const pendingUsers = async (req: Request, res: Response) => {
 const processUsers = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.body;
-    const tempUsers = await TempUser.findOne({ _id: id });
-    if (!tempUsers) {
-      return res
-        .status(404)
-        .json({ errorMsg: "Registration request not found", status: false });
+    const tempUser = await TempUser.findOne({ user_id: id });
+    const user = await User.findOne({ _id: id });
+
+    if (!tempUser || !user) {
+      return res.status(404).json({
+        errorMsg: "Registration request not found",
+        status: false,
+      });
     }
 
     const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
-
-    const society = await Society.find({ society_code: user.society_code });
+    const loggedInuser = await User.findById(loggedInUserId);
+    const society = await Society.findOne({ society_code: loggedInuser.society_code });
 
     if (!society) {
       return res.status(404).json({ errorMsg: "Society not found" });
     }
 
-    const {
-      name,
-      mb_no,
-      email,
-      role,
-      society_code,
-      flat_no,
-      flat_type,
-      floor_no,
-    } = tempUsers;
+    user.isVerified = true;
 
-    if (!user || society_code != user.society_code) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
+    await assignFlat(user);
 
-    const newUser = new User({
-      name,
-      mb_no,
-      email,
-      society_code,
-      role,
-      isVerified: true,
-      flat_no,
-    });
+    const savedUser = await user.save();
+    const token = generateToken(user);
 
-    if (role === "admin") {
-      const society = await Society.findOne({ society_code });
-      if (!society) {
-        return res
-          .status(404)
-          .json({ errorMsg: "Society not found", status: false });
-      }
-
-      society.admin_ids.push(newUser._id.toString());
-      await society.save();
-    }
-
-    const flatId = await assignFlat(newUser, flat_type, floor_no);
-    newUser.flat = flatId;
-
-    const savedUser = await newUser.save();
-    const token = generateToken(newUser);
-
-    await TempUser.findByIdAndDelete(id);
+    await TempUser.findOneAndDelete({ user_id: id });
 
     return res.status(200).json({
       msg: "User registered successfully",

@@ -1,6 +1,5 @@
 import mongoose, { Document } from "mongoose";
 
-// Define the Society interface extending from Mongoose's Document interface
 interface SocietyInterface extends Document {
   society_name: string;
   society_add: string;

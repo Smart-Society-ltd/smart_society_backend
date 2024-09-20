@@ -1,17 +1,15 @@
 import { Request, Response } from 'express';
-import TempUser from '../../Models/AuthModels/tempUserModel.js';
 import User from '../../Models/AuthModels/userModel.js';
 
 interface UserRegisterRequestBody {
   name: string;    
   mb_no: string;    
-  email: string;    
-  role: string;    
+  email: string;
 }
 
 const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: Response) => {
   try {
-    const { name, mb_no, email, role } = req.body;
+    const { name, mb_no, email } = req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -19,11 +17,10 @@ const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: 
       return res.status(409).json({ errorMsg: "User with this email already registered", status: false });
     }
 
-    const newUser = new TempUser({
+    const newUser = new User({
       name,
       mb_no,
       email,
-      role,
     });
 
     await newUser.save();

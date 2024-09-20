@@ -1,4 +1,20 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+interface UserInterface extends Document {
+  name: string;
+  mb_no: string;
+  email: string;
+  society_code: string;
+  role: string;
+  flat_no: string;
+  flat?: mongoose.Types.ObjectId;
+  isVerified: boolean;
+  tempUserId?: mongoose.Types.ObjectId;
+  verifyToken?: string;
+  verifyTokenExpiry?: Date;
+  forgetPasswordToken?: string;
+  forgetPasswordTokenExpiry?: Date;
+}
 
 const userSchema = new mongoose.Schema(
   {
@@ -18,15 +34,13 @@ const userSchema = new mongoose.Schema(
     },
     society_code: {
       type: String,
-      // required: true,
     },
     role: {
       type: String,
-      required: true,
+      default: "user",
     },
     flat_no: {
       type: String,
-      // required: true,
     },
     flat: {
       type: mongoose.Schema.Types.ObjectId,
@@ -36,13 +50,25 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    verifyToken: String,
-    verifyTokenExpiry: Date,
-    forgetPasswordToken: String,
-    forgetPasswordTokenExpiry: Date,
+    tempUserId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TempUser",
+    },
+    verifyToken: {
+      type: String,
+    },
+    verifyTokenExpiry: {
+      type: Date,
+    },
+    forgetPasswordToken: {
+      type: String,
+    },
+    forgetPasswordTokenExpiry: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model<UserInterface>("User", userSchema);
 export default User;
