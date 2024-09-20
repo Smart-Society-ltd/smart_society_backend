@@ -12,6 +12,7 @@ import documentRoute from "./Routes/DocumentManagementRoute/documentRoutes.js";
 import neighbourRoute from "./Routes/NeighbourRoutes/neighbourRoutes.js";
 import announcementRoute from "./Routes/AnnonucementRoutes/announcementRoutes.js";
 import complaintRoute from "./Routes/ComplaintRoutes/complaintRoutes.js";
+import annualPlanRoute from "./Routes/AnnualPlanRoutes/annualPlanRoutes.js";
 
 dotenv.config();
 
@@ -43,3 +44,4 @@ app.use("/api/document", documentRoute);
 app.use("/api/neighbour", neighbourRoute);
 app.use("/api/announcement", announcementRoute);
 app.use("/api/complaint", complaintRoute);
+app.use("/api/annualactionplan", annualPlanRoute);
