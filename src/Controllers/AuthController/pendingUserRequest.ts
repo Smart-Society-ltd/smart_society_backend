@@ -57,6 +57,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     }
 
     user.isVerified = true;
+    user.role = "user";
 
     await assignFlat(user);
 
