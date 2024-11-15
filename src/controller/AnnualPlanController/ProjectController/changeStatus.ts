@@ -3,53 +3,40 @@ import User from "../../../models/AuthModels/userModel.js";
 import Society from "../../../models/AuthModels/societyModel.js";
 import Project from "../../../models/AnnualActionPlanModel/plansModel.js";
 import { Types } from "mongoose";
+import asyncHandler from './../../../utils/asynchandler.js';
+import ApiError from './../../../utils/api_error.js';
+import ApiResponse from './../../../utils/api_success';
 
 interface ProjectRequestBody {
   project_id: Types.ObjectId;
   status: "Planned" | "In Progress" | "Completed";
 }
 
-const changeStatus = async (
-  req: Request<{}, {}, ProjectRequestBody>,
-  res: Response
-) => {
-  try {
-    const { project_id, status } = req.body;
+const changeStatus = asyncHandler(async (req: Request, res: Response) => {
+  const { project_id, status } = req.body;
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
+  const loggedInUserId = req.user._id;
+  const user = await User.findById(loggedInUserId);
 
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const society = await Society.findOne({ society_code: user.society_code });
-    if (!society || !society.admin_ids.includes(user._id.toString())) {
-      return res.status(403).json({
-        errorMsg: "Only an admin is allowed to change project status",
-      });
-    }
-
-    const project = await Project.findById(project_id);
-    if (!project) {
-      return res.status(404).json({ errorMsg: "Project not found" });
-    }
-
-    project.status = status;
-    await project.save();
-
-    return res.status(200).json({
-      msg: "Project status updated successfully",
-      data: project,
-      status: true,
-    });
-  } catch (error) {
-    console.error("Error updating project status:", error);
-    return res.status(500).json({
-      errorMsg: "Failed to update project status",
-      error: error.message,
-    });
+  if (!user) {
+    throw new ApiError("User not found", 404);
   }
-};
+
+  const society = await Society.findOne({ society_code: user.society_code });
+
+  if (!society.admin_ids.includes(user._id.toString())) {
+    throw new ApiError("User is not authorized to raise announcement", 403);
+  }
+
+  const project = await Project.findById(project_id);
+  if (!project) {
+    throw new ApiError("Project not found", 404);
+  }
+
+  project.status = status;
+  await project.save();
+
+  res.status(200).json(new ApiResponse({ project }, "Project status updated successfully"));
+});
 
 export default changeStatus;

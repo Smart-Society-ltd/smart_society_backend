@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 
 interface AsyncHandler {
-    (fn: (req: Request, res: Response, next?: NextFunction) => Promise<void>): (req: Request, res: Response, next?: NextFunction) => Promise<void>;
+    <T = {}, U = {}, P = {}, Q = {}>(
+        fn: (req: Request<T, U, P, Q>, res: Response, next: NextFunction) => Promise<void>
+    ): (req: Request<T, U, P, Q>, res: Response, next: NextFunction) => Promise<void>;
 }
+
 
 const asyncHandler: AsyncHandler = (fn) => async (req, res, next) => {
     try {

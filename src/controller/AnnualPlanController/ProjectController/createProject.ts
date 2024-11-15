@@ -4,6 +4,10 @@ import Society from "../../../models/AuthModels/societyModel.js";
 import Plan from "../../../models/AnnualActionPlanModel/annualPlanModel.js";
 import Project from "../../../models/AnnualActionPlanModel/plansModel.js";
 import { Types } from "mongoose";
+import asyncHandler from './../../../utils/asynchandler';
+import authorizeUser from "src/utils/authorize_user.js";
+import ApiError from './../../../utils/api_error.js';
+import ApiResponse from "src/utils/api_success.js";
 
 interface ProjectRequestBody {
   annual_plan_id: Types.ObjectId;
@@ -16,68 +20,44 @@ interface ProjectRequestBody {
   priority: "Low" | "Medium" | "High";
 }
 
-const createProject = async (
+const createProject = asyncHandler(async (
   req: Request<{}, {}, ProjectRequestBody>,
   res: Response
 ) => {
-  try {
-    const {
-      annual_plan_id,
-      name,
-      description,
-      start_date,
-      end_date,
-      budget_allocation,
-      priority,
-    } = req.body;
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
+  await authorizeUser(req);
 
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
 
-    const society = await Society.findOne({ society_code: user.society_code });
+  const {
+    annual_plan_id,
+    name,
+    description,
+    start_date,
+    end_date,
+    budget_allocation,
+    priority,
+  } = req.body;
 
-    if (!society || !society.admin_ids.includes(user._id.toString())) {
-      return res
-        .status(403)
-        .json({
-          errorMsg: "Only an admin is allowed to create a project",
-        });
-    }
 
-    const annualPlan = await Plan.findById(annual_plan_id);
-    if (!annualPlan) {
-      return res.status(404).json({ errorMsg: "Annual Plan not found" });
-    }
-
-    const newProject = new Project({
-      annual_plan_id,
-      name,
-      description,
-      start_date,
-      end_date,
-      budget_allocation,
-      status: "Planned",
-      priority,
-    });
-
-    const savedProject = await newProject.save();
-
-    return res.status(201).json({
-      msg: "Project created successfully",
-      data: savedProject,
-      status: true,
-    });
-  } catch (error) {
-    console.error("Error creating project:", error);
-    return res.status(500).json({
-      errorMsg: "Failed to create project",
-      error: error.message,
-    });
+  const annualPlan = await Plan.findById(annual_plan_id);
+  if (!annualPlan) {
+    throw new ApiError("Annual Plan not found", 404);
   }
-};
+
+  const newProject = new Project({
+    annual_plan_id,
+    name,
+    description,
+    start_date,
+    end_date,
+    budget_allocation,
+    status: "Planned",
+    priority,
+  });
+
+  const savedProject = await newProject.save();
+
+  res.status(201).json(new ApiResponse({ project: savedProject }, "Project created successfully"));
+});
 
 export default createProject;
