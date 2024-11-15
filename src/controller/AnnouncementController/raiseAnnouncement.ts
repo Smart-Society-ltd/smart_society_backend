@@ -2,52 +2,46 @@ import { Request, Response } from "express";
 import User from "../../models/AuthModels/userModel.js";
 import Society from '../../models/AuthModels/societyModel.js';
 import Announcement from "../../models/AnnonucementModel/announcemenetModel.js";
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success';
 
-const raiseAnnouncement = async (req: Request, res: Response) => {
-  try {
-    const { title, content } = req.body;
+const raiseAnnouncement = asyncHandler(async (req: Request, res: Response) => {
+  const { title, content } = req.body;
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
+  const loggedInUserId = req.user._id;
+  const user = await User.findById(loggedInUserId);
 
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const society = await Society.findOne({ society_code: user.society_code });
-
-    if (!society.admin_ids.includes(user._id.toString())) {
-      return res
-        .status(403)
-        .json({ errorMsg: "Only admin is allowed to raise announcement" });
-    }
-
-    let photoUrl = null;
-    if (req.file) {
-      const fileKey = req.file.key;
-      const bucketName = req.file.bucket;
-
-      photoUrl = `https://${bucketName}.s3.amazonaws.com/${fileKey}`;
-    }
-
-    const newAnnouncement = new Announcement({
-      title,
-      content,
-      raised_by: user.name,
-      society_code: user.society_code,
-      photo: photoUrl,
-    });
-
-    await newAnnouncement.save();
-
-    res.status(201).json({
-      msg: "Announcement raised successfully",
-      announcement: newAnnouncement,
-    });
-  } catch (error) {
-    console.error("Error raising announcement:", error);
-    res.status(500).json({ errorMsg: "Error raising announcement" });
+  if (!user) {
+    throw new ApiError("User not found", 404);
   }
-};
+
+  const society = await Society.findOne({ society_code: user.society_code });
+
+  if (!society.admin_ids.includes(user._id.toString())) {
+    throw new ApiError("User is not authorized to raise announcement", 403);
+  }
+
+  let photoUrl = null;
+  if (req.file) {
+    const fileKey = (req.file as any).key;
+    const bucketName = (req.file as any).bucket;
+
+    photoUrl = `https://${bucketName}.s3.amazonaws.com/${fileKey}`;
+  }
+
+  const newAnnouncement = new Announcement({
+    title,
+    content,
+    raised_by: user.name,
+    society_code: user.society_code,
+    photo: photoUrl,
+  });
+
+  await newAnnouncement.save();
+
+  res.status(201).json(new ApiResponse({ announcement: newAnnouncement, }, "Announcement raised successfully"));
+
+});
 
 export default raiseAnnouncement;

@@ -2,36 +2,28 @@ import { Request, Response } from "express";
 import User from "../../../models/AuthModels/userModel.js";
 import Society from "../../../models/AuthModels/societyModel.js";
 import ActionPlan from "../../../models/AnnualActionPlanModel/annualPlanModel.js";
+import asyncHandler from './../../../utils/asynchandler.js';
+import ApiError from './../../../utils/api_error.js';
+import ApiResponse from './../../../utils/api_success';
 
-const getAnnualPlan = async (req: Request, res: Response) => {
-  try {
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
+const getAnnualPlan = asyncHandler(async (req: Request, res: Response) => {
+  const loggedInUserId = req.user._id;
+  const user = await User.findById(loggedInUserId);
 
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const society = await Society.findOne({ society_code: user.society_code });
-
-    if (!society) {
-      return res.status(404).json({ errorMsg: "Society does not exist" });
-    }
-
-    const plans = await ActionPlan.find({ society_code: user.society_code });
-
-    return res.status(200).json({
-      msg: "Annual Plan fetched successfully",
-      data: plans,
-      status: true,
-    });
-  } catch (error) {
-    console.error("Error fetching annual plan:", error);
-    return res.status(500).json({
-      errorMsg: "Failed to fetch annual plan",
-      error: error.message,
-    });
+  if (!user) {
+    throw new ApiError("User not found", 404);
   }
-};
+
+  const society = await Society.findOne({ society_code: user.society_code });
+
+  if (!society.admin_ids.includes(user._id.toString())) {
+    throw new ApiError("User is not authorized to raise announcement", 403);
+  }
+
+
+  const plans = await ActionPlan.find({ society_code: user.society_code });
+
+  res.status(200).json(new ApiResponse({ plans }, "Annual Plan fetched successfully"));
+})
 
 export default getAnnualPlan;
