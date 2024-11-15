@@ -7,10 +7,10 @@ const upload = multer({
     s3: s3,
     bucket: "announcementphoto",
     acl: "private",
-    metadata: (req, file, cb) => {
+    metadata: (req: any, file: any, cb: any) => {
       cb(null, { fieldName: file.fieldname });
     },
-    key: (req, file, cb) => {
+    key: (req: any, file: any, cb: any) => {
       const societyCode = req.user.society_code;
 
       const fileKey = `${societyCode}/${file.originalname}`;

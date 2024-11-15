@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../Models/AuthModels/userModel.js';
+import User from '../models/AuthModels/userModel.js';
 
 const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
@@ -14,7 +14,7 @@ const authenticateToken = async (req: Request, res: Response, next: NextFunction
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
 
     const user = await User.findById(decoded.userId);
-    
+
     if (!user) {
       return res.status(403).json({ errorMsg: 'Invalid user' });
     }
@@ -22,7 +22,7 @@ const authenticateToken = async (req: Request, res: Response, next: NextFunction
 
     next();
   } catch (error) {
-    return res.status(403).json({ errorMsg: 'Invalid token'});
+    return res.status(403).json({ errorMsg: 'Invalid token' });
   }
 };
 

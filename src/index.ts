@@ -1,47 +1,31 @@
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
-import authRoutes from "./Routes/AuthRoutes/authRoutes.js";
-import maintenanceRoute from "./Routes/MaintenanceRoutes/maintenanceRoutes.js";
-import visitorRoute from "./Routes/VisitorManagement/visitorManagement.js";
-import userRoute from "./Routes/UserRoutes/userRoutes.js";
-import societyPricing from "./Routes/SocietyRoutes/societyRoutes.js";
-import documentRoute from "./Routes/DocumentManagementRoute/documentRoutes.js";
-import neighbourRoute from "./Routes/NeighbourRoutes/neighbourRoutes.js";
-import announcementRoute from "./Routes/AnnonucementRoutes/announcementRoutes.js";
-import complaintRoute from "./Routes/ComplaintRoutes/complaintRoutes.js";
-import annualPlanRoute from "./Routes/AnnualPlanRoutes/annualPlanRoutes.js";
+import connectMongodb from './db/config.js';
+import app from "./app.js";
 
-dotenv.config();
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.listen(process.env.PORT, () => {
-  console.log("Server started successfully");
+dotenv.config({
+  path: './.env'
 });
 
-main().catch((err) => console.log(err));
 
-async function main() {
-  // await mongoose.connect(process.env.DB_URI);
-  await mongoose.connect(process.env.DB_URI_ATLAS);
-  console.log("Successfully conected to database");
+const initialize = async () => {
+  try {
+
+    await connectMongodb();
+
+    app.on('error', (error) => {
+      console.log(error);
+    })
+    const port = process.env.PORT || 5000;
+
+    app.listen(port, () => {
+      console.log(`Server is running at http://localhost:${port}`)
+    })
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-app.use("/api/auth", authRoutes);
-app.use("/api/maintenance", maintenanceRoute);
-app.use("/api/user", userRoute);
-app.use("/api/society", societyPricing);
-app.use("/api/visitor", visitorRoute);
-app.use("/api/document", documentRoute);
-app.use("/api/neighbour", neighbourRoute);
-app.use("/api/announcement", announcementRoute);
-app.use("/api/complaint", complaintRoute);
-app.use("/api/annualactionplan", annualPlanRoute);
+initialize();
+
+
+

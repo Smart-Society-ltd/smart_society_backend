@@ -1,7 +1,7 @@
 import express from "express";
 
-import getNeighbour from "../../Controllers/NeighbourController/getNeighbour.js";
-import authenticateToken from "../../MiddleWare/authMiddlewar.js";
+import getNeighbour from "../../controller/NeighbourController/getNeighbour.js";
+import authenticateToken from "../../middleware/authMiddlewar.js";
 
 const router = express.Router();
 

@@ -1,13 +1,13 @@
 import express from "express";
-import createAnnualPlan from "../../Controllers/AnnualPlanController/AnnualActionPlan/createAnnualPlan.js";
-import createProject from "../../Controllers/AnnualPlanController/ProjectController/createProject.js";
-import getAnnualPlan from "../../Controllers/AnnualPlanController/AnnualActionPlan/getActionPlans.js";
-import getProject from "../../Controllers/AnnualPlanController/ProjectController/getProject.js";
-import distributeWork from "../../Controllers/AnnualPlanController/ProjectController/workDistribution.js";
-import getParticularProject from "../../Controllers/AnnualPlanController/ProjectController/getParticularProject.js";
-import changeStatus from "../../Controllers/AnnualPlanController/ProjectController/changeStatus.js";
+import createAnnualPlan from "../../controller/AnnualPlanController/AnnualActionPlan/createAnnualPlan.js";
+import createProject from "../../controller/AnnualPlanController/ProjectController/createProject.js";
+import getAnnualPlan from "../../controller/AnnualPlanController/AnnualActionPlan/getActionPlans.js";
+import getProject from "../../controller/AnnualPlanController/ProjectController/getProject.js";
+import distributeWork from "../../controller/AnnualPlanController/ProjectController/workDistribution.js";
+import getParticularProject from "../../controller/AnnualPlanController/ProjectController/getParticularProject.js";
+import changeStatus from "../../controller/AnnualPlanController/ProjectController/changeStatus.js";
 
-import authenticateToken from "../../MiddleWare/authMiddlewar.js";
+import authenticateToken from "../../middleware/authMiddlewar.js";
 
 const router = express.Router();
 

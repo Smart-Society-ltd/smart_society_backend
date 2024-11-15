@@ -1,13 +1,13 @@
 import express from "express";
 
-import folderCreation from "../../Controllers/DocumentController/folderCreation.js";
-import uploadDocument from "../../Controllers/DocumentController/uploadDocument.js";
-import getFolders from "../../Controllers/DocumentController/getFolders.js";
-import getDocuments from "../../Controllers/DocumentController/getDocuments.js";
-import deleteFile from "../../Controllers/DocumentController/deleteFile.js";
+import folderCreation from "../../controller/DocumentController/folderCreation.js";
+import uploadDocument from "../../controller/DocumentController/uploadDocument.js";
+import getFolders from "../../controller/DocumentController/getFolders.js";
+import getDocuments from "../../controller/DocumentController/getDocuments.js";
+import deleteFile from "../../controller/DocumentController/deleteFile.js";
 
-import authenticateToken from "../../MiddleWare/authMiddlewar.js";
-import { uploadPhotos } from "../../MiddleWare/s3ForDocument.js";
+import authenticateToken from "../../middleware/authMiddlewar.js";
+import { uploadPhotos } from "../../middleware/s3ForDocument.js";
 
 const router = express.Router();
 

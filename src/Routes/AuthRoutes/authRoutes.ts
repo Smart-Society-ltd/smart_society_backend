@@ -1,14 +1,14 @@
 import express from "express";
-import sendOtp from "../../Controllers/OtpController/sendOtp.js";
-import verifyOtp from "../../Controllers/OtpController/verifyOtp.js";
-import tempRegisterSociety from "../../Controllers/AuthController/tempRegisterSociety.js";
-import { listPendingRegistrations, processRegistration } from "../../Controllers/AuthController/pendingSocietyRequest.js";
-import userLogin from "../../Controllers/AuthController/userLogin.js";
-import userRegister from "../../Controllers/AuthController/userRegister.js";
-import { pendingUsers, processUsers } from "../../Controllers/AuthController/pendingUserRequest.js";
-import assignSociety from "../../Controllers/AuthController/societyAssign.js";
+import sendOtp from "../../controller/OtpController/sendOtp.js";
+import verifyOtp from "../../controller/OtpController/verifyOtp.js";
+import tempRegisterSociety from "../../controller/AuthController/tempRegisterSociety.js";
+import { listPendingRegistrations, processRegistration } from "../../controller/AuthController/pendingSocietyRequest.js";
+import userLogin from "../../controller/AuthController/userLogin.js";
+import userRegister from "../../controller/AuthController/userRegister.js";
+import { pendingUsers, processUsers } from "../../controller/AuthController/pendingUserRequest.js";
+import assignSociety from "../../controller/AuthController/societyAssign.js";
 
-import authMiddleware from '../../MiddleWare/authMiddlewar.js';
+import authMiddleware from '../../middleware/authMiddlewar.js';
 
 const router = express.Router();
 

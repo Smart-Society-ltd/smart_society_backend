@@ -1,12 +1,12 @@
 import express from "express";
-import raiseComplaint from "../../Controllers/ComplaintController/raiseComplaint.js";
-import getUnresolvedComplaints from "../../Controllers/ComplaintController/getUnresolveComplaints.js";
-import resolveComplaint from "../../Controllers/ComplaintController/resolveComplaint.js";
-import getResolvedComplaints from "../../Controllers/ComplaintController/getResolveComplaints.js";
-import deleteComplaint from "../../Controllers/ComplaintController/deleteComplaint.js";
+import raiseComplaint from "../../controller/ComplaintController/raiseComplaint.js";
+import getUnresolvedComplaints from "../../controller/ComplaintController/getUnresolveComplaints.js";
+import resolveComplaint from "../../controller/ComplaintController/resolveComplaint.js";
+import getResolvedComplaints from "../../controller/ComplaintController/getResolveComplaints.js";
+import deleteComplaint from "../../controller/ComplaintController/deleteComplaint.js";
 
-import s3ForComplaint from "../../MiddleWare/s3ForComplaints.js";
-import authenticateToken from "../../MiddleWare/authMiddlewar.js";
+import s3ForComplaint from "../../middleware/s3ForComplaints.js";
+import authenticateToken from "../../middleware/authMiddlewar.js";
 
 const router = express.Router();
 

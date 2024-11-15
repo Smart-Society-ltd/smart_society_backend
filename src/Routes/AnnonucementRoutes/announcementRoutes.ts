@@ -1,10 +1,10 @@
 import express from "express";
-import raiseAnnouncement from "../../Controllers/AnnouncementController/raiseAnnouncement.js";
-import getAnnouncement from "../../Controllers/AnnouncementController/getAnnonucement.js";
-import deleteAnnouncement from "../../Controllers/AnnouncementController/deleteAnnouncement.js";
+import raiseAnnouncement from "../../controller/AnnouncementController/raiseAnnouncement.js";
+import getAnnouncement from "../../controller/AnnouncementController/getAnnonucement.js";
+import deleteAnnouncement from "../../controller/AnnouncementController/deleteAnnouncement.js";
 
-import s3ForAnnouncement from "../../MiddleWare/s3ForAnnouncement.js";
-import authenticateToken from "../../MiddleWare/authMiddlewar.js";
+import s3ForAnnouncement from "../../middleware/s3ForAnnouncement.js";
+import authenticateToken from "../../middleware/authMiddlewar.js";
 
 const router = express.Router();
 
