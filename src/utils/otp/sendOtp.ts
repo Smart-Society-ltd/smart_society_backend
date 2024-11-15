@@ -5,7 +5,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = Twilio(accountSid, authToken);
 
-const sendOTP = async (mb_no) => {
+const sendOTP = async (mb_no: string) => {
     try {
         const message = await client.messages.create({
             body: `Your SmartSociety OTP is ${otp}`,

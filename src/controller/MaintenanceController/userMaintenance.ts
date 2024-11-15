@@ -7,13 +7,13 @@ const getUserMaintenance = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     if (!userId) {
-      return res.status(400).json({ msg: 'userId is required' });
+      res.status(400).json({ msg: 'userId is required' });
     }
 
     const maintenance = await Maintenance.findOne({ user_id: userId });
 
     if (!maintenance) {
-      return res.status(404).json({ msg: 'Maintenance record not found' });
+      res.status(404).json({ msg: 'Maintenance record not found' });
     }
 
     res.status(200).json({ data: maintenance });

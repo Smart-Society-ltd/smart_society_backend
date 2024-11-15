@@ -18,15 +18,14 @@ const upload = multer({
     metadata: (req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
     },
-    key: (req, file, cb) => {
+    key: (req: any, file, cb) => {
 
-      const societyCode = req.body.society_code || 'default';
+      const societyCode = (req.body as any).society_code || 'default';
 
-      const folder = req.body.folder_name;
+      const folder = (req.body as any).folder_name;
 
-      const fileKey = `${societyCode}/${folder}/${
-        file.originalname
-      }`;
+      const fileKey = `${societyCode}/${folder}/${file.originalname
+        }`;
       cb(null, fileKey);
     },
   }),
@@ -34,4 +33,4 @@ const upload = multer({
 
 const uploadPhotos = upload.single("file");
 
-export {uploadPhotos, s3};
+export { uploadPhotos, s3 };

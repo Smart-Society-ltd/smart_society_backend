@@ -11,13 +11,13 @@ const FolderCreation = async (req: Request, res: Response) => {
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const society = await Society.findOne({ society_code: user.society_code });
 
     if (!society.admin_ids.includes(user._id.toString())) {
-      return res
+      res
         .status(404)
         .json({ errorMsg: "Only admin is allow to create folder" });
     }

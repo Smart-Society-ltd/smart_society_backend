@@ -14,7 +14,7 @@ const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.status(409).json({ errorMsg: "User with this email already registered", status: false });
+      res.status(409).json({ errorMsg: "User with this email already registered", status: false });
     }
 
     const newUser = new User({
@@ -25,10 +25,10 @@ const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: 
 
     await newUser.save();
 
-    return res.status(200).json({ User: newUser, status: true });
+    res.status(200).json({ User: newUser, status: true });
   } catch (error) {
     console.error('Error registering user:', error);
-    return res.status(500).json({ errorMsg: "Failed to register user", error: error.message });
+    res.status(500).json({ errorMsg: "Failed to register user", error: error.message });
   }
 };
 

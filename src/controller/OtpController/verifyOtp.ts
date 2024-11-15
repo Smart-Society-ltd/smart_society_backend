@@ -4,6 +4,7 @@ import generateOtp from "../../utils/otp/generateOtp.js";
 
 interface VerifyOtpRequestBody {
   otp: string;
+  mb_no: string;
 }
 
 const verifyOtp = async (
@@ -14,11 +15,11 @@ const verifyOtp = async (
     const { mb_no, otp } = req.body;
     // const generatedOtp = await generateOtp(otp);
 
-    if (otp != 123456) {
-      return res.status(500).json({ msg: "Otp is Invalid", status: false });
+    if (otp != '123456') {
+      res.status(500).json({ msg: "Otp is Invalid", status: false });
     }
 
-    return res
+    res
       .status(200)
       .json({ msg: "Otp verified Successfully", status: true });
   } catch { }

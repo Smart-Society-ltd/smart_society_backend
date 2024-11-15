@@ -7,7 +7,7 @@ const authenticateToken = async (req: Request, res: Response, next: NextFunction
   const token = authHeader && authHeader.split(' ')[1];
 
   if (token == null) {
-    return res.status(401).json({ error: 'No token provided' });
+    res.status(401).json({ error: 'No token provided' });
   }
 
   try {
@@ -16,13 +16,13 @@ const authenticateToken = async (req: Request, res: Response, next: NextFunction
     const user = await User.findById(decoded.userId);
 
     if (!user) {
-      return res.status(403).json({ errorMsg: 'Invalid user' });
+      res.status(403).json({ errorMsg: 'Invalid user' });
     }
     req.user = user;
 
     next();
   } catch (error) {
-    return res.status(403).json({ errorMsg: 'Invalid token' });
+    res.status(403).json({ errorMsg: 'Invalid token' });
   }
 };
 

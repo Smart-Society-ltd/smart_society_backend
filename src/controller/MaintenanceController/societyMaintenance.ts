@@ -7,15 +7,15 @@ interface SocietyMaintenanceRequestParams {
 }
 
 const getSocietyMaintenance = async (
-  req: Request<SocietyMaintenanceRequestParams>,
+  req: Request<{}, {}, SocietyMaintenanceRequestParams>,
   res: Response
 ) => {
   try {
-    const { society_code } = req.params;
+    const { society_code } = req.params as { readonly society_code: string };
 
     const checkSocietyCode = await Society.findOne({ society_code: society_code });
     if (!checkSocietyCode) {
-      return res.status(400).json({
+      res.status(400).json({
         errorMsg: "Invalid Society Id",
         status: false,
       });
@@ -35,14 +35,14 @@ const getSocietyMaintenance = async (
       },
     ]);
 
-    return res.status(200).json({
+    res.status(200).json({
       msg: "Maintenance data fetched successfully",
       status: true,
       result,
     });
   } catch (error) {
     console.error("Error while fetching maintenance data:", error);
-    return res
+    res
       .status(500)
       .json({ errorMsg: "Failed to fetch maintenance data", error: error.message });
   }

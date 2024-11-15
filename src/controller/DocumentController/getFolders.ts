@@ -7,13 +7,13 @@ const getFolders = async (req: Request, res: Response) => {
     const loggedInUserId = req.user?._id;
 
     if (!loggedInUserId) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const society_code = user.society_code;
@@ -21,7 +21,7 @@ const getFolders = async (req: Request, res: Response) => {
     const folders = await Folder.find({ society_code }).select("folder_name");
 
     if (folders.length === 0) {
-      return res.status(200).json({ msg: "No folders available" });
+      res.status(200).json({ msg: "No folders available" });
     }
 
     res.status(200).json({ msg: "Folders fetched successfully", folders });

@@ -11,19 +11,19 @@ const raiseComplaint = async (req: Request, res: Response) => {
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const society = await Society.findOne({ society_code: user.society_code });
 
     if (!society) {
-      return res.status(404).json({ errorMsg: "Society not found" });
+      res.status(404).json({ errorMsg: "Society not found" });
     }
 
     let photoUrl = null;
     if (req.file) {
-      const fileKey = req.file.key;
-      const bucketName = req.file.bucket;
+      const fileKey = (req.file as any).key;
+      const bucketName = (req.file as any).bucket;
 
       photoUrl = `https://${bucketName}.s3.amazonaws.com/${fileKey}`;
     }

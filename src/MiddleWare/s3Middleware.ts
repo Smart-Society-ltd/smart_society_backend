@@ -10,7 +10,7 @@ const upload = multer({
     metadata: (req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
     },
-    key: (req, file, cb) => {
+    key: (req: any, file, cb) => {
       const societyCode = req.body.society_code || "default";
 
       const date = new Date().toISOString().split("T")[0];

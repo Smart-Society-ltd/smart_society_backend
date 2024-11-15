@@ -11,41 +11,41 @@ const pendingCheckin = async (req: Request, res: Response) => {
       .sort({ createdAt: -1 });
 
     if (pendingCheckin.length === 0) {
-      return res.status(200).json({ msg: "No pending checkin request" });
+      res.status(200).json({ msg: "No pending checkin request" });
     }
 
     const loggedInUserId = req.user?._id;
 
     if (!loggedInUserId) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      return res.status(404).json({ errorMsg: "User not found" });
+      res.status(404).json({ errorMsg: "User not found" });
     }
 
     if (user.flat_no != flat_no) {
-      return res.status(404).json({ errorMsg: "User belongs to another flat" });
+      res.status(404).json({ errorMsg: "User belongs to another flat" });
     }
 
-    return res.status(200).json({ data: pendingCheckin });
+    res.status(200).json({ data: pendingCheckin });
   } catch (error) {
     console.error("Error listing pending checkin request:", error);
-    return res.status(500).json({
+    res.status(500).json({
       errorMsg: "Failed to list checkin request",
       error: error.message,
     });
   }
 };
 
-const processCheckin = async (req: Request<{ id: string }>, res: Response) => {
+const processCheckin: (req: Request<{ id: string }>, res: Response) => Promise<void> = async (req, res) => {
   try {
     const { id } = req.body;
     const checkinRequest = await tempVisitor.findOne({ _id: id });
     if (!checkinRequest) {
-      return res
+      res
         .status(404)
         .json({ errorMsg: "Checkin request not found", status: false });
     }
@@ -67,13 +67,13 @@ const processCheckin = async (req: Request<{ id: string }>, res: Response) => {
     const loggedInUserId = req.user?._id;
 
     if (!loggedInUserId) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      return res.status(404).json({ errorMsg: "User not found" });
+      res.status(404).json({ errorMsg: "User not found" });
     }
 
     const newCheckin = new Visitor({
@@ -94,14 +94,14 @@ const processCheckin = async (req: Request<{ id: string }>, res: Response) => {
 
     await tempVisitor.findByIdAndDelete(id);
 
-    return res.status(200).json({
+    res.status(200).json({
       msg: "Checkin request accepted successfully",
       newCheckin,
       status: true,
     });
   } catch (error) {
     console.error("Error processing checkin request:", error);
-    return res.status(500).json({
+    res.status(500).json({
       errorMsg: "Failed to process checkin request",
       error: error.message,
     });

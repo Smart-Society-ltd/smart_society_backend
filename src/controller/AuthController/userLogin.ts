@@ -15,24 +15,24 @@ const userLogin = async (req: Request<{}, {}, UserLoginRequestBody>, res: Respon
     const user = await User.findOne({ mb_no });
 
     if (!user) {
-      return res.status(404).json({ errorMsg: "User with this number does not exist", status: false });
+      res.status(404).json({ errorMsg: "User with this number does not exist", status: false });
     }
 
     const otpEntry = await OtpModel.findOne({ mb_no });
 
     if (!otpEntry) {
-      return res.status(400).json({ errorMsg: "OTP is Invalid", status: false });
+      res.status(400).json({ errorMsg: "OTP is Invalid", status: false });
     }
 
     if (otpEntry.otp !== otp) {
-      return res.status(400).json({ errorMsg: "Invalid OTP", status: false });
+      res.status(400).json({ errorMsg: "Invalid OTP", status: false });
     }
 
     const token = generateToken(user);
 
     await OtpModel.deleteOne({ mb_no });
 
-    return res.status(200).json({
+    res.status(200).json({
       msg: "Login successful",
       status: true,
       user,
@@ -40,7 +40,7 @@ const userLogin = async (req: Request<{}, {}, UserLoginRequestBody>, res: Respon
     });
   } catch (error) {
     console.error('Error logging in user:', error);
-    return res.status(500).json({ errorMsg: "Failed to login user", error: error.message });
+    res.status(500).json({ errorMsg: "Failed to login user", error: error.message });
   }
 };
 

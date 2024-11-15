@@ -8,6 +8,7 @@ interface CheckinRequestBody {
   visiting_to: string;
   visit_purpose: string;
   visitor_add: string;
+  visitor_address: string;
   flat_no: string;
   no_of_people: string;
 }
@@ -31,7 +32,7 @@ const checkIn = async (
     } = req.body;
 
     if (!file) {
-      return res.status(404).json({ errorMsg: "No file uploaded" });
+      res.status(404).json({ errorMsg: "No file uploaded" });
     }
 
     const tempCheckIn = new Visitor({
@@ -44,8 +45,8 @@ const checkIn = async (
       visitor_address,
       visitor_contact_no,
       checkin_date: Date.now(),
-      image_url: file.location,
-      image_key: file.key,
+      image_url: (file as any).location,
+      image_key: (file as any).key,
     });
 
     const tempCheckInData = await tempCheckIn.save();

@@ -10,14 +10,14 @@ const deleteComplaint = async (req: Request, res: Response) => {
     const { id } = req.body;
 
     if (!id) {
-      return res.status(400).json({ errorMsg: "Complaint ID is required" });
+      res.status(400).json({ errorMsg: "Complaint ID is required" });
     }
 
     const loggedInUserId = req.user._id;
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const society = await Society.findOne({ society_code: user.society_code });
@@ -25,11 +25,11 @@ const deleteComplaint = async (req: Request, res: Response) => {
     const complaint = await Complaint.findById(id);
 
     if (!complaint) {
-      return res.status(404).json({ errorMsg: "Complaints not found" });
+      res.status(404).json({ errorMsg: "Complaints not found" });
     }
 
     if (complaint.raised_by != user.name) {
-      return res
+      res
         .status(404)
         .json({ errorMsg: "Only person who raised the complaint can delete complaint" });
     }
@@ -47,7 +47,7 @@ const deleteComplaint = async (req: Request, res: Response) => {
         );
       } catch (err) {
         console.error("Error deleting file from S3:", err);
-        return res
+        res
           .status(500)
           .json({ errorMsg: "Error deleting file from S3" });
       }

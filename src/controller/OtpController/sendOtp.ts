@@ -15,7 +15,7 @@ const sendOtp = async (
     const { mb_no } = req.body;
 
     if (!mb_no) {
-      return res
+       res
         .status(500)
         .json({ errorMsg: "Mobile no is required to send otp" });
     }
@@ -27,10 +27,10 @@ const sendOtp = async (
 
     await newOtpRegistration.save();
 
-    return res.status(200).json({ msg: "OTP sent successfully", otp });
+     res.status(200).json({ msg: "OTP sent successfully", otp });
   } catch (error) {
     console.error("Error sending OTP:", error);
-    return res
+     res
       .status(500)
       .json({ errorMsg: "Failed to send OTP", error: error.message });
   }

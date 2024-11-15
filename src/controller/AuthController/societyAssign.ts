@@ -9,6 +9,7 @@ interface SocietyAssignRequestBody {
   flat_no: string;
   floor_no: string;
   flat_type: string;
+  id: string;
 }
 
 const assignSociety = async (
@@ -21,7 +22,7 @@ const assignSociety = async (
     const user = await User.findOne({ _id: id });
 
     if (!user) {
-      return res
+      res
         .status(404)
         .json({ errorMsg: "User does not exist", status: false });
     }
@@ -29,7 +30,7 @@ const assignSociety = async (
     const society = await Society.findOne({ society_code });
 
     if (!society) {
-      return res.status(404).json({ errorMsg: "Invalid Society Code" });
+      res.status(404).json({ errorMsg: "Invalid Society Code" });
     }
 
     const admin_id = society.admin_ids[0];
@@ -49,7 +50,7 @@ const assignSociety = async (
     user.tempUserId = newTempUser._id;
 
     await user.save();
-    return res.status(200).json({
+    res.status(200).json({
       msg: "Request sent to admin successfully",
       data: {
         admin_name: admin.name,
@@ -60,7 +61,7 @@ const assignSociety = async (
     });
   } catch (error) {
     console.error("Error registering user:", error);
-    return res
+    res
       .status(500)
       .json({ errorMsg: "Failed to register user", error: error.message });
   }

@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
-import User from "../../../models/AuthModels/userModel.js";
-import Society from "../../../models/AuthModels/societyModel.js";
 import Project from "../../../models/AnnualActionPlanModel/plansModel.js";
 import { Types } from "mongoose";
+import asyncHandler from './../../../utils/asynchandler.js';
+import ApiError from './../../../utils/api_error.js';
+import authorizeUser from './../../../utils/authorize_user.js';
+import ApiResponse from './../../../utils/api_success.js';
 
 interface WorkDistributionRequestBody {
   project_id: Types.ObjectId;
@@ -10,39 +12,18 @@ interface WorkDistributionRequestBody {
   work_distribution: Types.ObjectId[];
 }
 
-const distributeWork = async (
-  req: Request<{}, {}, WorkDistributionRequestBody>,
-  res: Response
-) => {
-  try {
+const distributeWork = asyncHandler(
+  async (req: Request<{}, {}, WorkDistributionRequestBody>, res: Response) => {
     const { project_id, responsible_person, work_distribution } = req.body;
-
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
-
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const society = await Society.findOne({ society_code: user.society_code });
-    if (!society || !society.admin_ids.includes(user._id.toString())) {
-      return res.status(403).json({
-        errorMsg: "Only an admin is allowed to distribute work",
-      });
-    }
+    await authorizeUser(req);
 
     const project = await Project.findById(project_id);
     if (!project) {
-      return res.status(404).json({ errorMsg: "Project not found" });
+      throw new ApiError("Project not found", 404);
     }
 
     if (project.work_distribution.length != 0) {
-      return res
-        .status(404)
-        .json({
-          errorMsg:
-            "Work distribution for this project has already been completed.",
-        });
+      throw new ApiError("Work already distributed", 400);
     }
 
     project.responsible_person = responsible_person;
@@ -50,18 +31,8 @@ const distributeWork = async (
 
     await project.save();
 
-    return res.status(200).json({
-      msg: "Work distributed successfully",
-      data: project,
-      status: true,
-    });
-  } catch (error) {
-    console.error("Error distributing work:", error);
-    return res.status(500).json({
-      errorMsg: "Failed to distribute work",
-      error: error.message,
-    });
+    res.status(200).json(new ApiResponse({ project }, "Work distributed successfully"));
   }
-};
+)
 
 export default distributeWork;

@@ -9,7 +9,7 @@ const getUnresolvedComplaints = async (req: Request, res: Response) => {
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const society = await Society.findOne({ society_code: user.society_code });
@@ -20,7 +20,7 @@ const getUnresolvedComplaints = async (req: Request, res: Response) => {
     }).sort({ createdAt: -1 });
 
     if (complaints.length === 0) {
-      return res.status(200).json({
+      res.status(200).json({
         msg: "No complaints found",
         complaints: [],
       });

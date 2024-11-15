@@ -14,21 +14,21 @@ const pendingUsers = async (req: Request, res: Response) => {
     const user = await User.findById(loggedInUserId);
 
     if (!user || society_code != user.society_code) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const pendingUsers = await User.find({ society_code, isVerified: false })
       .populate('tempUserId', 'flat_type floor_no');
 
     if (pendingUsers.length === 0) {
-      return res
+      res
         .status(200)
         .json({ msg: "No pending users found for the given society code." });
     }
-    return res.status(200).json({ data: pendingUsers });
+    res.status(200).json({ data: pendingUsers });
   } catch (error) {
     console.error("Error listing pending registrations:", error);
-    return res.status(500).json({
+    res.status(500).json({
       errorMsg: "Failed to list pending registrations",
       error: error.message,
     });
@@ -42,7 +42,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     const user = await User.findOne({ _id: id });
 
     if (!tempUser || !user) {
-      return res.status(404).json({
+      res.status(404).json({
         errorMsg: "Registration request not found",
         status: false,
       });
@@ -53,7 +53,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     const society = await Society.findOne({ society_code: loggedInuser.society_code });
 
     if (!society) {
-      return res.status(404).json({ errorMsg: "Society not found" });
+      res.status(404).json({ errorMsg: "Society not found" });
     }
 
     user.isVerified = true;
@@ -66,7 +66,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
 
     await TempUser.findOneAndDelete({ user_id: id });
 
-    return res.status(200).json({
+    res.status(200).json({
       msg: "User registered successfully",
       newUser: savedUser,
       status1: true,
@@ -74,7 +74,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     });
   } catch (error) {
     console.error("Error processing registration:", error);
-    return res.status(500).json({
+    res.status(500).json({
       errorMsg: "Failed to process registration",
       error: error.message,
     });

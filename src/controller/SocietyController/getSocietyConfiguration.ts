@@ -17,11 +17,11 @@ const getSocietyConfiguration = async (
 
     const user = await User.findById(loggedInUserId);
     if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     // if(user.role != 'admin'){
-    //     return res.status(404).json({ errorMsg: "Only Admin can delete the files" });
+    //      res.status(404).json({ errorMsg: "Only Admin can delete the files" });
     // }
 
     const society = await Society.findOne({ society_code: user.society_code });

@@ -14,15 +14,15 @@ const getUser = async (
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-      return res.status(401).json({ errorMsg: "Authentication token missing" });
+      res.status(401).json({ errorMsg: "Authentication token missing" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findById(decoded.userId).select("-password");
 
     if (!user) {
-      return res.status(404).json({ errorMsg: "User not found" });
+      res.status(404).json({ errorMsg: "User not found" });
     }
 
     res.json(user);

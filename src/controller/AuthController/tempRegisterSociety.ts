@@ -34,7 +34,7 @@ const tempRegisterSociety = async (
     const existingUser2 = await User.findOne({ email });
 
     if (existingUser1 || existingUser2) {
-      return res
+      res
         .status(409)
         .json({ msg: "User with this email already exists", status: false });
     }
@@ -67,7 +67,7 @@ const tempRegisterSociety = async (
       society_pincode: savedRegistration.society_pincode,
     };
 
-    return res.status(200).json({
+    res.status(200).json({
       msg: "Registration request submitted successfully",
       status: true,
       data: {
@@ -77,7 +77,7 @@ const tempRegisterSociety = async (
     });
   } catch (error) {
     console.error("Error submitting registration request:", error);
-    return res.status(500).json({
+    res.status(500).json({
       errorMsg: "Failed to submit registration request",
       error: error.message,
     });

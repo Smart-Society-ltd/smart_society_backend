@@ -11,28 +11,28 @@ const deleteFile = async (req: Request, res: Response) => {
 
     const user = await User.findById(loggedInUserId);
     if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const society_code = user.society_code;
     if (user.society_code != society_code) {
-      return res.status(404).json({ errorMsg: "User is from another society" });
+      res.status(404).json({ errorMsg: "User is from another society" });
     }
 
     if (user.role != 'admin') {
-      return res.status(404).json({ errorMsg: "Only Admin can delete the files" });
+      res.status(404).json({ errorMsg: "Only Admin can delete the files" });
     }
 
     const folder = await Folder.findOne({ society_code, folder_name });
 
     if (!folder) {
-      return res.status(404).json({ errorMsg: "Folder not found" });
+      res.status(404).json({ errorMsg: "Folder not found" });
     }
 
     const fileIndex = folder.files.findIndex(file => file.fileName === fileName);
 
     if (fileIndex === -1) {
-      return res.status(404).json({ errorMsg: "File not found" });
+      res.status(404).json({ errorMsg: "File not found" });
     }
 
     const fileToDelete = folder.files[fileIndex];

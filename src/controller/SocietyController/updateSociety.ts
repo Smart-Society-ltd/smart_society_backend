@@ -9,13 +9,13 @@ const updateSociety = async (req: Request, res: Response) => {
     const loggedInUser = await User.findById(loggedInUserId);
 
     if (!loggedInUser || loggedInUser.role != 'admin') {
-      return res.status(403).json({ errorMsg: "Unauthorized: Only Admin can update Society Details" });
+      res.status(403).json({ errorMsg: "Unauthorized: Only Admin can update Society Details" });
     }
 
     const society = await Society.findOne({ society_code: req.body.society_code });
 
     if (!society) {
-      return res.status(404).json({ errorMsg: "Society not found" });
+      res.status(404).json({ errorMsg: "Society not found" });
     }
 
     Object.assign(society, req.body.updateFields);

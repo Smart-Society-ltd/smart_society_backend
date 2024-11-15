@@ -23,19 +23,19 @@ const uploadDocument = async (
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const society = await Society.findOne({ society_code: user.society_code });
 
     if (!society.admin_ids.includes(user._id.toString())) {
-      return res
+      res
         .status(404)
         .json({ errorMsg: "Only admin is allow to upload file" });
     }
 
     if (!file) {
-      return res.status(404).json({ errorMsg: "No file uploaded" });
+      res.status(404).json({ errorMsg: "No file uploaded" });
     }
 
     const society_code = user.society_code;
@@ -46,12 +46,12 @@ const uploadDocument = async (
     });
 
     if (!folder) {
-      return res.status(404).json({ errorMsg: "Folder not found" });
+      res.status(404).json({ errorMsg: "Folder not found" });
     }
 
     folder.files.push({
       fileName: file.originalname,
-      filePath: file.location,
+      filePath: (file as any).location,
       fileType: file.mimetype,
       fileSize: file.size,
       uploadDate: new Date(),

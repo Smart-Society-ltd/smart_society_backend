@@ -43,10 +43,10 @@ const listPendingRegistrations = async (req: Request, res: Response) => {
   try {
     const pendingRegistrations = await tempSociety.find();
 
-    return res.status(200).json({ data: pendingRegistrations });
+    res.status(200).json({ data: pendingRegistrations });
   } catch (error) {
     console.error("Error listing pending registrations:", error);
-    return res.status(500).json({
+    res.status(500).json({
       errorMsg: "Failed to list pending registrations",
       error: error.message,
     });
@@ -61,7 +61,7 @@ const processRegistration = async (
     const { id } = req.body;
     const tempRegistration = await tempSociety.findOne({ _id: id });
     if (!tempRegistration) {
-      return res
+      res
         .status(404)
         .json({ msg: "Registration request not found", status: false });
     }
@@ -111,7 +111,7 @@ const processRegistration = async (
     const savedSociety = await newSociety.save();
     await tempSociety.findByIdAndDelete(id);
 
-    return res.status(200).json({
+    res.status(200).json({
       msg: "Society Registered Successfully",
       status: true,
       Admin: savedAdmin,
@@ -119,7 +119,7 @@ const processRegistration = async (
     });
   } catch (error) {
     console.error("Error processing registration:", error);
-    return res.status(500).json({
+    res.status(500).json({
       errorMsg: "Failed to process registration",
       error: error.message,
     });

@@ -5,9 +5,9 @@ import { Document, Types } from 'mongoose';
 //   username: String;
 // }
 
-const generateToken = (user) => {
+const generateToken = (user: any) => {
   return jwt.sign(
-    { userId: user._id }, 
+    { userId: user._id },
     process.env.JWT_SECRET
   );
 };

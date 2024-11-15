@@ -11,23 +11,23 @@ const resolveComplaint = async (req: Request, res: Response) => {
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const society = await Society.findOne({ society_code: user.society_code });
 
     if (!society) {
-      return res.status(404).json({ errorMsg: "Society not found" });
+      res.status(404).json({ errorMsg: "Society not found" });
     }
 
     const complaint = await Complaint.findById(id);
 
     if (!complaint) {
-      return res.status(404).json({ errorMsg: "Complaint not found" });
+      res.status(404).json({ errorMsg: "Complaint not found" });
     }
 
     if (complaint.raised_by != user.name) {
-      return res
+      res
         .status(404)
         .json({
           errorMsg: "Only person who raised the complaint can resolve complaint",

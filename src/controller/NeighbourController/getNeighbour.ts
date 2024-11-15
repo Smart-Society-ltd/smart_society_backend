@@ -8,7 +8,7 @@ const getNeighbour = async (req: Request, res: Response) => {
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
+      res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const neighbours = await User.find({ society_code: user.society_code })
