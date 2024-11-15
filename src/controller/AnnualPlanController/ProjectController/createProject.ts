@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
-import User from "../../../models/AuthModels/userModel.js";
-import Society from "../../../models/AuthModels/societyModel.js";
 import Plan from "../../../models/AnnualActionPlanModel/annualPlanModel.js";
 import Project from "../../../models/AnnualActionPlanModel/plansModel.js";
 import { Types } from "mongoose";
-import asyncHandler from './../../../utils/asynchandler';
-import authorizeUser from "src/utils/authorize_user.js";
+import asyncHandler from './../../../utils/asynchandler.js';
 import ApiError from './../../../utils/api_error.js';
-import ApiResponse from "src/utils/api_success.js";
+import ApiResponse from './../../../utils/api_success.js';
+import authorizeUser from './../../../utils/authorize_user.js';
 
 interface ProjectRequestBody {
   annual_plan_id: Types.ObjectId;

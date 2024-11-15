@@ -4,9 +4,9 @@ import Society from "../../models/AuthModels/societyModel.js";
 import Announcement from "../../models/AnnonucementModel/announcemenetModel.js";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import asyncHandler from "../../utils/asynchandler.js";
-import ApiError from "src/utils/api_error.js";
-import ApiResponse from "src/utils/api_success.js";
-import { s3 } from 'src/middleware/s3ForDocument.js';
+import { s3 } from "../../middleware/s3ForDocument.js"
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success.js';
 
 const deleteAnnouncement = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.body;

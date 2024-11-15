@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Society from '../models/AuthModels/societyModel.js';
 import User from '../models/AuthModels/userModel.js';
-import ApiError from './api_error';
+import ApiError from './api_error.js';
 
 const authorizeUser = async (req: Request) => {
     const loggedInUserId = req.user._id;

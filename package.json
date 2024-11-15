@@ -10,7 +10,8 @@
     "build": "rimraf dist && tsc && tsc-alias",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
-    "stage": "tsc && git status && git add ."
+    "stage": "tsc && git status && git add .",
+    "test": "rimraf dist && tsc && tsc-alias && node dist/index.js"
   },
   "keywords": [],
   "author": "",

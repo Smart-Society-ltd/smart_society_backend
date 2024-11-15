@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import User from "../../models/AuthModels/userModel.js";
 import Society from "../../models/AuthModels/societyModel.js";
 import Announcement from "../../models/AnnonucementModel/announcemenetModel.js";
-import asyncHandler from "src/utils/asynchandler.js";
-import ApiResponse from "src/utils/api_success.js";
 import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success.js';
+import asyncHandler from './../../utils/asynchandler.js';
 
 const getAnnouncement = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const loggedInUserId = req.user._id;

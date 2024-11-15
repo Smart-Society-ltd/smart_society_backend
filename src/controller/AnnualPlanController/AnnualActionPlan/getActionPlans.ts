@@ -4,7 +4,7 @@ import Society from "../../../models/AuthModels/societyModel.js";
 import ActionPlan from "../../../models/AnnualActionPlanModel/annualPlanModel.js";
 import asyncHandler from './../../../utils/asynchandler.js';
 import ApiError from './../../../utils/api_error.js';
-import ApiResponse from './../../../utils/api_success';
+import ApiResponse from './../../../utils/api_success.js';
 
 const getAnnualPlan = asyncHandler(async (req: Request, res: Response) => {
   const loggedInUserId = req.user._id;
