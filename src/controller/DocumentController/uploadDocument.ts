@@ -4,7 +4,7 @@ import User from '../../models/AuthModels/userModel.js';
 import Society from '../../models/AuthModels/societyModel.js';
 import ApiError from './../../utils/api_error.js';
 import ApiResponse from './../../utils/api_success.js';
-import asyncHandler from './../../utils/asynchandler';
+import asyncHandler from './../../utils/asynchandler.js';
 
 interface DocumentRequestBody {
   society_code: string;

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../../models/AuthModels/userModel.js";
-import ApiError from './../../utils/api_error';
-import ApiResponse from './../../utils/api_success';
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success.js';
 
 interface getUserRequestBody {
   userId: string;

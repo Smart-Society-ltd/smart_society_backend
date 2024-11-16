@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Visitor from "../../models/VisitorManagement/tempVisitorModel.js";
-import ApiResponse from "src/utils/api_success.js";
+import ApiResponse from './../../utils/api_success.js';
 
 interface CheckinRequestBody {
   society_code: string;

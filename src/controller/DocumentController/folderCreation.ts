@@ -3,7 +3,7 @@ import Folder from "../../models/DocumentModel/folder.js";
 import Society from "../../models/AuthModels/societyModel.js";
 import User from "../../models/AuthModels/userModel.js";
 import ApiError from './../../utils/api_error.js';
-import ApiResponse from './../../utils/api_success';
+import ApiResponse from './../../utils/api_success.js';
 
 const FolderCreation = async (req: Request, res: Response) => {
   const { folder_name } = req.body;

@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import User from "../../models/AuthModels/userModel.js";
 import Society from "../../models/AuthModels/societyModel.js";
-import asyncHandler from './../../utils/asynchandler';
-import ApiError from "src/utils/api_error.js";
+import asyncHandler from './../../utils/asynchandler.js';
 import ApiResponse from './../../utils/api_success.js';
+import ApiError from './../../utils/api_error.js';
 
 const updateSociety = asyncHandler(
   async (req: Request, res: Response) => {

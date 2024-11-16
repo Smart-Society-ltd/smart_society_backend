@@ -3,8 +3,8 @@ import jwt from "jsonwebtoken";
 import Society from "../../models/AuthModels/societyModel.js";
 import User from '../../models/AuthModels/userModel.js'
 import ApiError from './../../utils/api_error.js';
-import asyncHandler from './../../utils/asynchandler';
-import ApiResponse from './../../utils/api_success';
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiResponse from './../../utils/api_success.js';
 
 interface getSocietyRequestBody {
   userId: string;

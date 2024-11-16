@@ -4,8 +4,8 @@ import User from "../../models/AuthModels/userModel.js";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { s3 } from '../../middleware/s3ForDocument.js'
 import asyncHandler from './../../utils/asynchandler.js';
-import ApiError from "src/utils/api_error.js";
-import ApiResponse from "src/utils/api_success.js";
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success.js';
 
 const deleteFile = asyncHandler(
   async (req: Request, res: Response) => {

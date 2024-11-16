@@ -7,7 +7,7 @@ import Society from "../../models/AuthModels/societyModel.js";
 import assignFlat from "../../utils/society/assignFlats.js";
 import asyncHandler from './../../utils/asynchandler.js';
 import ApiError from './../../utils/api_error.js';
-import ApiResponse from "src/utils/api_success.js";
+import ApiResponse from './../../utils/api_success.js';
 
 const pendingUsers = asyncHandler(async (req: Request, res: Response) => {
   const { society_code } = req.params;

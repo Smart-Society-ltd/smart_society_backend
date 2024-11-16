@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/AuthModels/userModel.js';
-import asyncHandler from './../utils/asynchandler';
-import ApiError from './../utils/api_error';
+import asyncHandler from './../utils/asynchandler.js';
+import ApiError from './../utils/api_error.js';
 
 const authenticateToken = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {

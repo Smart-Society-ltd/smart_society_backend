@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import asyncHandler from './../../utils/asynchandler.js';
 import ApiError from './../../utils/api_error.js';
-import ApiResponse from './../../utils/api_success';
+import ApiResponse from './../../utils/api_success.js';
 
 interface VerifyOtpRequestBody {
   otp: string;

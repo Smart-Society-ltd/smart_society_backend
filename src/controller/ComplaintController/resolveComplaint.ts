@@ -3,7 +3,7 @@ import User from "../../models/AuthModels/userModel.js";
 import Society from "../../models/AuthModels/societyModel.js";
 import Complaint from "../../models/ComplaintModel/complaintModel.js";
 import ApiError from './../../utils/api_error.js';
-import ApiResponse from "src/utils/api_success.js";
+import ApiResponse from './../../utils/api_success.js';
 
 const resolveComplaint = async (req: Request, res: Response) => {
   const { id } = req.body;

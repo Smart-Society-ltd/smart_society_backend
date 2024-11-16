@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import User from "../../models/AuthModels/userModel.js";
 import Society from "../../models/AuthModels/societyModel.js";
 import Complaint from "../../models/ComplaintModel/complaintModel.js";
-import ApiError from "src/utils/api_error.js";
 import ApiResponse from './../../utils/api_success.js';
+import ApiError from './../../utils/api_error.js';
 
 const getResolvedComplaints = async (req: Request, res: Response) => {
   const loggedInUserId = req.user._id;
