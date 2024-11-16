@@ -3,36 +3,40 @@ import Folder from "../../models/DocumentModel/folder.js";
 import User from "../../models/AuthModels/userModel.js";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { s3 } from '../../middleware/s3ForDocument.js'
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiError from "src/utils/api_error.js";
+import ApiResponse from "src/utils/api_success.js";
 
-const deleteFile = async (req: Request, res: Response) => {
-  try {
+const deleteFile = asyncHandler(
+  async (req: Request, res: Response) => {
     const { folder_name, fileName } = req.body;
     const loggedInUserId = req.user?._id;
 
     const user = await User.findById(loggedInUserId);
     if (!user) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
+      throw new ApiError("User not found", 404);
     }
 
+    // TODO : kya bakchodi chalu he ye bhai
     const society_code = user.society_code;
-    if (user.society_code != society_code) {
-      res.status(404).json({ errorMsg: "User is from another society" });
-    }
+    // if (user.society_code != society_code) {
+    //   res.status(404).json({ errorMsg: "Invalid Society code" });
+    // }
 
     if (user.role != 'admin') {
-      res.status(404).json({ errorMsg: "Only Admin can delete the files" });
+      throw new ApiError("Only admin can delete files", 403);
     }
 
     const folder = await Folder.findOne({ society_code, folder_name });
 
     if (!folder) {
-      res.status(404).json({ errorMsg: "Folder not found" });
+      throw new ApiError("Folder not found", 404);
     }
 
     const fileIndex = folder.files.findIndex(file => file.fileName === fileName);
 
     if (fileIndex === -1) {
-      res.status(404).json({ errorMsg: "File not found" });
+      throw new ApiError("File not found", 404);
     }
 
     const fileToDelete = folder.files[fileIndex];
@@ -52,11 +56,8 @@ const deleteFile = async (req: Request, res: Response) => {
 
     await s3.send(command);
 
-    res.status(200).json({ msg: "File deleted successfully" });
-  } catch (error) {
-    console.log("Error:", error);
-    res.status(500).json({ errorMsg: "Failed to delete file", error: error.message });
+    res.status(200).json(new ApiResponse({}, "File deleted successfully"));
   }
-};
+);
 
 export default deleteFile;

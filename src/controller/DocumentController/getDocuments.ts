@@ -1,35 +1,35 @@
 import { Request, Response } from "express";
 import Folder from "../../models/DocumentModel/folder.js";
 import User from "../../models/AuthModels/userModel.js";
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success.js';
 
-const getDocuments = async (req: Request, res: Response) => {
-  try {
+const getDocuments = asyncHandler(
+  async (req: Request, res: Response) => {
     const { folder_name } = req.body;
 
     const loggedInUserId = req.user?._id;
 
     if (!loggedInUserId) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
+      throw new ApiError("Unauthorized user", 401);
     }
 
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
+      throw new ApiError("User not found", 404);
     }
 
     const society_code = user.society_code;
     const documents = await Folder.findOne({ society_code, folder_name });
 
     if (!documents) {
-      res.status(404).json({ errorMsg: "Folder does not exist" });
+      throw new ApiError("Documents not found", 404);
     }
 
-    res.status(200).json({ msg: "Documents fetched successfully", documents });
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ errorMsg: "Error fetching documents" });
+    res.status(200).json(new ApiResponse({ documents }, "Documents fetched successfully"));
   }
-};
+);
 
 export default getDocuments;

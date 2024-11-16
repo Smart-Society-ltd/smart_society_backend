@@ -2,14 +2,16 @@ import { Request, Response } from "express";
 import societyMaintenance from "../../models/MaintenanceModel/societyMaintenance.js";
 import Society from "../../models/AuthModels/societyModel.js";
 import User from "../../models/AuthModels/userModel.js";
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiError from './../../utils/api_error.js';
 
-const configureMaintenance = async (req: Request, res: Response) => {
-  try {
+const configureMaintenance = asyncHandler(
+  async (req: Request, res: Response) => {
     const { society_code, maintenance_period, maintenance_basis, custom_maintenance_values } = req.body;
 
     const societyCheck = await Society.findOne({ society_code });
     if (!societyCheck) {
-      res.status(404).json({ errorMsg: "Invalid Society Code" });
+      throw new ApiError("Society not found", 404);
     }
 
     const loggedInUserId = req.user?._id;
@@ -61,10 +63,7 @@ const configureMaintenance = async (req: Request, res: Response) => {
       msg: "Society Maintenance configured successfully",
       data: newConfiguration,
     });
-  } catch (error) {
-    console.error("Error configuring maintenance record:", error);
-    res.status(500).json({ errorMsg: "Server error" });
   }
-};
+);
 
 export default configureMaintenance;

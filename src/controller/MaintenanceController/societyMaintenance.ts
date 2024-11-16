@@ -1,24 +1,24 @@
 import { Request, Response } from "express";
 import Maintenance from "../../models/MaintenanceModel/userMaintenanceModel.js";
 import Society from "../../models/AuthModels/societyModel.js";
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success';
+import asyncHandler from './../../utils/asynchandler';
 
 interface SocietyMaintenanceRequestParams {
   society_id: string;
 }
 
-const getSocietyMaintenance = async (
-  req: Request<{}, {}, SocietyMaintenanceRequestParams>,
-  res: Response
-) => {
-  try {
+const getSocietyMaintenance = asyncHandler(
+  async (
+    req: Request<{}, {}, SocietyMaintenanceRequestParams>,
+    res: Response
+  ) => {
     const { society_code } = req.params as { readonly society_code: string };
 
     const checkSocietyCode = await Society.findOne({ society_code: society_code });
     if (!checkSocietyCode) {
-      res.status(400).json({
-        errorMsg: "Invalid Society Id",
-        status: false,
-      });
+      throw new ApiError("Invalid society code", 404);
     }
 
     const result = await Maintenance.aggregate([
@@ -35,17 +35,8 @@ const getSocietyMaintenance = async (
       },
     ]);
 
-    res.status(200).json({
-      msg: "Maintenance data fetched successfully",
-      status: true,
-      result,
-    });
-  } catch (error) {
-    console.error("Error while fetching maintenance data:", error);
-    res
-      .status(500)
-      .json({ errorMsg: "Failed to fetch maintenance data", error: error.message });
+    res.status(200).json(new ApiResponse({ maintainance: result }, "Maintenance data fetched successfully"));
   }
-};
+);
 
 export default getSocietyMaintenance;
