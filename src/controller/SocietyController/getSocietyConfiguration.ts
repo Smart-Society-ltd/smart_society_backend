@@ -3,26 +3,25 @@ import jwt from "jsonwebtoken";
 import Society from "../../models/AuthModels/societyModel.js";
 import User from '../../models/AuthModels/userModel.js'
 import Maintenance from "../../models/MaintenanceModel/societyMaintenance.js";
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success';
 
 interface getSocietyRequestBody {
   userId: string;
 }
 
-const getSocietyConfiguration = async (
-  req: Request<{}, {}, getSocietyRequestBody>,
-  res: Response
-) => {
-  try {
+const getSocietyConfiguration = asyncHandler(
+  async (
+    req: Request<{}, {}, getSocietyRequestBody>,
+    res: Response
+  ) => {
     const loggedInUserId = req.user?._id;
 
     const user = await User.findById(loggedInUserId);
     if (!user) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
+      throw new ApiError("User not found", 404);
     }
-
-    // if(user.role != 'admin'){
-    //      res.status(404).json({ errorMsg: "Only Admin can delete the files" });
-    // }
 
     const society = await Society.findOne({ society_code: user.society_code });
 
@@ -36,12 +35,8 @@ const getSocietyConfiguration = async (
       custom_maintenance_values: societyMaintenance.custom_maintenance_values,
     }
 
-    res.status(200).json({ msg: "Data fetched successfully", data: societyData });
-
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    res.status(500).json({ errorMsg: "Server error" });
+    res.status(200).json(new ApiResponse({ societyData }, "Society configuration found"));
   }
-};
+);
 
 export default getSocietyConfiguration;

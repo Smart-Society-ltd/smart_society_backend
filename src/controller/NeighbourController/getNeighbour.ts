@@ -1,24 +1,23 @@
 import { Request, Response } from "express";
 import User from "../../models/AuthModels/userModel.js";
-import Flat from "../../models/AuthModels/flatsModel.js"
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiError from './../../utils/api_error';
+import ApiResponse from './../../utils/api_success';
 
-const getNeighbour = async (req: Request, res: Response) => {
-  try {
+const getNeighbour = asyncHandler(
+  async (req: Request, res: Response) => {
     const loggedInUserId = req.user._id;
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
+      throw new ApiError("User not found", 404);
     }
 
     const neighbours = await User.find({ society_code: user.society_code })
       .populate('flat');
 
-    res.json(neighbours);
-  } catch (error) {
-    console.error("Error fetching neighbours:", error);
-    res.status(500).json({ errorMsg: "Error fetching neighbours" });
+    res.status(200).json(new ApiResponse({ neighbours }, "Neighbours fetched successfully"));
   }
-};
+);
 
 export default getNeighbour;

@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import User from "../../models/AuthModels/userModel.js";
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success';
 
 interface updateUserRequestBody {
   name: string;
@@ -11,32 +14,29 @@ interface updateUserRequestBody {
   family_members_count: string;
 }
 
-const updateUser = async (
-  req: Request<{}, {}, updateUserRequestBody>,
-  res: Response
-) => {
-  try {
+const updateUser = asyncHandler(
+  async (
+    req: Request<{}, {}, updateUserRequestBody>,
+    res: Response
+  ) => {
     const loggedInUserId = req.user?._id;
 
     if (!loggedInUserId) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
+      throw new ApiError("Unauthorized user", 401);
     }
 
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      res.status(404).json({ errorMsg: "User not found" });
+      throw new ApiError("User not found", 404);
     }
 
     Object.assign(user, req.body);
 
     const updatedUser = await user.save();
 
-    res.status(200).json({ msg: "User updated successfully", data: updatedUser });
-  } catch (error) {
-    console.error("Error updating user:", error);
-    res.status(500).json({ errorMsg: "Server error", error: error.message });
+    res.status(200).json(new ApiResponse({ user: updatedUser }, "User updated successfully"));
   }
-};
+);
 
 export default updateUser;

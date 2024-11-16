@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import User from "../../models/AuthModels/userModel.js";
 import tempVisitor from "../../models/VisitorManagement/tempVisitorModel.js";
 import Visitor from "../../models/VisitorManagement/visitorModel.js";
+import asyncHandler from './../../utils/asynchandler';
+import Api from "twilio/lib/rest/Api.js";
+import ApiError from './../../utils/api_error';
+import ApiResponse from './../../utils/api_success';
 
 const pendingCheckin = async (req: Request, res: Response) => {
   try {
@@ -40,14 +44,12 @@ const pendingCheckin = async (req: Request, res: Response) => {
   }
 };
 
-const processCheckin: (req: Request<{ id: string }>, res: Response) => Promise<void> = async (req, res) => {
-  try {
+const processCheckin = asyncHandler(
+  async (req: Request<{ id: string }>, res: Response) => {
     const { id } = req.body;
     const checkinRequest = await tempVisitor.findOne({ _id: id });
     if (!checkinRequest) {
-      res
-        .status(404)
-        .json({ errorMsg: "Checkin request not found", status: false });
+      throw new ApiError("Checkin request not found", 404);
     }
 
     const {
@@ -67,13 +69,13 @@ const processCheckin: (req: Request<{ id: string }>, res: Response) => Promise<v
     const loggedInUserId = req.user?._id;
 
     if (!loggedInUserId) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
+      throw new ApiError("Unauthorized user", 401);
     }
 
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      res.status(404).json({ errorMsg: "User not found" });
+      throw new ApiError("User not found", 404);
     }
 
     const newCheckin = new Visitor({
@@ -94,18 +96,8 @@ const processCheckin: (req: Request<{ id: string }>, res: Response) => Promise<v
 
     await tempVisitor.findByIdAndDelete(id);
 
-    res.status(200).json({
-      msg: "Checkin request accepted successfully",
-      newCheckin,
-      status: true,
-    });
-  } catch (error) {
-    console.error("Error processing checkin request:", error);
-    res.status(500).json({
-      errorMsg: "Failed to process checkin request",
-      error: error.message,
-    });
+    res.status(200).json(new ApiResponse({ checkin: newCheckin }, "Visitor checked in successfully"));
   }
-};
+);
 
 export { pendingCheckin, processCheckin };

@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
 import pricing from "../../data/societyPricing.js";
+import ApiResponse from './../../utils/api_success.js';
+import asyncHandler from './../../utils/asynchandler.js';
 
-const societyPricing = async (req: Request, res: Response) => {
-  try {
-    res.json(pricing);
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    res.status(500).json({ errorMsg: "Server error" });
+const societyPricing = asyncHandler(
+  async (req: Request, res: Response) => {
+    res.status(200).json(new ApiResponse({ pricing }, "Society pricing found"));
   }
-};
+);
 
 export default societyPricing;

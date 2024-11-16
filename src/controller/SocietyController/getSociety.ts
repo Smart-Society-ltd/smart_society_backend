@@ -2,20 +2,23 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import Society from "../../models/AuthModels/societyModel.js";
 import User from '../../models/AuthModels/userModel.js'
+import ApiError from './../../utils/api_error.js';
+import asyncHandler from './../../utils/asynchandler';
+import ApiResponse from './../../utils/api_success';
 
 interface getSocietyRequestBody {
   userId: string;
 }
 
-const getSociety = async (
-  req: Request<{}, {}, getSocietyRequestBody>,
-  res: Response
-) => {
-  try {
+const getSociety = asyncHandler(
+  async (
+    req: Request<{}, {}, getSocietyRequestBody>,
+    res: Response
+  ) => {
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-      res.status(401).json({ errorMsg: "Authentication token missing" });
+      throw new ApiError("Unauthorized user", 401);
     }
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
@@ -23,20 +26,17 @@ const getSociety = async (
     const user = await User.findById(decoded.userId);
 
     if (!user) {
-      res.status(404).json({ errorMsg: "User not found" });
+      throw new ApiError("User not found", 404);
     }
 
     const society = await Society.findOne({ society_code: user.society_code });
 
-    if (!user) {
-      res.status(404).json({ errorMsg: "Society not found" });
+    if (!society) {
+      throw new ApiError("Society not found", 404);
     }
 
-    res.json(society);
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    res.status(500).json({ errorMsg: "Server error" });
+    res.json(new ApiResponse({ society }, "Society found"));
   }
-};
+);
 
 export default getSociety;

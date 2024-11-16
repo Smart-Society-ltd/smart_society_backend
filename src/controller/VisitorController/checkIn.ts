@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Visitor from "../../models/VisitorManagement/tempVisitorModel.js";
+import ApiResponse from "src/utils/api_success.js";
 
 interface CheckinRequestBody {
   society_code: string;
@@ -17,48 +18,39 @@ const checkIn = async (
   req: Request<{}, {}, CheckinRequestBody>,
   res: Response
 ) => {
-  try {
-    const file = req.file;
+  const file = req.file;
 
-    const {
-      society_code,
-      visitor_name,
-      visitor_contact_no,
-      visiting_to,
-      visit_purpose,
-      visitor_address,
-      flat_no,
-      no_of_people,
-    } = req.body;
+  const {
+    society_code,
+    visitor_name,
+    visitor_contact_no,
+    visiting_to,
+    visit_purpose,
+    visitor_address,
+    flat_no,
+    no_of_people,
+  } = req.body;
 
-    if (!file) {
-      res.status(404).json({ errorMsg: "No file uploaded" });
-    }
-
-    const tempCheckIn = new Visitor({
-      society_code,
-      visit_purpose,
-      visiting_to,
-      visitor_name,
-      flat_no,
-      no_of_people,
-      visitor_address,
-      visitor_contact_no,
-      checkin_date: Date.now(),
-      image_url: (file as any).location,
-      image_key: (file as any).key,
-    });
-
-    const tempCheckInData = await tempCheckIn.save();
-
-    res.status(200).json({ msg: "Check-in successful", data: tempCheckInData });
-  } catch (error) {
-    console.log("Error:", error);
-    res.status(500).json({
-      errorMsg: "Failed to complete check-in",
-      error: error.message,
-    });
+  if (!file) {
+    throw new Error("Please upload an image");
   }
+
+  const tempCheckIn = new Visitor({
+    society_code,
+    visit_purpose,
+    visiting_to,
+    visitor_name,
+    flat_no,
+    no_of_people,
+    visitor_address,
+    visitor_contact_no,
+    checkin_date: Date.now(),
+    image_url: (file as any).location,
+    image_key: (file as any).key,
+  });
+
+  const tempCheckInData = await tempCheckIn.save();
+  res.status(200).json(new ApiResponse({ checkIn: tempCheckInData }, "Visitor checked in successfully"));
 };
 
 export default checkIn;
