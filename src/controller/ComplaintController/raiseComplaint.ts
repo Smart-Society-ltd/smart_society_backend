@@ -2,22 +2,25 @@ import { Request, Response } from "express";
 import User from "../../models/AuthModels/userModel.js";
 import Society from '../../models/AuthModels/societyModel.js';
 import Complaint from "../../models/ComplaintModel/complaintModel.js";
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success.js';
 
-const raiseComplaint = async (req: Request, res: Response) => {
-  try {
+const raiseComplaint = asyncHandler(
+  async (req: Request, res: Response) => {
     const { title, content } = req.body;
 
     const loggedInUserId = req.user._id;
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
+      throw new ApiError("User not found", 404);
     }
 
     const society = await Society.findOne({ society_code: user.society_code });
 
     if (!society) {
-      res.status(404).json({ errorMsg: "Society not found" });
+      throw new ApiError("Invalid Society code ", 404);
     }
 
     let photoUrl = null;
@@ -38,14 +41,8 @@ const raiseComplaint = async (req: Request, res: Response) => {
 
     await newComplaint.save();
 
-    res.status(201).json({
-      msg: "Complaint raised successfully",
-      complaint: newComplaint,
-    });
-  } catch (error) {
-    console.error("Error raising complaint:", error);
-    res.status(500).json({ errorMsg: "Error raising complaint" });
+    res.status(201).json(new ApiResponse({ complaint: newComplaint, }, "Complaint raised successfully"));
   }
-};
+);
 
 export default raiseComplaint;

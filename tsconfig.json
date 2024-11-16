@@ -10,12 +10,7 @@
     "outDir": "dist",
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
-    "paths": {
-      "@Controllers/*": ["./Controllers/*"],
-      "@Models/*": ["./Models/*"],
-      "@Functions/*": ["./Functions/*"],
-      "@Routes/*": ["./Routes/*"]
-    }
+    "paths": {}
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules"]

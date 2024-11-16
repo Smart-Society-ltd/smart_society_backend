@@ -2,38 +2,29 @@ import { Request, Response } from "express";
 import User from "../../models/AuthModels/userModel.js";
 import Society from "../../models/AuthModels/societyModel.js";
 import Complaint from "../../models/ComplaintModel/complaintModel.js";
+import ApiError from "src/utils/api_error.js";
+import ApiResponse from './../../utils/api_success.js';
 
 const getResolvedComplaints = async (req: Request, res: Response) => {
-  try {
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
+  const loggedInUserId = req.user._id;
+  const user = await User.findById(loggedInUserId);
 
-    if (!user) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const society = await Society.findOne({ society_code: user.society_code });
-
-    const complaints = await Complaint.find({
-      society_code: user.society_code,
-      isResolved: true,
-    }).sort({ createdAt: -1 });
-
-    if (complaints.length === 0) {
-      res.status(200).json({
-        msg: "No complaints found",
-        complaints: [],
-      });
-    }
-
-    res.status(200).json({
-      msg: "Complaints fetched successfully",
-      complaints,
-    });
-  } catch (error) {
-    console.error("Error fetching complaints:", error);
-    res.status(500).json({ errorMsg: "Error fetching complaints" });
+  if (!user) {
+    throw new ApiError("User not found", 404);
   }
+
+  const society = await Society.findOne({ society_code: user.society_code });
+
+  const complaints = await Complaint.find({
+    society_code: user.society_code,
+    isResolved: true,
+  }).sort({ createdAt: -1 });
+
+
+
+  res.status(200).json(new ApiResponse({
+    complaints
+  }, "Resolved complaints fetched successfully"));
 };
 
 export default getResolvedComplaints;

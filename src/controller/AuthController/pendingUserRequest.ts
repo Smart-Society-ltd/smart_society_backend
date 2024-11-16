@@ -5,47 +5,35 @@ import User from "../../models/AuthModels/userModel.js";
 import TempUser from "../../models/AuthModels/tempUserModel.js";
 import Society from "../../models/AuthModels/societyModel.js";
 import assignFlat from "../../utils/society/assignFlats.js";
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from "src/utils/api_success.js";
 
-const pendingUsers = async (req: Request, res: Response) => {
-  try {
-    const { society_code } = req.params;
+const pendingUsers = asyncHandler(async (req: Request, res: Response) => {
+  const { society_code } = req.params;
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
+  const loggedInUserId = req.user._id;
+  const user = await User.findById(loggedInUserId);
 
-    if (!user || society_code != user.society_code) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const pendingUsers = await User.find({ society_code, isVerified: false })
-      .populate('tempUserId', 'flat_type floor_no');
-
-    if (pendingUsers.length === 0) {
-      res
-        .status(200)
-        .json({ msg: "No pending users found for the given society code." });
-    }
-    res.status(200).json({ data: pendingUsers });
-  } catch (error) {
-    console.error("Error listing pending registrations:", error);
-    res.status(500).json({
-      errorMsg: "Failed to list pending registrations",
-      error: error.message,
-    });
+  if (!user || society_code != user.society_code) {
+    throw new ApiError("User not found", 404);
   }
-};
 
-const processUsers = async (req: Request<{ id: string }>, res: Response) => {
-  try {
+  const pendingUsers = await User.find({ society_code, isVerified: false })
+    .populate('tempUserId', 'flat_type floor_no');
+
+
+  res.status(200).json(new ApiResponse({ pendingUsers }, "Pending users fetched successfully"));
+});
+
+const processUsers = asyncHandler(
+  async (req: Request<{ id: string }>, res: Response) => {
     const { id } = req.body;
     const tempUser = await TempUser.findOne({ user_id: id });
     const user = await User.findOne({ _id: id });
 
     if (!tempUser || !user) {
-      res.status(404).json({
-        errorMsg: "Registration request not found",
-        status: false,
-      });
+      throw new ApiError("Registration Req not found", 404);
     }
 
     const loggedInUserId = req.user._id;
@@ -53,7 +41,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     const society = await Society.findOne({ society_code: loggedInuser.society_code });
 
     if (!society) {
-      res.status(404).json({ errorMsg: "Society not found" });
+      throw new ApiError("Society not found", 404);
     }
 
     user.isVerified = true;
@@ -66,19 +54,12 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
 
     await TempUser.findOneAndDelete({ user_id: id });
 
-    res.status(200).json({
-      msg: "User registered successfully",
-      newUser: savedUser,
-      status1: true,
-      token,
-    });
-  } catch (error) {
-    console.error("Error processing registration:", error);
-    res.status(500).json({
-      errorMsg: "Failed to process registration",
-      error: error.message,
-    });
-  }
-};
+    res.status(200).json(new ApiResponse({
+      user: savedUser,
+      token
+    },
+      "User verified successfully"
+    ));
+  });
 
 export { pendingUsers, processUsers };

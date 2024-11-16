@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 // import bcryptjs from "bcryptjs";
 import tempSociety from "../../models/AuthModels/tempRegistrationModel.js";
 import User from "../../models/AuthModels/userModel.js";
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success.js';
 
 interface RegisterRequestBody {
   name: string;
@@ -14,11 +17,11 @@ interface RegisterRequestBody {
   society_pincode: string;
 }
 
-const tempRegisterSociety = async (
-  req: Request<{}, {}, RegisterRequestBody>,
-  res: Response
-) => {
-  try {
+const tempRegisterSociety = asyncHandler(
+  async (
+    req: Request<{}, {}, RegisterRequestBody>,
+    res: Response
+  ) => {
     const {
       name,
       mb_no,
@@ -34,9 +37,7 @@ const tempRegisterSociety = async (
     const existingUser2 = await User.findOne({ email });
 
     if (existingUser1 || existingUser2) {
-      res
-        .status(409)
-        .json({ msg: "User with this email already exists", status: false });
+      throw new ApiError("User already exists", 400);
     }
 
     const newTempRegistration = new tempSociety({
@@ -67,21 +68,13 @@ const tempRegisterSociety = async (
       society_pincode: savedRegistration.society_pincode,
     };
 
-    res.status(200).json({
-      msg: "Registration request submitted successfully",
-      status: true,
-      data: {
-        user: userSection,
-        society: societySection,
-      },
-    });
-  } catch (error) {
-    console.error("Error submitting registration request:", error);
-    res.status(500).json({
-      errorMsg: "Failed to submit registration request",
-      error: error.message,
-    });
+    res.status(200).json(new ApiResponse({
+      user: userSection,
+      society: societySection,
+    },
+      "Registration request sent successfully",
+    ));
   }
-};
+);
 
 export default tempRegisterSociety;

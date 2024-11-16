@@ -3,21 +3,24 @@ import User from "../../models/AuthModels/userModel.js";
 import Society from "../../models/AuthModels/societyModel.js";
 import Complaint from "../../models/ComplaintModel/complaintModel.js";
 import { s3 } from "../../middleware/s3ForDocument.js";
-import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success.js';
 
-const deleteComplaint = async (req: Request, res: Response) => {
-  try {
+const deleteComplaint = asyncHandler(
+  async (req: Request, res: Response) => {
     const { id } = req.body;
 
     if (!id) {
-      res.status(400).json({ errorMsg: "Complaint ID is required" });
+      throw new ApiError("Complaint ID is required", 401);
     }
 
     const loggedInUserId = req.user._id;
     const user = await User.findById(loggedInUserId);
 
     if (!user) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
+      throw new ApiError("User not found", 404);
     }
 
     const society = await Society.findOne({ society_code: user.society_code });
@@ -25,13 +28,11 @@ const deleteComplaint = async (req: Request, res: Response) => {
     const complaint = await Complaint.findById(id);
 
     if (!complaint) {
-      res.status(404).json({ errorMsg: "Complaints not found" });
+      throw new ApiError("Complaint not found", 404);
     }
 
     if (complaint.raised_by != user.name) {
-      res
-        .status(404)
-        .json({ errorMsg: "Only person who raised the complaint can delete complaint" });
+      throw new ApiError("Only person who raised the complaint can delete complaint", 403);
     }
 
     if (complaint.photo) {
@@ -47,21 +48,14 @@ const deleteComplaint = async (req: Request, res: Response) => {
         );
       } catch (err) {
         console.error("Error deleting file from S3:", err);
-        res
-          .status(500)
-          .json({ errorMsg: "Error deleting file from S3" });
+        throw new ApiError("Error deleting file from S3", 500);
       }
     }
 
     await Complaint.findByIdAndDelete(id);
 
-    res.status(200).json({
-      msg: "Complaint deleted successfully",
-    });
-  } catch (error) {
-    console.error("Error deleting complaint:", error);
-    res.status(500).json({ errorMsg: "Error deleting complaint" });
+    res.status(200).json(new ApiResponse({}, "Complaint deleted successfully"));
   }
-};
+);
 
 export default deleteComplaint;

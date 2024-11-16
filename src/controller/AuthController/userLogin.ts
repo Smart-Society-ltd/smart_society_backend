@@ -2,46 +2,40 @@ import { Request, Response } from 'express';
 import User from '../../models/AuthModels/userModel.js';
 import generateToken from '../../utils/jwt/generateToken.js';
 import OtpModel from '../../models/AuthModels/otpModel.js';
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success.js';
+import asyncHandler from './../../utils/asynchandler.js';
 
 interface UserLoginRequestBody {
   mb_no: string;
   otp: string;
 }
 
-const userLogin = async (req: Request<{}, {}, UserLoginRequestBody>, res: Response) => {
-  try {
+const userLogin = asyncHandler(
+  async (req: Request<{}, {}, UserLoginRequestBody>, res: Response) => {
     const { mb_no, otp } = req.body;
 
     const user = await User.findOne({ mb_no });
 
     if (!user) {
-      res.status(404).json({ errorMsg: "User with this number does not exist", status: false });
+      throw new ApiError("User not found", 404);
     }
 
     const otpEntry = await OtpModel.findOne({ mb_no });
 
-    if (!otpEntry) {
-      res.status(400).json({ errorMsg: "OTP is Invalid", status: false });
-    }
-
-    if (otpEntry.otp !== otp) {
-      res.status(400).json({ errorMsg: "Invalid OTP", status: false });
+    if (!otpEntry || otpEntry.otp !== otp) {
+      throw new ApiError("Invalid OTP", 404);
     }
 
     const token = generateToken(user);
 
     await OtpModel.deleteOne({ mb_no });
 
-    res.status(200).json({
-      msg: "Login successful",
-      status: true,
+    res.status(200).json(new ApiResponse({
       user,
       token
-    });
-  } catch (error) {
-    console.error('Error logging in user:', error);
-    res.status(500).json({ errorMsg: "Failed to login user", error: error.message });
-  }
-};
+    }, 'User logged in successfully',
+    ));
+  })
 
 export default userLogin;

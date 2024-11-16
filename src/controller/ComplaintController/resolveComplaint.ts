@@ -2,48 +2,39 @@ import { Request, Response } from "express";
 import User from "../../models/AuthModels/userModel.js";
 import Society from "../../models/AuthModels/societyModel.js";
 import Complaint from "../../models/ComplaintModel/complaintModel.js";
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from "src/utils/api_success.js";
 
 const resolveComplaint = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.body;
+  const { id } = req.body;
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
+  const loggedInUserId = req.user._id;
+  const user = await User.findById(loggedInUserId);
 
-    if (!user) {
-      res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const society = await Society.findOne({ society_code: user.society_code });
-
-    if (!society) {
-      res.status(404).json({ errorMsg: "Society not found" });
-    }
-
-    const complaint = await Complaint.findById(id);
-
-    if (!complaint) {
-      res.status(404).json({ errorMsg: "Complaint not found" });
-    }
-
-    if (complaint.raised_by != user.name) {
-      res
-        .status(404)
-        .json({
-          errorMsg: "Only person who raised the complaint can resolve complaint",
-        });
-    }
-
-    complaint.isResolved = true;
-    complaint.save();
-
-    res.status(200).json({
-      msg: "Complaint resolved successfully",
-    });
-  } catch (error) {
-    console.error("Error resolving complaint:", error);
-    res.status(500).json({ errorMsg: "Error resolving complaint" });
+  if (!user) {
+    throw new ApiError("User not found", 404);
   }
+
+  const society = await Society.findOne({ society_code: user.society_code });
+
+  if (!society) {
+    throw new ApiError("Invalid Society code ", 404);
+  }
+
+  const complaint = await Complaint.findById(id);
+
+  if (!complaint) {
+    throw new ApiError("Complaint not found", 404);
+  }
+
+  if (complaint.raised_by != user.name) {
+    throw new ApiError("You are not authorized to resolve this complaint", 401);
+  }
+
+  complaint.isResolved = true;
+  complaint.save();
+
+  res.status(200).json(new ApiResponse({}, "Complaint resolved successfully"));
 };
 
 export default resolveComplaint;

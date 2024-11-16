@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
 import User from '../../models/AuthModels/userModel.js';
+import ApiError from './../../utils/api_error.js';
+import ApiResponse from './../../utils/api_success.js';
+import asyncHandler from './../../utils/asynchandler.js';
 
 interface UserRegisterRequestBody {
   name: string;
@@ -7,14 +10,14 @@ interface UserRegisterRequestBody {
   email: string;
 }
 
-const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: Response) => {
-  try {
+const userRegister = asyncHandler(
+  async (req: Request<{}, {}, UserRegisterRequestBody>, res: Response) => {
     const { name, mb_no, email } = req.body;
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      res.status(409).json({ errorMsg: "User with this email already registered", status: false });
+      throw new ApiError("User already exists", 409);
     }
 
     const newUser = new User({
@@ -25,11 +28,8 @@ const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: 
 
     await newUser.save();
 
-    res.status(200).json({ User: newUser, status: true });
-  } catch (error) {
-    console.error('Error registering user:', error);
-    res.status(500).json({ errorMsg: "Failed to register user", error: error.message });
+    res.status(200).json(new ApiResponse({ user: newUser }, 'User registered successfully'));
   }
-};
+)
 
 export default userRegister;

@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
-import generateToken from "../../utils/jwt/generateToken.js";
 import tempSociety from "../../models/AuthModels/tempRegistrationModel.js";
 import Society from "../../models/AuthModels/societyModel.js";
 import User from "../../models/AuthModels/userModel.js";
+import asyncHandler from './../../utils/asynchandler.js';
+import ApiResponse from './../../utils/api_success.js';
+import ApiError from './../../utils/api_error.js';
 
 interface TempRegistration {
   id: string;
@@ -39,31 +41,18 @@ interface Society {
   admin_id: string;
 }
 
-const listPendingRegistrations = async (req: Request, res: Response) => {
-  try {
+const listPendingRegistrations = asyncHandler(
+  async (req: Request, res: Response) => {
     const pendingRegistrations = await tempSociety.find();
+    res.status(200).json(new ApiResponse({ pendingRegistrations }, "Pending registrations fetched successfully"));
+  });
 
-    res.status(200).json({ data: pendingRegistrations });
-  } catch (error) {
-    console.error("Error listing pending registrations:", error);
-    res.status(500).json({
-      errorMsg: "Failed to list pending registrations",
-      error: error.message,
-    });
-  }
-};
-
-const processRegistration = async (
-  req: Request<{ id: string }>,
-  res: Response
-) => {
-  try {
+const processRegistration = asyncHandler(
+  async (req: Request, res: Response) => {
     const { id } = req.body;
     const tempRegistration = await tempSociety.findOne({ _id: id });
     if (!tempRegistration) {
-      res
-        .status(404)
-        .json({ msg: "Registration request not found", status: false });
+      throw new ApiError("Registration not found", 404);
     }
 
     const {
@@ -111,19 +100,13 @@ const processRegistration = async (
     const savedSociety = await newSociety.save();
     await tempSociety.findByIdAndDelete(id);
 
-    res.status(200).json({
-      msg: "Society Registered Successfully",
-      status: true,
-      Admin: savedAdmin,
-      Society: savedSociety,
-    });
-  } catch (error) {
-    console.error("Error processing registration:", error);
-    res.status(500).json({
-      errorMsg: "Failed to process registration",
-      error: error.message,
-    });
+    res.status(200).json(new ApiResponse({
+      society: savedSociety,
+      admin: savedAdmin
+    },
+      "Registration processed successfully"
+    ));
   }
-};
+)
 
 export { listPendingRegistrations, processRegistration };
