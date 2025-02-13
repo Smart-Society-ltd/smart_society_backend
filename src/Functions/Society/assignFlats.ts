@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Society from "../../Models/AuthModels/societyModel.js";
+import {Society} from "../../Models/AuthModels/societyModel.js";
 import Flat from "../../Models/AuthModels/flatsModel.js";
 import TempUser from "../../Models/AuthModels/tempUserModel.js";
 

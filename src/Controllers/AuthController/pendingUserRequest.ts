@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import generateToken from "../../Functions/JWT/generateToken.js";
-import User from "../../Models/AuthModels/userModel.js";
+import { User } from "../../Models/AuthModels/userModel.js";
 import TempUser from "../../Models/AuthModels/tempUserModel.js";
-import Society from "../../Models/AuthModels/societyModel.js";
+import { Society } from "../../Models/AuthModels/societyModel.js";
 import assignFlat from "../../Functions/Society/assignFlats.js";
 
 const pendingUsers = async (req: Request, res: Response) => {
@@ -17,8 +17,10 @@ const pendingUsers = async (req: Request, res: Response) => {
       return res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
-    const pendingUsers = await User.find({ society_code, isVerified: false })
-      .populate('tempUserId', 'flat_type floor_no');
+    const pendingUsers = await User.find({
+      society_code,
+      isVerified: false,
+    }).populate("tempUserId", "flat_type floor_no");
 
     if (pendingUsers.length === 0) {
       return res
@@ -30,7 +32,7 @@ const pendingUsers = async (req: Request, res: Response) => {
     console.error("Error listing pending registrations:", error);
     return res.status(500).json({
       errorMsg: "Failed to list pending registrations",
-      error: error.message,
+      error: error?.message,
     });
   }
 };
@@ -50,7 +52,9 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
 
     const loggedInUserId = req.user._id;
     const loggedInuser = await User.findById(loggedInUserId);
-    const society = await Society.findOne({ society_code: loggedInuser.society_code });
+    const society = await Society.findOne({
+      society_code: loggedInuser.society_code,
+    });
 
     if (!society) {
       return res.status(404).json({ errorMsg: "Society not found" });

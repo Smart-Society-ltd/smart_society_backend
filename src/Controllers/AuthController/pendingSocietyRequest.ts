@@ -1,47 +1,27 @@
 import { Request, Response } from "express";
 import generateToken from "../../Functions/JWT/generateToken.js";
-import tempSociety from "../../Models/AuthModels/tempRegistrationModel.js";
-import Society from "../../Models/AuthModels/societyModel.js";
-import User from "../../Models/AuthModels/userModel.js";
+import tempSocietyModel from "../../Models/AuthModels/tempRegistrationModel.js";
+import {
+  Society,
+  SocietyInterface,
+} from "../../Models/AuthModels/societyModel.js";
+import { User } from "../../Models/AuthModels/userModel.js";
 
-interface TempRegistration {
+type TempSociety = {
   id: string;
   name: string;
   mb_no: string;
   email: string;
-  // password: string;
   society_name: string;
   society_add: string;
   society_city: string;
   society_state: string;
   society_pincode: string;
-}
-
-interface User {
-  // username: string;
-  id: string;
-  name: string;
-  mb_no: string;
-  email: string;
-  // password: string;
-  society_code: string;
-  role: string;
-}
-
-interface Society {
-  id: string;
-  society_name: string;
-  society_add: string;
-  society_city: string;
-  society_state: string;
-  society_pincode: string;
-  society_code: string;
-  admin_id: string;
-}
+};
 
 const listPendingRegistrations = async (req: Request, res: Response) => {
   try {
-    const pendingRegistrations = await tempSociety.find();
+    const pendingRegistrations = await tempSocietyModel.find();
 
     return res.status(200).json({ data: pendingRegistrations });
   } catch (error) {
@@ -59,7 +39,9 @@ const processRegistration = async (
 ) => {
   try {
     const { id } = req.body;
-    const tempRegistration = await tempSociety.findOne({ _id: id });
+    const tempRegistration: TempSociety = await tempSocietyModel.findOne({
+      _id: id,
+    });
     if (!tempRegistration) {
       return res
         .status(404)
@@ -96,7 +78,7 @@ const processRegistration = async (
     });
 
     const savedAdmin = await newAdmin.save();
-    const admin_id = savedAdmin._id;
+    const admin_id = savedAdmin?._id;
 
     const newSociety = new Society({
       society_name,
@@ -105,11 +87,11 @@ const processRegistration = async (
       society_state,
       society_pincode,
       society_code,
-      admin_ids: admin_id,
+      admin_ids: [admin_id],
     });
 
-    const savedSociety = await newSociety.save();
-    await tempSociety.findByIdAndDelete(id);
+    const savedSociety: SocietyInterface = await newSociety.save();
+    await tempSocietyModel.findByIdAndDelete(id);
 
     return res.status(200).json({
       msg: "Society Registered Successfully",

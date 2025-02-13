@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 // import bcryptjs from "bcryptjs";
 import tempSociety from "../../Models/AuthModels/tempRegistrationModel.js";
-import User from "../../Models/AuthModels/userModel.js";
+import { User } from "../../Models/AuthModels/userModel.js";
 
-interface RegisterRequestBody {
+type RegisterRequestBody = {
   name: string;
   mb_no: string;
   email: string;
@@ -12,7 +12,7 @@ interface RegisterRequestBody {
   society_city: string;
   society_state: string;
   society_pincode: string;
-}
+};
 
 const tempRegisterSociety = async (
   req: Request<{}, {}, RegisterRequestBody>,
@@ -43,7 +43,6 @@ const tempRegisterSociety = async (
       name,
       mb_no,
       email,
-      // password: hashedPassword,
       society_name,
       society_add,
       society_city,
@@ -54,17 +53,17 @@ const tempRegisterSociety = async (
     const savedRegistration = await newTempRegistration.save();
 
     const userSection = {
-      name: savedRegistration.name,
-      email: savedRegistration.email,
-      mb_no: savedRegistration.mb_no,
+      name: savedRegistration?.name,
+      email: savedRegistration?.email,
+      mb_no: savedRegistration?.mb_no,
     };
 
     const societySection = {
-      society_name: savedRegistration.society_name,
-      society_add: savedRegistration.society_add,
-      society_city: savedRegistration.society_city,
-      society_state: savedRegistration.society_state,
-      society_pincode: savedRegistration.society_pincode,
+      society_name: savedRegistration?.society_name,
+      society_add: savedRegistration?.society_add,
+      society_city: savedRegistration?.society_city,
+      society_state: savedRegistration?.society_state,
+      society_pincode: savedRegistration?.society_pincode,
     };
 
     return res.status(200).json({

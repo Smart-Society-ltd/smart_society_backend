@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import Society from "../../Models/AuthModels/societyModel.js";
-import User from '../../Models/AuthModels/userModel.js'
+import { Society } from "../../Models/AuthModels/societyModel.js";
+import { User } from "../../Models/AuthModels/userModel.js";
 
-interface getSocietyRequestBody {
+type getSocietyRequestBody = {
   userId: string;
-}
-                                 
+};
+
 const getSociety = async (
   req: Request<{}, {}, getSocietyRequestBody>,
   res: Response
@@ -26,13 +26,13 @@ const getSociety = async (
       return res.status(404).json({ errorMsg: "User not found" });
     }
 
-    const society = await Society.findOne({society_code : user.society_code});
+    const society = await Society.findOne({ society_code: user.society_code });
 
     if (!user) {
-        return res.status(404).json({ errorMsg: "Society not found" });
-      }
+      return res.status(404).json({ errorMsg: "Society not found" });
+    }
 
-      res.json(society);
+    res.json(society);
   } catch (error) {
     console.error("Error decoding token:", error);
     res.status(500).json({ errorMsg: "Server error" });

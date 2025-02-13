@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import TempUser from "../../Models/AuthModels/tempUserModel.js";
-import User from "../../Models/AuthModels/userModel.js";
-import Society from "../../Models/AuthModels/societyModel.js";
+import {User} from "../../Models/AuthModels/userModel.js";
+import {Society} from "../../Models/AuthModels/societyModel.js";
 
 interface SocietyAssignRequestBody {
   userId: string;
@@ -32,7 +32,7 @@ const assignSociety = async (
       return res.status(404).json({ errorMsg: "Invalid Society Code" });
     }
 
-    const admin_id = society.admin_ids[0];
+    const admin_id = society?.admin_ids[0];
     const admin = await User.findOne({ _id: admin_id });
 
     user.society_code = society_code;
@@ -46,15 +46,15 @@ const assignSociety = async (
 
     await newTempUser.save();
 
-    user.tempUserId = newTempUser._id;
+    user.tempUserId = newTempUser?._id;
 
     await user.save();
     return res.status(200).json({
       msg: "Request sent to admin successfully",
       data: {
-        admin_name: admin.name,
-        admin_mb_no: admin.mb_no,
-        society_name: society.society_name,
+        admin_name: admin?.name,
+        admin_mb_no: admin?.mb_no,
+        society_name: society?.society_name,
       },
       status: true,
     });
@@ -62,7 +62,7 @@ const assignSociety = async (
     console.error("Error registering user:", error);
     return res
       .status(500)
-      .json({ errorMsg: "Failed to register user", error: error.message });
+      .json({ errorMsg: "Failed to register user", error: error?.message });
   }
 };
 

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 // import verifyOTP from '../../Functions/OTP/verifyOtp.js';
 import generateOtp from "../../Functions/OTP/generateOtp.js";
 
-interface VerifyOtpRequestBody {
+type VerifyOtpRequestBody = {
   otp: string;
 }
 

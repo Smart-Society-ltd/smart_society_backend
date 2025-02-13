@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import pricing from "../../JSONFiles/societyPricing.js";
+import pricing from "../../Data/societyPricing.js";
 
 const societyPricing = async (req: Request, res: Response) => {
   try {
