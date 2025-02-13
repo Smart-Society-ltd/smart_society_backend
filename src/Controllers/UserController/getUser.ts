@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import User from "../../Models/AuthModels/userModel.js";
+import {User} from "../../Models/AuthModels/userModel.js";
 
 interface getUserRequestBody {
   userId: string;

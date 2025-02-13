@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Folder from "../../Models/DocumentModel/folder.js";
-import Society from "../../Models/AuthModels/societyModel.js";
-import User from "../../Models/AuthModels/userModel.js";
+import {Society} from "../../Models/AuthModels/societyModel.js";
+import {User} from "../../Models/AuthModels/userModel.js";
 
 const FolderCreation = async (req: Request, res: Response) => {
   try {

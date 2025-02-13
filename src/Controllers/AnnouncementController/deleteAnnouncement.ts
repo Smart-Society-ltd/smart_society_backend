@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import User from "../../Models/AuthModels/userModel.js";
-import Society from "../../Models/AuthModels/societyModel.js";
+import {User} from "../../Models/AuthModels/userModel.js";
+import {Society} from "../../Models/AuthModels/societyModel.js";
 import Announcement from "../../Models/AnnonucementModel/announcemenetModel.js";
 import { s3 } from "../../MiddleWare/s3ForDocument.js";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";

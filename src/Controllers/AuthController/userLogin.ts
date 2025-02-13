@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../../Models/AuthModels/userModel.js";
 import generateToken from "../../Functions/JWT/generateToken.js";
 import OtpModel from "../../Models/AuthModels/otpModel.js";
+import { checkUser } from "../../Functions/Check/checkUser.js";
 
 interface UserLoginRequestBody {
   mb_no: string;
@@ -15,7 +16,7 @@ const userLogin = async (
   try {
     const { mb_no, otp } = req.body;
 
-    const user = await User.findOne({ mb_no });
+    const user = await checkUser({mb_no});
 
     if (!user) {
       return res

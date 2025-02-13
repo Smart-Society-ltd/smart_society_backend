@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import User from "../../../Models/AuthModels/userModel.js";
-import Society from "../../../Models/AuthModels/societyModel.js";
+import {User} from "../../../Models/AuthModels/userModel.js";
+import {Society} from "../../../Models/AuthModels/societyModel.js";
 import Plan from "../../../Models/AnnualActionPlanModel/annualPlanModel.js";
 import Project from "../../../Models/AnnualActionPlanModel/plansModel.js";
 import { Types } from "mongoose";

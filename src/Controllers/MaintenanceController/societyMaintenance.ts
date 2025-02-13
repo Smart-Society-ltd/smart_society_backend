@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Maintenance from "../../Models/MaintenanceModel/userMaintenanceModel.js";
-import Society from "../../Models/AuthModels/societyModel.js";
+import {Society} from "../../Models/AuthModels/societyModel.js";
 
 interface SocietyMaintenanceRequestParams {
   society_id: string;

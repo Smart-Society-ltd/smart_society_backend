@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import User from "../../../Models/AuthModels/userModel.js";
-import Society from "../../../Models/AuthModels/societyModel.js";
+import {User} from "../../../Models/AuthModels/userModel.js";
+import {Society} from "../../../Models/AuthModels/societyModel.js";
 import ActionPlan from "../../../Models/AnnualActionPlanModel/annualPlanModel.js";
 
 const getAnnualPlan = async (req: Request, res: Response) => {

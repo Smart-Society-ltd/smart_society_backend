@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Folder from "../../Models/DocumentModel/folder.js";
-import User from "../../Models/AuthModels/userModel.js";
+import {User} from "../../Models/AuthModels/userModel.js";
 
 const getFolders = async (req: Request, res: Response) => {
   try {
