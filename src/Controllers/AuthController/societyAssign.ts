@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import TempUser from "../../Models/AuthModels/tempUserModel.js";
-import {User} from "../../Models/AuthModels/userModel.js";
-import {Society} from "../../Models/AuthModels/societyModel.js";
+import { User } from "../../Models/AuthModels/userModel.js";
+import { Society } from "../../Models/AuthModels/societyModel.js";
+import {
+  checkUser,
+  checkSociety,
+} from "../../Functions/CheckUserSociety/checkUserSociety.js";
 
 interface SocietyAssignRequestBody {
   userId: string;
@@ -18,7 +22,7 @@ const assignSociety = async (
   try {
     const { id, society_code, flat_no, floor_no, flat_type } = req.body;
 
-    const user = await User.findOne({ _id: id });
+    const user = await checkUser({ _id: id });
 
     if (!user) {
       return res
@@ -26,7 +30,7 @@ const assignSociety = async (
         .json({ errorMsg: "User does not exist", status: false });
     }
 
-    const society = await Society.findOne({ society_code });
+    const society = await checkSociety({ society_code });
 
     if (!society) {
       return res.status(404).json({ errorMsg: "Invalid Society Code" });

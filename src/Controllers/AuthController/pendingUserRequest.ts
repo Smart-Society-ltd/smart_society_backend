@@ -5,22 +5,27 @@ import { User } from "../../Models/AuthModels/userModel.js";
 import TempUser from "../../Models/AuthModels/tempUserModel.js";
 import { Society } from "../../Models/AuthModels/societyModel.js";
 import assignFlat from "../../Functions/Society/assignFlats.js";
+import {
+  checkSociety,
+  checkUser,
+} from "../../Functions/CheckUserSociety/checkUserSociety.js";
 
 const pendingUsers = async (req: Request, res: Response) => {
   try {
-    const { society_code } = req.params;
+    const { society_code } = req?.params;
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
+    const loggedInUserId = req?.user?._id;
+    const user = await checkUser({ _id: loggedInUserId });
 
-    if (!user || society_code != user.society_code) {
+    if (!user || society_code != user?.society_code || user?.role != "admin") {
       return res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
     const pendingUsers = await User.find({
       society_code,
       isVerified: false,
-    }).populate("tempUserId", "flat_type floor_no");
+    });
+    // populate("tempUserId", "flat_type floor_no");
 
     if (pendingUsers.length === 0) {
       return res
@@ -40,10 +45,10 @@ const pendingUsers = async (req: Request, res: Response) => {
 const processUsers = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.body;
-    const tempUser = await TempUser.findOne({ user_id: id });
-    const user = await User.findOne({ _id: id });
+    // const tempUser = await TempUser.findOne({ user_id: id });
+    const user = await checkUser({ _id: id });
 
-    if (!tempUser || !user) {
+    if (!user) {
       return res.status(404).json({
         errorMsg: "Registration request not found",
         status: false,
@@ -51,9 +56,9 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     }
 
     const loggedInUserId = req.user._id;
-    const loggedInuser = await User.findById(loggedInUserId);
-    const society = await Society.findOne({
-      society_code: loggedInuser.society_code,
+    const loggedInuser = await checkUser({ _id: loggedInUserId });
+    const society = await checkSociety({
+      society_code: loggedInuser?.society_code,
     });
 
     if (!society) {
@@ -68,7 +73,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     const savedUser = await user.save();
     const token = generateToken(user);
 
-    await TempUser.findOneAndDelete({ user_id: id });
+    // await TempUser.findOneAndDelete({ user_id: id });
 
     return res.status(200).json({
       msg: "User registered successfully",

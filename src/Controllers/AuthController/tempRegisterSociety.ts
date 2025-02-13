@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 // import bcryptjs from "bcryptjs";
 import tempSociety from "../../Models/AuthModels/tempRegistrationModel.js";
 import { User } from "../../Models/AuthModels/userModel.js";
+import { checkUser } from "../../Functions/CheckUserSociety/checkUserSociety.js";
 
 type RegisterRequestBody = {
   name: string;
@@ -31,7 +32,7 @@ const tempRegisterSociety = async (
     } = req.body;
 
     const existingUser1 = await tempSociety.findOne({ email });
-    const existingUser2 = await User.findOne({ email });
+    const existingUser2 = await checkUser({ email });
 
     if (existingUser1 || existingUser2) {
       return res
