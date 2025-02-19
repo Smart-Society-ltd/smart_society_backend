@@ -39,20 +39,22 @@ const assignSociety = async (
     const admin_id = society?.admin_ids[0];
     const admin = await User.findOne({ _id: admin_id });
 
-    user.society_code = society_code;
-    user.flat_no = flat_no;
+    // user.society_code = society_code;
+    // user.flat_no = flat_no;
 
     const newTempUser = new TempUser({
       user_id: id,
+      society_code,
+      flat_no,
       flat_type,
       floor_no,
     });
 
     await newTempUser.save();
 
-    user.tempUserId = newTempUser?._id;
+    // user.tempUserId = newTempUser?._id;
 
-    await user.save();
+    // await user.save();
     return res.status(200).json({
       msg: "Request sent to admin successfully",
       data: {

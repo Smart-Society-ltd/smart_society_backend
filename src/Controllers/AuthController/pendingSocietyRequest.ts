@@ -1,27 +1,16 @@
 import { Request, Response } from "express";
 import generateToken from "../../Functions/JWT/generateToken.js";
-import tempSocietyModel from "../../Models/AuthModels/tempRegistrationModel.js";
+import TempSociety from "../../Models/AuthModels/tempRegistrationModel.js";
 import {
   Society,
   SocietyInterface,
 } from "../../Models/AuthModels/societyModel.js";
 import { User } from "../../Models/AuthModels/userModel.js";
-
-type TempSociety = {
-  id: string;
-  name: string;
-  mb_no: string;
-  email: string;
-  society_name: string;
-  society_add: string;
-  society_city: string;
-  society_state: string;
-  society_pincode: string;
-};
-
+import { checkTempSociety } from "../../Functions/CheckUserSociety/checkUserSociety.js";
+ 
 const listPendingRegistrations = async (req: Request, res: Response) => {
   try {
-    const pendingRegistrations = await tempSocietyModel.find();
+    const pendingRegistrations = await TempSociety.find();
 
     return res.status(200).json({ data: pendingRegistrations });
   } catch (error) {
@@ -39,9 +28,8 @@ const processRegistration = async (
 ) => {
   try {
     const { id } = req.body;
-    const tempRegistration: TempSociety = await tempSocietyModel.findOne({
-      _id: id,
-    });
+    const tempRegistration = await checkTempSociety(id);
+
     if (!tempRegistration) {
       return res
         .status(404)
@@ -91,7 +79,7 @@ const processRegistration = async (
     });
 
     const savedSociety: SocietyInterface = await newSociety.save();
-    await tempSocietyModel.findByIdAndDelete(id);
+    await TempSociety.findByIdAndDelete(id);
 
     return res.status(200).json({
       msg: "Society Registered Successfully",

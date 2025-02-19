@@ -21,9 +21,9 @@ const pendingUsers = async (req: Request, res: Response) => {
       return res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
-    const pendingUsers = await User.find({
+    const pendingUsers = await TempUser.find({
       society_code,
-      isVerified: false,
+      // isVerified: false,
     });
     // populate("tempUserId", "flat_type floor_no");
 
@@ -45,10 +45,10 @@ const pendingUsers = async (req: Request, res: Response) => {
 const processUsers = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.body;
-    // const tempUser = await TempUser.findOne({ user_id: id });
+    const tempUser = await TempUser.findOne({ user_id: id });
     const user = await checkUser({ _id: id });
 
-    if (!user) {
+    if (!tempUser || !user) {
       return res.status(404).json({
         errorMsg: "Registration request not found",
         status: false,
@@ -57,28 +57,32 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
 
     const loggedInUserId = req.user._id;
     const loggedInuser = await checkUser({ _id: loggedInUserId });
-    const society = await checkSociety({
-      society_code: loggedInuser?.society_code,
-    });
 
-    if (!society) {
-      return res.status(404).json({ errorMsg: "Society not found" });
+    if(loggedInuser.role != "admin"){
+      return res.status(404).json({
+        errorMsg: "Only admin can accept the request",
+        status: false,
+      });
     }
+
+    // const society = await checkSociety({
+    //   society_code: loggedInuser?.society_code,
+    // });
 
     user.isVerified = true;
     user.role = "user";
 
-    await assignFlat(user);
+    await assignFlat(user, tempUser);
 
     const savedUser = await user.save();
     const token = generateToken(user);
 
-    // await TempUser.findOneAndDelete({ user_id: id });
+    await TempUser.findOneAndDelete({ user_id: id });
 
     return res.status(200).json({
       msg: "User registered successfully",
       newUser: savedUser,
-      status1: true,
+      status: true,
       token,
     });
   } catch (error) {

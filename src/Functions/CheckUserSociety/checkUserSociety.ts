@@ -1,5 +1,6 @@
 import { Society } from "../../Models/AuthModels/societyModel.js";
 import { User } from "../../Models/AuthModels/userModel.js";
+import TempSociety from "../../Models/AuthModels/tempRegistrationModel.js"
 
 export const checkUser = async (data: {
   mb_no?: string;
@@ -20,4 +21,14 @@ export const checkSociety = async (data: {
   const query = Object.fromEntries(Object.entries(data).filter(([_, v]) => v));
 
   return await Society.findOne(query);
+};
+
+
+export const checkTempSociety = async (data: {
+  society_code?: string;
+  _id?: string;
+}) => {
+  const query = Object.fromEntries(Object.entries(data).filter(([_, v]) => v));
+
+  return await TempSociety.findOne(query);
 };
