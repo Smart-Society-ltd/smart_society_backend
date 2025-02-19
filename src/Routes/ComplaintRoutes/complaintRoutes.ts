@@ -5,12 +5,12 @@ import resolveComplaint from "../../Controllers/ComplaintController/resolveCompl
 import getResolvedComplaints from "../../Controllers/ComplaintController/getResolveComplaints.js";
 import deleteComplaint from "../../Controllers/ComplaintController/deleteComplaint.js";
 
-import s3ForComplaint from "../../MiddleWare/s3ForComplaints.js";
+import uploadComplaintPhoto from "../../MiddleWare/s3ForComplaints.js";
 import authenticateToken from "../../MiddleWare/authMiddlewar.js";
 
 const router = express.Router();
 
-router.post("/raise", authenticateToken, s3ForComplaint, raiseComplaint);
+router.post("/raise", authenticateToken, uploadComplaintPhoto, raiseComplaint);
 router.get("/getunresolve", authenticateToken, getUnresolvedComplaints);
 router.get("/getresolve", authenticateToken, getResolvedComplaints);
 router.post("/resolve", authenticateToken, resolveComplaint);

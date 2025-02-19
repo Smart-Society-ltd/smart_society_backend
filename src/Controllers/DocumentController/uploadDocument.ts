@@ -4,7 +4,6 @@ import {User} from '../../Models/AuthModels/userModel.js';
 import {Society} from '../../Models/AuthModels/societyModel.js';
 
 interface DocumentRequestBody {
-  society_code: string;
   folder_name: string;
 }
 
@@ -26,9 +25,9 @@ const uploadDocument = async (
       return res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
-    const society = await Society.findOne({ society_code: user.society_code });
+    // const society = await Society.findOne({ society_code: user.society_code });
 
-    if (!society.admin_ids.includes(user._id.toString())) {
+    if (user?.role != 'admin') {
       return res
         .status(404)
         .json({ errorMsg: "Only admin is allow to upload file" });

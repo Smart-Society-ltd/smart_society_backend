@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {User} from "../../Models/AuthModels/userModel.js";
 import {Society} from "../../Models/AuthModels/societyModel.js";
 import Complaint from "../../Models/ComplaintModel/complaintModel.js";
-import { s3 } from "../../MiddleWare/s3ForDocument.js";
+import { s3 } from "../../Config/s3.js";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 const deleteComplaint = async (req: Request, res: Response) => {
