@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import societyMaintenance from "../../Models/MaintenanceModel/societyMaintenance.js";
-import Society from "../../Models/AuthModels/societyModel.js";
-import User from "../../Models/AuthModels/userModel.js";
+import {Society} from "../../Models/AuthModels/societyModel.js";
+import {User} from "../../Models/AuthModels/userModel.js";
 
 const configureMaintenance = async (req: Request, res: Response) => {
   try {

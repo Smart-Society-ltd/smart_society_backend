@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 interface tempUserInterface extends Document {
   user_id: string;
+  society_code: string;
+  flat_no: string;
   floor_no: string;
   flat_type: string;
 }
@@ -11,6 +13,16 @@ const tempUserSchema = new mongoose.Schema(
     user_id: {
       type: String,
       required: true,
+    },
+    user_name: {
+      type: String,
+      required: true,
+    },
+    society_code: {
+      type: String,
+    },
+    flat_no: {
+      type: String,
     },
     floor_no: {
       type: String,

@@ -1,20 +1,27 @@
-import { Request, Response } from 'express';
-import User from '../../Models/AuthModels/userModel.js';
+import { Request, Response } from "express";
+import { User } from "../../Models/AuthModels/userModel.js";
+import { checkUser } from "../../Functions/CheckUserSociety/checkUserSociety.js";
 
 interface UserRegisterRequestBody {
-  name: string;    
-  mb_no: string;    
+  name: string;
+  mb_no: string;
   email: string;
 }
 
-const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: Response) => {
+const userRegister = async (
+  req: Request<{}, {}, UserRegisterRequestBody>,
+  res: Response
+) => {
   try {
     const { name, mb_no, email } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await checkUser({ email });
 
     if (existingUser) {
-      return res.status(409).json({ errorMsg: "User with this email already registered", status: false });
+      return res.status(409).json({
+        errorMsg: "User with this email already registered",
+        status: false,
+      });
     }
 
     const newUser = new User({
@@ -25,10 +32,12 @@ const userRegister = async (req: Request<{}, {}, UserRegisterRequestBody>, res: 
 
     await newUser.save();
 
-    return res.status(200).json({ User : newUser, status: true });
+    return res.status(200).json({ User: newUser, status: true });
   } catch (error) {
-    console.error('Error registering user:', error);
-    return res.status(500).json({ errorMsg: "Failed to register user", error: error.message });
+    console.error("Error registering user:", error);
+    return res
+      .status(500)
+      .json({ errorMsg: "Failed to register user", error: error.message });
   }
 };
 

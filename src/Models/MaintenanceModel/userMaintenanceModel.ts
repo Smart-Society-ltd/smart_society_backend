@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
-import User from "../AuthModels/userModel.js";
-import Society from "../AuthModels/societyModel.js";
+import {User} from "../AuthModels/userModel.js";
+import {Society} from "../AuthModels/societyModel.js";
 
 interface Transaction {
   amount: number;

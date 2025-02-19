@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User from "../../Models/AuthModels/userModel.js";
+import {User} from "../../Models/AuthModels/userModel.js";
 
 interface updateUserRequestBody {
   name: string;

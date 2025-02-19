@@ -1,24 +1,29 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import generateToken from "../../Functions/JWT/generateToken.js";
-import User from "../../Models/AuthModels/userModel.js";
+import { User } from "../../Models/AuthModels/userModel.js";
 import TempUser from "../../Models/AuthModels/tempUserModel.js";
-import Society from "../../Models/AuthModels/societyModel.js";
+import { Society } from "../../Models/AuthModels/societyModel.js";
 import assignFlat from "../../Functions/Society/assignFlats.js";
+import {
+  checkSociety,
+  checkUser,
+} from "../../Functions/CheckUserSociety/checkUserSociety.js";
 
 const pendingUsers = async (req: Request, res: Response) => {
   try {
-    const { society_code } = req.params;
+    const { society_code } = req?.params;
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
+    const loggedInUserId = req?.user?._id;
+    const user = await checkUser({ _id: loggedInUserId });
 
-    if (!user || society_code != user.society_code) {
+    if (!user || society_code != user?.society_code || user?.role != "admin") {
       return res.status(401).json({ errorMsg: "Unauthorized user" });
     }
 
-    const pendingUsers = await User.find({ society_code, isVerified: false })
-      .populate('tempUserId', 'flat_type floor_no');
+    const pendingUsers = await TempUser.find({
+      society_code,
+    });
 
     if (pendingUsers.length === 0) {
       return res
@@ -30,7 +35,7 @@ const pendingUsers = async (req: Request, res: Response) => {
     console.error("Error listing pending registrations:", error);
     return res.status(500).json({
       errorMsg: "Failed to list pending registrations",
-      error: error.message,
+      error: error?.message,
     });
   }
 };
@@ -39,7 +44,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.body;
     const tempUser = await TempUser.findOne({ user_id: id });
-    const user = await User.findOne({ _id: id });
+    const user = await checkUser({ _id: id });
 
     if (!tempUser || !user) {
       return res.status(404).json({
@@ -49,17 +54,23 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     }
 
     const loggedInUserId = req.user._id;
-    const loggedInuser = await User.findById(loggedInUserId);
-    const society = await Society.findOne({ society_code: loggedInuser.society_code });
+    const loggedInuser = await checkUser({ _id: loggedInUserId });
 
-    if (!society) {
-      return res.status(404).json({ errorMsg: "Society not found" });
+    if(loggedInuser.role != "admin"){
+      return res.status(404).json({
+        errorMsg: "Only admin can accept the request",
+        status: false,
+      });
     }
+
+    // const society = await checkSociety({
+    //   society_code: loggedInuser?.society_code,
+    // });
 
     user.isVerified = true;
     user.role = "user";
 
-    await assignFlat(user);
+    await assignFlat(user, tempUser);
 
     const savedUser = await user.save();
     const token = generateToken(user);
@@ -69,7 +80,7 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     return res.status(200).json({
       msg: "User registered successfully",
       newUser: savedUser,
-      status1: true,
+      status: true,
       token,
     });
   } catch (error) {

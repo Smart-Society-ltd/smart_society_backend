@@ -3,7 +3,7 @@ import sendOTP from "../../Functions/OTP/sendOtp.js";
 import generateOtp from "../../Functions/OTP/generateOtp.js";
 import OtpModel from "../../Models/AuthModels/otpModel.js";
 
-interface SendOtpRequestBody {
+type SendOtpRequestBody = {
   mb_no: string;
 }
 
