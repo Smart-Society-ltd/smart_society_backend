@@ -23,9 +23,7 @@ const pendingUsers = async (req: Request, res: Response) => {
 
     const pendingUsers = await TempUser.find({
       society_code,
-      // isVerified: false,
     });
-    // populate("tempUserId", "flat_type floor_no");
 
     if (pendingUsers.length === 0) {
       return res

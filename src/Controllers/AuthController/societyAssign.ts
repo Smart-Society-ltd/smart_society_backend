@@ -44,6 +44,7 @@ const assignSociety = async (
 
     const newTempUser = new TempUser({
       user_id: id,
+      user_name: user?.name,
       society_code,
       flat_no,
       flat_type,

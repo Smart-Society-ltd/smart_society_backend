@@ -14,6 +14,10 @@ const tempUserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    user_name: {
+      type: String,
+      required: true,
+    },
     society_code: {
       type: String,
     },
