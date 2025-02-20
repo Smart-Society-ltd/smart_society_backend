@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Folder from "../../Models/DocumentModel/folder.js"; 
-import {User} from '../../Models/AuthModels/userModel.js';
-import {Society} from '../../Models/AuthModels/societyModel.js';
+import Folder from "../../Models/DocumentModel/folder.js";
+import { User } from "../../Models/AuthModels/userModel.js";
+import { Society } from "../../Models/AuthModels/societyModel.js";
 
 interface DocumentRequestBody {
   folder_name: string;
@@ -14,24 +14,9 @@ const uploadDocument = async (
   try {
     const file = req.file;
 
-    const {
-      folder_name
-    } = req.body;
+    const { folder_name } = req.body;
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
-
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    // const society = await Society.findOne({ society_code: user.society_code });
-
-    if (user?.role != 'admin') {
-      return res
-        .status(404)
-        .json({ errorMsg: "Only admin is allow to upload file" });
-    }
+    const { user } = req.validatedAdmin;
 
     if (!file) {
       return res.status(404).json({ errorMsg: "No file uploaded" });
@@ -39,9 +24,9 @@ const uploadDocument = async (
 
     const society_code = user.society_code;
 
-    const folder = await Folder.findOne({ 
-      society_code, 
-      folder_name 
+    const folder = await Folder.findOne({
+      society_code,
+      folder_name,
     });
 
     if (!folder) {

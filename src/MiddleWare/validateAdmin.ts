@@ -14,6 +14,7 @@ const validateAdmin = async (req: Request, res: Response, next: NextFunction) =>
       return res.status(403).json({ errorMsg: "Access denied: Admins only" });
     }
 
+    req.validatedAdmin = { user };
     next();
   } catch (error) {
     res.status(500).json({ errorMsg: "Internal Server Error" });
