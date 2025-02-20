@@ -1,5 +1,5 @@
 import express from "express";
-import uploadVisitorPhoto from "../../MiddleWare/s3Middleware.js";
+import uploadVisitorPhoto from "../../MiddleWare/s3ForVisitor.js";
 import checkIn from "../../Controllers/VisitorController/checkIn.js";
 import {
   pendingCheckin,

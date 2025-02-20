@@ -14,13 +14,6 @@ const pendingUsers = async (req: Request, res: Response) => {
   try {
     const { society_code } = req?.params;
 
-    const loggedInUserId = req?.user?._id;
-    const user = await checkUser({ _id: loggedInUserId });
-
-    if (!user || society_code != user?.society_code || user?.role != "admin") {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
     const pendingUsers = await TempUser.find({
       society_code,
     });
@@ -52,20 +45,6 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
         status: false,
       });
     }
-
-    const loggedInUserId = req.user._id;
-    const loggedInuser = await checkUser({ _id: loggedInUserId });
-
-    if(loggedInuser.role != "admin"){
-      return res.status(404).json({
-        errorMsg: "Only admin can accept the request",
-        status: false,
-      });
-    }
-
-    // const society = await checkSociety({
-    //   society_code: loggedInuser?.society_code,
-    // });
 
     user.isVerified = true;
     user.role = "user";
