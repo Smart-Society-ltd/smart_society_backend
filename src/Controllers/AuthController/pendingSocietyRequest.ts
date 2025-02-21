@@ -7,7 +7,7 @@ import {
 } from "../../Models/AuthModels/societyModel.js";
 import { User } from "../../Models/AuthModels/userModel.js";
 import { checkTempSociety } from "../../Functions/CheckUserSociety/checkUserSociety.js";
- 
+
 const listPendingRegistrations = async (req: Request, res: Response) => {
   try {
     const pendingRegistrations = await TempSociety.find();
@@ -28,7 +28,7 @@ const processRegistration = async (
 ) => {
   try {
     const { id } = req.body;
-    const tempRegistration = await checkTempSociety(id);
+    const tempRegistration = await checkTempSociety({ _id: id });
 
     if (!tempRegistration) {
       return res

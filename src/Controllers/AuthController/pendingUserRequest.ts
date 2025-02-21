@@ -46,10 +46,10 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
       });
     }
 
+    await assignFlat(user, tempUser);
+
     user.isVerified = true;
     user.role = "user";
-
-    await assignFlat(user, tempUser);
 
     const savedUser = await user.save();
     const token = generateToken(user);
