@@ -1,11 +1,6 @@
 import { Request, Response } from "express";
 import TempUser from "../../Models/AuthModels/tempUserModel.js";
 import { User } from "../../Models/AuthModels/userModel.js";
-import { Society } from "../../Models/AuthModels/societyModel.js";
-import {
-  checkUser,
-  checkSociety,
-} from "../../Functions/CheckUserSociety/checkUserSociety.js";
 
 interface SocietyAssignRequestBody {
   userId: string;
@@ -21,26 +16,10 @@ const assignSociety = async (
 ) => {
   try {
     const { id, society_code, flat_no, floor_no, flat_type } = req.body;
-
-    const user = await checkUser({ _id: id });
-
-    if (!user) {
-      return res
-        .status(404)
-        .json({ errorMsg: "User does not exist", status: false });
-    }
-
-    const society = await checkSociety({ society_code });
-
-    if (!society) {
-      return res.status(404).json({ errorMsg: "Invalid Society Code" });
-    }
-
+    const { user, society } = req.validatedData;
+    
     const admin_id = society?.admin_ids[0];
     const admin = await User.findOne({ _id: admin_id });
-
-    // user.society_code = society_code;
-    // user.flat_no = flat_no;
 
     const newTempUser = new TempUser({
       user_id: id,
@@ -53,9 +32,6 @@ const assignSociety = async (
 
     await newTempUser.save();
 
-    // user.tempUserId = newTempUser?._id;
-
-    // await user.save();
     return res.status(200).json({
       msg: "Request sent to admin successfully",
       data: {

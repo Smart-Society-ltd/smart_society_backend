@@ -7,14 +7,16 @@ import getDocuments from "../../Controllers/DocumentController/getDocuments.js";
 import deleteFile from "../../Controllers/DocumentController/deleteFile.js";
 
 import authenticateToken from "../../MiddleWare/authMiddlewar.js";
-import { uploadPhotos } from "../../MiddleWare/s3ForDocument.js";
+import uploadSSDocument from "../../MiddleWare/s3ForDocument.js"
+import validateUser from "../../MiddleWare/validateUser.js";
+import validateAdmin from "../../MiddleWare/validateAdmin.js";
 
 const router = express.Router();
 
-router.post("/folder/create", authenticateToken, folderCreation);
-router.post("/file/add", authenticateToken, uploadPhotos, uploadDocument);
-router.get("/folder/get/:society_code", authenticateToken, getFolders);
-router.post("/file/get", authenticateToken, getDocuments);
-router.delete("/file/delete", authenticateToken, deleteFile);
+router.post("/folder/create", authenticateToken, validateAdmin, folderCreation);
+router.post("/file/add", authenticateToken, validateAdmin, uploadSSDocument, uploadDocument);
+router.get("/folder/get/:society_code", authenticateToken, validateUser, getFolders);
+router.post("/file/get", authenticateToken, validateUser, getDocuments);
+router.delete("/file/delete", authenticateToken, validateAdmin, deleteFile);
 
 export default router;

@@ -1,26 +1,12 @@
 import { Request, Response } from "express";
 import Folder from "../../Models/DocumentModel/folder.js";
-import {Society} from "../../Models/AuthModels/societyModel.js";
-import {User} from "../../Models/AuthModels/userModel.js";
+import { Society } from "../../Models/AuthModels/societyModel.js";
+import { User } from "../../Models/AuthModels/userModel.js";
 
 const FolderCreation = async (req: Request, res: Response) => {
   try {
     const { folder_name } = req.body;
-
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
-
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const society = await Society.findOne({ society_code: user.society_code });
-
-    if (!society.admin_ids.includes(user._id.toString())) {
-      return res
-        .status(404)
-        .json({ errorMsg: "Only admin is allow to create folder" });
-    }
+    const { user } = req.validatedAdmin;
 
     const folderNameCheck = await Folder.findOne({
       society_code: user.society_code,

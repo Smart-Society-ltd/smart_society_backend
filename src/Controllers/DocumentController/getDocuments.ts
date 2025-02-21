@@ -1,22 +1,11 @@
 import { Request, Response } from "express";
 import Folder from "../../Models/DocumentModel/folder.js";
-import {User} from "../../Models/AuthModels/userModel.js";
+import { User } from "../../Models/AuthModels/userModel.js";
 
 const getDocuments = async (req: Request, res: Response) => {
   try {
     const { folder_name } = req.body;
-
-    const loggedInUserId = req.user?._id;
-    
-    if (!loggedInUserId) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const user = await User.findById(loggedInUserId);
-
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
+    const { user } = req.validatedUser;
 
     const society_code = user.society_code;
     const documents = await Folder.findOne({ society_code, folder_name });

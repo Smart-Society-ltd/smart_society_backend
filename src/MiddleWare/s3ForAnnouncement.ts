@@ -1,24 +1,8 @@
-import multer from "multer";
-import multerS3 from "multer-s3";
-import { s3 } from "./s3ForDocument.js";
+import {uploadToS3} from "../Config/s3.js";
 
-const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: "announcementphoto",
-    acl: "private",
-    metadata: (req, file, cb) => {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: (req, file, cb) => {
-      const societyCode = req.user.society_code;
-
-      const fileKey = `${societyCode}/${file.originalname}`;
-      cb(null, fileKey);
-    },
-  }),
+const uploadAnnouncementPhoto = uploadToS3("announcementphoto", (req, file) => {
+  const societyCode = req.user.society_code;
+  return `${societyCode}/${file.originalname}`;
 });
 
-const uploadPhotos = upload.single("file");
-
-export default uploadPhotos;
+export default uploadAnnouncementPhoto.single("file");

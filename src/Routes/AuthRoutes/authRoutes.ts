@@ -9,6 +9,8 @@ import { pendingUsers, processUsers } from "../../Controllers/AuthController/pen
 import assignSociety from "../../Controllers/AuthController/societyAssign.js";
 
 import authMiddleware from '../../MiddleWare/authMiddlewar.js';
+import validateAdmin from "../../MiddleWare/validateAdmin.js";
+import validateUserAndSociety from "../../MiddleWare/validateUserSociety.js";
 
 const router = express.Router();
 
@@ -19,8 +21,8 @@ router.get("/registerSociety/pending", listPendingRegistrations);
 router.post("/registerSociety/process", processRegistration);
 router.post("/login", userLogin);
 router.post("/userRegister", userRegister);
-router.post("/assignSociety", assignSociety);
-router.get("/userRegister/pending/:society_code", authMiddleware, pendingUsers);
-router.post("/userRegister/process", authMiddleware, processUsers);
+router.post("/assignSociety", validateUserAndSociety, assignSociety);
+router.get("/userRegister/pending/:society_code", authMiddleware, validateAdmin, pendingUsers);
+router.post("/userRegister/process", authMiddleware, validateAdmin, processUsers);
 
 export default router;
