@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import TempUser from "../../Models/AuthModels/tempUserModel.js";
-import { User } from "../../Models/AuthModels/userModel.js";
+import TempUser from "../../Schema/AuthModels/tempUserModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
 
 interface SocietyAssignRequestBody {
   userId: string;
@@ -17,7 +17,7 @@ const assignSociety = async (
   try {
     const { id, society_code, flat_no, floor_no, flat_type } = req.body;
     const { user, society } = req.validatedData;
-    
+
     const admin_id = society?.admin_ids[0];
     const admin = await User.findOne({ _id: admin_id });
 

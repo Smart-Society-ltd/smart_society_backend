@@ -1,6 +1,6 @@
-import { Society } from "../../Models/AuthModels/societyModel.js";
-import { User } from "../../Models/AuthModels/userModel.js";
-import TempSociety from "../../Models/AuthModels/tempRegistrationModel.js"
+import { Society } from "../../Schema/AuthModels/societyModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import TempSociety from "../../Schema/AuthModels/tempRegistrationModel.js";
 
 export const checkUser = async (data: {
   mb_no?: string;
@@ -22,7 +22,6 @@ export const checkSociety = async (data: {
 
   return await Society.findOne(query);
 };
-
 
 export const checkTempSociety = async (data: {
   society_code?: string;

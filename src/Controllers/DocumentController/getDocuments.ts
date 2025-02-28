@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import Folder from "../../Models/DocumentModel/folder.js";
-import { User } from "../../Models/AuthModels/userModel.js";
+import Folder from "../../Schema/DocumentModel/folder.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
 
 const getDocuments = async (req: Request, res: Response) => {
   try {

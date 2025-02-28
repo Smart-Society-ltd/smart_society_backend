@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
-import { Society } from "../../Models/AuthModels/societyModel.js";
-import Flat from "../../Models/AuthModels/flatsModel.js";
-import TempUser from "../../Models/AuthModels/tempUserModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
+import Flat from "../../Schema/AuthModels/flatsModel.js";
+import TempUser from "../../Schema/AuthModels/tempUserModel.js";
 
 const assignFlat = async (user, tempUser) => {
   try {
-    const society = await Society.findOne({ society_code: tempUser.society_code });
+    const society = await Society.findOne({
+      society_code: tempUser.society_code,
+    });
 
     console.log("user", user);
     console.log("society", society);
@@ -29,8 +31,8 @@ const assignFlat = async (user, tempUser) => {
     const newFlat = new Flat({
       flat_no: tempUser.flat_no,
       society_code: tempUser.society_code,
-      flat_type : tempUser.flat_type,
-      floor_no : tempUser.floor_no,
+      flat_type: tempUser.flat_type,
+      floor_no: tempUser.floor_no,
       residents: [user.name],
     });
 

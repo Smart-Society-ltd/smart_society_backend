@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Folder from "../../Models/DocumentModel/folder.js";
-import { User } from "../../Models/AuthModels/userModel.js";
-import { Society } from "../../Models/AuthModels/societyModel.js";
+import Folder from "../../Schema/DocumentModel/folder.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
 
 interface DocumentRequestBody {
   folder_name: string;

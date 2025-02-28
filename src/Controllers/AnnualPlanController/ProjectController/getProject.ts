@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import {User} from "../../../Models/AuthModels/userModel.js";
-import {Society} from "../../../Models/AuthModels/societyModel.js";
-import ActionPlan from "../../../Models/AnnualActionPlanModel/annualPlanModel.js";
-import Project from "../../../Models/AnnualActionPlanModel/plansModel.js";
+import { User } from "../../../Schema/AuthModels/userModel.js";
+import { Society } from "../../../Schema/AuthModels/societyModel.js";
+import ActionPlan from "../../../Schema/AnnualActionPlanModel/annualPlanModel.js";
+import Project from "../../../Schema/AnnualActionPlanModel/plansModel.js";
 import { Types } from "mongoose";
 
 interface ProjectRequestBody {

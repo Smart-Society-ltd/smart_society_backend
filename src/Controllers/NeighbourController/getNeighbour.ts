@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { User } from "../../Models/AuthModels/userModel.js";
-import Flat from "../../Models/AuthModels/flatsModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import Flat from "../../Schema/AuthModels/flatsModel.js";
 
 const getNeighbour = async (req: Request, res: Response) => {
   try {

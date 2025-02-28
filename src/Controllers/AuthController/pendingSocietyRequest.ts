@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import generateToken from "../../Functions/JWT/generateToken.js";
-import TempSociety from "../../Models/AuthModels/tempRegistrationModel.js";
+import TempSociety from "../../Schema/AuthModels/tempRegistrationModel.js";
 import {
   Society,
   SocietyInterface,
-} from "../../Models/AuthModels/societyModel.js";
-import { User } from "../../Models/AuthModels/userModel.js";
+} from "../../Schema/AuthModels/societyModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
 import { checkTempSociety } from "../../Functions/CheckUserSociety/checkUserSociety.js";
 
 const listPendingRegistrations = async (req: Request, res: Response) => {

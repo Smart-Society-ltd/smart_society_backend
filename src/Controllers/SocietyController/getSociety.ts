@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { Society } from "../../Models/AuthModels/societyModel.js";
-import { User } from "../../Models/AuthModels/userModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
 
 type getSocietyRequestBody = {
   userId: string;

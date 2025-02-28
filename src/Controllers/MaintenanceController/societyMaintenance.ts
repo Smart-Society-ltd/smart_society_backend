@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import Maintenance from "../../Models/MaintenanceModel/userMaintenanceModel.js";
-import {Society} from "../../Models/AuthModels/societyModel.js";
+import Maintenance from "../../Schema/MaintenanceModel/userMaintenanceModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
 
 interface SocietyMaintenanceRequestParams {
   society_id: string;
@@ -10,11 +10,13 @@ const getSocietyMaintenance = async (
   req: Request<SocietyMaintenanceRequestParams>,
   res: Response
 ) => {
-  try {   
+  try {
     const { society_code } = req.params;
 
-    const checkSocietyCode = await Society.findOne({ society_code: society_code });
-     if (!checkSocietyCode) {
+    const checkSocietyCode = await Society.findOne({
+      society_code: society_code,
+    });
+    if (!checkSocietyCode) {
       return res.status(400).json({
         errorMsg: "Invalid Society Id",
         status: false,
@@ -42,9 +44,10 @@ const getSocietyMaintenance = async (
     });
   } catch (error) {
     console.error("Error while fetching maintenance data:", error);
-    return res
-      .status(500)
-      .json({ errorMsg: "Failed to fetch maintenance data", error: error.message });
+    return res.status(500).json({
+      errorMsg: "Failed to fetch maintenance data",
+      error: error.message,
+    });
   }
 };
 

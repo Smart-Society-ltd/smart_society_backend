@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import sendOTP from "../../Functions/OTP/sendOtp.js";
 import generateOtp from "../../Functions/OTP/generateOtp.js";
-import OtpModel from "../../Models/AuthModels/otpModel.js";
+import OtpModel from "../../Schema/AuthModels/otpModel.js";
 
 type SendOtpRequestBody = {
   mb_no: string;
-}
+};
 
 const sendOtp = async (
   req: Request<{}, {}, SendOtpRequestBody>,

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import {User} from "../../../Models/AuthModels/userModel.js";
-import {Society} from "../../../Models/AuthModels/societyModel.js";
-import Plan from "../../../Models/AnnualActionPlanModel/annualPlanModel.js";
-import Project from "../../../Models/AnnualActionPlanModel/plansModel.js";
+import { User } from "../../../Schema/AuthModels/userModel.js";
+import { Society } from "../../../Schema/AuthModels/societyModel.js";
+import Plan from "../../../Schema/AnnualActionPlanModel/annualPlanModel.js";
+import Project from "../../../Schema/AnnualActionPlanModel/plansModel.js";
 import { Types } from "mongoose";
 
 interface ProjectRequestBody {
@@ -41,11 +41,9 @@ const createProject = async (
     const society = await Society.findOne({ society_code: user.society_code });
 
     if (!society || !society.admin_ids.includes(user._id.toString())) {
-      return res
-        .status(403)
-        .json({
-          errorMsg: "Only an admin is allowed to create a project",
-        });
+      return res.status(403).json({
+        errorMsg: "Only an admin is allowed to create a project",
+      });
     }
 
     const annualPlan = await Plan.findById(annual_plan_id);
@@ -58,9 +56,9 @@ const createProject = async (
       name,
       description,
       start_date,
-      end_date,   
+      end_date,
       budget_allocation,
-      status : "Planned",
+      status: "Planned",
       priority,
     });
 

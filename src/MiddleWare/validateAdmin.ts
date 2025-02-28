@@ -1,8 +1,12 @@
 import { checkUser } from "../Functions/CheckUserSociety/checkUserSociety.js";
-import { User } from "../Models/AuthModels/userModel.js";
+import { User } from "../Schema/AuthModels/userModel.js";
 import { Request, Response, NextFunction } from "express";
 
-const validateAdmin = async (req: Request, res: Response, next: NextFunction) => {
+const validateAdmin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const loggedInUserId = req.user._id;
     if (!loggedInUserId) {
