@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {User} from "../../Models/AuthModels/userModel.js";
-import {Society} from "../../Models/AuthModels/societyModel.js";
-import Complaint from "../../Models/ComplaintModel/complaintModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
+import Complaint from "../../Schema/ComplaintModel/complaintModel.js";
 
 const getResolvedComplaints = async (req: Request, res: Response) => {
   try {

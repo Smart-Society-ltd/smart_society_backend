@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 // import bcryptjs from "bcryptjs";
-import tempSociety from "../../Models/AuthModels/tempRegistrationModel.js";
-import { User } from "../../Models/AuthModels/userModel.js";
+import tempSociety from "../../Schema/AuthModels/tempRegistrationModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
 import { checkUser } from "../../Functions/CheckUserSociety/checkUserSociety.js";
 
 type RegisterRequestBody = {

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import {Society} from "../../Models/AuthModels/societyModel.js";
-import {User} from '../../Models/AuthModels/userModel.js'
-import Maintenance from "../../Models/MaintenanceModel/societyMaintenance.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import Maintenance from "../../Schema/MaintenanceModel/societyMaintenance.js";
 
 interface getSocietyRequestBody {
   userId: string;
@@ -24,20 +24,23 @@ const getSocietyConfiguration = async (
     //     return res.status(404).json({ errorMsg: "Only Admin can delete the files" });
     // }
 
-     const society = await Society.findOne({society_code : user.society_code});
+    const society = await Society.findOne({ society_code: user.society_code });
 
-     const societyMaintenance = await Maintenance.findOne({society_code : user.society_code});
+    const societyMaintenance = await Maintenance.findOne({
+      society_code: user.society_code,
+    });
 
-     const societyData = {
-        total_flats : society.total_flats,
-        remaining_flats : society.remaining_flats,
-        maintenance_period : societyMaintenance.maintenance_period,
-        maintenance_basis : societyMaintenance.maintenance_basis,
-        custom_maintenance_values : societyMaintenance.custom_maintenance_values,
-     }
+    const societyData = {
+      total_flats: society.total_flats,
+      remaining_flats: society.remaining_flats,
+      maintenance_period: societyMaintenance.maintenance_period,
+      maintenance_basis: societyMaintenance.maintenance_basis,
+      custom_maintenance_values: societyMaintenance.custom_maintenance_values,
+    };
 
-     res.status(200).json({ msg: "Data fetched successfully" , data : societyData});
-
+    res
+      .status(200)
+      .json({ msg: "Data fetched successfully", data: societyData });
   } catch (error) {
     console.error("Error decoding token:", error);
     res.status(500).json({ errorMsg: "Server error" });

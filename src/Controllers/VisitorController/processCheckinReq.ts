@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {User} from "../../Models/AuthModels/userModel.js";
-import tempVisitor from "../../Models/VisitorManagement/tempVisitorModel.js";
-import Visitor from "../../Models/VisitorManagement/visitorModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import tempVisitor from "../../Schema/VisitorManagement/tempVisitorModel.js";
+import Visitor from "../../Schema/VisitorManagement/visitorModel.js";
 
 const pendingCheckin = async (req: Request, res: Response) => {
   try {

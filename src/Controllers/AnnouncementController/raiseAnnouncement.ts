@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {User} from "../../Models/AuthModels/userModel.js";
-import {Society} from '../../Models/AuthModels/societyModel.js';
-import Announcement from "../../Models/AnnonucementModel/announcemenetModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
+import Announcement from "../../Schema/AnnonucementModel/announcemenetModel.js";
 
 const raiseAnnouncement = async (req: Request, res: Response) => {
   try {
@@ -26,14 +26,14 @@ const raiseAnnouncement = async (req: Request, res: Response) => {
     if (req.file) {
       const fileKey = req.file.key;
       const bucketName = req.file.bucket;
-      
+
       photoUrl = `https://${bucketName}.s3.amazonaws.com/${fileKey}`;
     }
 
     const newAnnouncement = new Announcement({
       title,
       content,
-      raised_by : user.name,
+      raised_by: user.name,
       society_code: user.society_code,
       photo: photoUrl,
     });

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {User} from "../../Models/AuthModels/userModel.js";
-import {Society} from "../../Models/AuthModels/societyModel.js";
-import Complaint from "../../Models/ComplaintModel/complaintModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
+import Complaint from "../../Schema/ComplaintModel/complaintModel.js";
 
 const resolveComplaint = async (req: Request, res: Response) => {
   try {
@@ -27,11 +27,9 @@ const resolveComplaint = async (req: Request, res: Response) => {
     }
 
     if (complaint.raised_by != user.name) {
-      return res
-        .status(404)
-        .json({
-          errorMsg: "Only person who raised the complaint can resolve complaint",
-        });
+      return res.status(404).json({
+        errorMsg: "Only person who raised the complaint can resolve complaint",
+      });
     }
 
     complaint.isResolved = true;

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {User} from "../../Models/AuthModels/userModel.js";
-import {Society} from "../../Models/AuthModels/societyModel.js";
-import Complaint from "../../Models/ComplaintModel/complaintModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
+import Complaint from "../../Schema/ComplaintModel/complaintModel.js";
 import { s3 } from "../../Config/s3.js";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
@@ -25,13 +25,13 @@ const deleteComplaint = async (req: Request, res: Response) => {
     const complaint = await Complaint.findById(id);
 
     if (!complaint) {
-        return res.status(404).json({ errorMsg: "Complaints not found" });
-      }
+      return res.status(404).json({ errorMsg: "Complaints not found" });
+    }
 
     if (complaint.raised_by != user.name) {
-      return res
-        .status(404)
-        .json({ errorMsg: "Only person who raised the complaint can delete complaint" });
+      return res.status(404).json({
+        errorMsg: "Only person who raised the complaint can delete complaint",
+      });
     }
 
     if (complaint.photo) {

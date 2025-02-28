@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {User} from '../../../Models/AuthModels/userModel.js';
-import {Society} from "../../../Models/AuthModels/societyModel.js";
-import Plan from '../../../Models/AnnualActionPlanModel/annualPlanModel.js'
+import { User } from "../../../Schema/AuthModels/userModel.js";
+import { Society } from "../../../Schema/AuthModels/societyModel.js";
+import Plan from "../../../Schema/AnnualActionPlanModel/annualPlanModel.js";
 
 interface AnnualPlanRequestBody {
   goals: string;
@@ -24,17 +24,17 @@ const createAnnualPlan = async (
     const society = await Society.findOne({ society_code: user.society_code });
 
     if (!society.admin_ids.includes(user._id.toString())) {
-      return res
-        .status(403)
-        .json({ errorMsg: "Only admin is allowed to create Annual Action Plan" });
+      return res.status(403).json({
+        errorMsg: "Only admin is allowed to create Annual Action Plan",
+      });
     }
 
     const year = new Date().getFullYear();
 
     const newPlan = new Plan({
-      year ,
-      society_code : user.society_code,
-      created_by : user._id,
+      year,
+      society_code: user.society_code,
+      created_by: user._id,
       goals,
     });
 

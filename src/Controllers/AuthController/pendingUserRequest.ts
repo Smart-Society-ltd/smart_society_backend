@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import generateToken from "../../Functions/JWT/generateToken.js";
-import { User } from "../../Models/AuthModels/userModel.js";
-import TempUser from "../../Models/AuthModels/tempUserModel.js";
-import { Society } from "../../Models/AuthModels/societyModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import TempUser from "../../Schema/AuthModels/tempUserModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
 import assignFlat from "../../Functions/Society/assignFlats.js";
 import {
   checkSociety,
@@ -46,10 +46,10 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
       });
     }
 
+    await assignFlat(user, tempUser);
+
     user.isVerified = true;
     user.role = "user";
-
-    await assignFlat(user, tempUser);
 
     const savedUser = await user.save();
     const token = generateToken(user);

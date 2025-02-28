@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import Folder from "../../Models/DocumentModel/folder.js";
-import { User } from "../../Models/AuthModels/userModel.js";
+import Folder from "../../Schema/DocumentModel/folder.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { s3 } from "../../Config/s3.js";
 

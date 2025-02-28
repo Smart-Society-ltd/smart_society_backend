@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {User} from "../../../Models/AuthModels/userModel.js";
-import {Society} from "../../../Models/AuthModels/societyModel.js";
-import Project from "../../../Models/AnnualActionPlanModel/plansModel.js";
+import { User } from "../../../Schema/AuthModels/userModel.js";
+import { Society } from "../../../Schema/AuthModels/societyModel.js";
+import Project from "../../../Schema/AnnualActionPlanModel/plansModel.js";
 import { Types } from "mongoose";
 
 interface WorkDistributionRequestBody {
@@ -37,12 +37,10 @@ const distributeWork = async (
     }
 
     if (project.work_distribution.length != 0) {
-      return res
-        .status(404)
-        .json({
-          errorMsg:
-            "Work distribution for this project has already been completed.",
-        });
+      return res.status(404).json({
+        errorMsg:
+          "Work distribution for this project has already been completed.",
+      });
     }
 
     project.responsible_person = responsible_person;

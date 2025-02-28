@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Visitor from "../../Models/VisitorManagement/tempVisitorModel.js";
+import Visitor from "../../Schema/VisitorManagement/tempVisitorModel.js";
 
 interface CheckinRequestBody {
   society_code: string;

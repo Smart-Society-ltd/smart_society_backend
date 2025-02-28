@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {User} from "../../Models/AuthModels/userModel.js";
-import {Society} from '../../Models/AuthModels/societyModel.js';
-import Complaint from "../../Models/ComplaintModel/complaintModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
+import Complaint from "../../Schema/ComplaintModel/complaintModel.js";
 
 const raiseComplaint = async (req: Request, res: Response) => {
   try {
@@ -16,22 +16,22 @@ const raiseComplaint = async (req: Request, res: Response) => {
 
     const society = await Society.findOne({ society_code: user.society_code });
 
-    if(!society){
-        return res.status(404).json({ errorMsg: "Society not found" });
+    if (!society) {
+      return res.status(404).json({ errorMsg: "Society not found" });
     }
 
     let photoUrl = null;
     if (req.file) {
       const fileKey = req.file.key;
       const bucketName = req.file.bucket;
-      
+
       photoUrl = `https://${bucketName}.s3.amazonaws.com/${fileKey}`;
     }
 
     const newComplaint = new Complaint({
       title,
       content,
-      raised_by : user.name,
+      raised_by: user.name,
       society_code: user.society_code,
       photo: photoUrl,
     });

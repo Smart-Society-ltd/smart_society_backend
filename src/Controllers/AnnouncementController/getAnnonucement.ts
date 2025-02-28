@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {User} from "../../Models/AuthModels/userModel.js";
-import {Society} from "../../Models/AuthModels/societyModel.js";
-import Announcement from "../../Models/AnnonucementModel/announcemenetModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
+import Announcement from "../../Schema/AnnonucementModel/announcemenetModel.js";
 
 const getAnnouncement = async (req: Request, res: Response) => {
   try {

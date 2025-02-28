@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import {User} from "../../Models/AuthModels/userModel.js";
+import { User } from "../../Schema/AuthModels/userModel.js";
 
 interface updateUserRequestBody {
   name: string;
@@ -12,12 +12,12 @@ interface updateUserRequestBody {
 }
 
 const updateUser = async (
-  req: Request<{}, {}, updateUserRequestBody>, 
+  req: Request<{}, {}, updateUserRequestBody>,
   res: Response
 ) => {
   try {
     const loggedInUserId = req.user?._id;
-    
+
     if (!loggedInUserId) {
       return res.status(401).json({ errorMsg: "Unauthorized user" });
     }
@@ -32,7 +32,9 @@ const updateUser = async (
 
     const updatedUser = await user.save();
 
-    res.status(200).json({ msg: "User updated successfully", data: updatedUser });
+    res
+      .status(200)
+      .json({ msg: "User updated successfully", data: updatedUser });
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).json({ errorMsg: "Server error", error: error.message });

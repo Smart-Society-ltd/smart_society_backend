@@ -1,18 +1,14 @@
 import { Request, Response } from "express";
-import {User} from "../../Models/AuthModels/userModel.js";
-import Flat from "../../Models/AuthModels/flatsModel.js"
+import { User } from "../../Schema/AuthModels/userModel.js";
+import Flat from "../../Schema/AuthModels/flatsModel.js";
 
 const getNeighbour = async (req: Request, res: Response) => {
   try {
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
+    const { user } = req.validatedUser;
 
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const neighbours = await User.find({ society_code: user.society_code })
-      .populate('flat');
+    const neighbours = await User.find({
+      society_code: user.society_code,
+    }).populate("flat");
 
     res.json(neighbours);
   } catch (error) {

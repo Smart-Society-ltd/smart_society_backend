@@ -1,16 +1,16 @@
 import mongoose from "mongoose";
-import { Society } from "../../Models/AuthModels/societyModel.js";
-import Flat from "../../Models/AuthModels/flatsModel.js";
-import TempUser from "../../Models/AuthModels/tempUserModel.js";
+import { Society } from "../../Schema/AuthModels/societyModel.js";
+import Flat from "../../Schema/AuthModels/flatsModel.js";
+import TempUser from "../../Schema/AuthModels/tempUserModel.js";
 
 const assignFlat = async (user, tempUser) => {
   try {
-    const society = await Society.findOne({ society_code: tempUser.society_code });
-    // const tempUser = await TempUser.findOne({ user_id: user._id });
+    const society = await Society.findOne({
+      society_code: tempUser.society_code,
+    });
 
     console.log("user", user);
     console.log("society", society);
-    // console.log("society", society);
     if (!society) {
       throw new Error("Society not found");
     }
@@ -31,17 +31,20 @@ const assignFlat = async (user, tempUser) => {
     const newFlat = new Flat({
       flat_no: tempUser.flat_no,
       society_code: tempUser.society_code,
-      flat_type : tempUser.flat_type,
-      floor_no : tempUser.floor_no,
+      flat_type: tempUser.flat_type,
+      floor_no: tempUser.floor_no,
       residents: [user.name],
     });
 
+    const savedFlat = await newFlat.save();
+
+    // Update society remaining flats
     society.remaining_flats -= 1;
     await society.save();
 
-    const flat = await newFlat.save();
-
-    user.flat = flat?._id;
+    // Assign flat reference to user
+    user.society_code = society.society_code;
+    user.flat = savedFlat;
 
     await user.save();
 
