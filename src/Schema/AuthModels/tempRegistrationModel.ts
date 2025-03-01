@@ -1,9 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 interface TempRegistration extends Document {
-  name: string;
-  mb_no: string;
-  email: string;
+  user_id: mongoose.Schema.Types.ObjectId;
   society_name: string;
   society_add: string;
   society_city: string;
@@ -12,19 +10,10 @@ interface TempRegistration extends Document {
 }
 
 const TempRegistrationSchema: Schema = new Schema({
-  name: {
-    type: String,
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
-  },
-  mb_no: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
   },
   society_name: {
     type: String,

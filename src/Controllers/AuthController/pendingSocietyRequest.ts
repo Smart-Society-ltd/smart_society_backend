@@ -7,10 +7,11 @@ import {
 } from "../../Schema/AuthModels/societyModel.js";
 import { User } from "../../Schema/AuthModels/userModel.js";
 import { checkTempSociety } from "../../Functions/CheckUserSociety/checkUserSociety.js";
+import mongoose from "mongoose";
 
 const listPendingRegistrations = async (req: Request, res: Response) => {
   try {
-    const pendingRegistrations = await TempSociety.find();
+    const pendingRegistrations = await TempSociety.find().populate("user_id");
 
     return res.status(200).json({ data: pendingRegistrations });
   } catch (error) {
@@ -28,7 +29,7 @@ const processRegistration = async (
 ) => {
   try {
     const { id } = req.body;
-    const tempRegistration = await checkTempSociety({ _id: id });
+    const tempRegistration = await TempSociety.findById(id).populate("user_id");
 
     if (!tempRegistration) {
       return res
@@ -36,10 +37,21 @@ const processRegistration = async (
         .json({ msg: "Registration request not found", status: false });
     }
 
+    console.log("Temp registration", tempRegistration);
+
+    const admin_id = (
+      tempRegistration.user_id as unknown as mongoose.Document & {
+        _id: mongoose.Types.ObjectId;
+      }
+    )._id;
+    console.log("admin_id", admin_id);
+    const user = await User.findById(admin_id);
+    console.log("user", user);
+
     const {
-      name,
-      mb_no,
-      email,
+      // name,
+      // mb_no,
+      // email,
       society_name,
       society_add,
       society_city,
@@ -56,17 +68,20 @@ const processRegistration = async (
 
     const society_code = `${normalizedSocietyName}${count + 1}`;
 
-    const newAdmin = new User({
-      name,
-      mb_no,
-      email,
-      society_code,
-      isVerified: true,
-      role: "admin",
-    });
+    // const newAdmin = new User({
+    //   name,
+    //   mb_no,
+    //   email,
+    //   society_code,
+    //   isVerified: true,
+    //   role: "admin",
+    // });
 
-    const savedAdmin = await newAdmin.save();
-    const admin_id = savedAdmin?._id;
+    user.isVerified = true;
+    user.role = "admin";
+    user.society_code = society_code;
+
+    await user.save();
 
     const newSociety = new Society({
       society_name,
@@ -78,14 +93,12 @@ const processRegistration = async (
       admin_ids: [admin_id],
     });
 
-    const savedSociety: SocietyInterface = await newSociety.save();
+    await newSociety.save();
     await TempSociety.findByIdAndDelete(id);
 
     return res.status(200).json({
       msg: "Society Registered Successfully",
-      status: true,
-      Admin: savedAdmin,
-      Society: savedSociety,
+      // status: true,
     });
   } catch (error) {
     console.error("Error processing registration:", error);

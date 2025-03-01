@@ -3,11 +3,10 @@ import { Request, Response } from "express";
 import tempSociety from "../../Schema/AuthModels/tempRegistrationModel.js";
 import { User } from "../../Schema/AuthModels/userModel.js";
 import { checkUser } from "../../Functions/CheckUserSociety/checkUserSociety.js";
+import mongoose from "mongoose";
 
 type RegisterRequestBody = {
-  name: string;
-  mb_no: string;
-  email: string;
+  id: string;
   society_name: string;
   society_add: string;
   society_city: string;
@@ -21,9 +20,7 @@ const tempRegisterSociety = async (
 ) => {
   try {
     const {
-      name,
-      mb_no,
-      email,
+      id,
       society_name,
       society_add,
       society_city,
@@ -31,19 +28,16 @@ const tempRegisterSociety = async (
       society_pincode,
     } = req.body;
 
-    const existingUser1 = await tempSociety.findOne({ email });
-    const existingUser2 = await checkUser({ email });
+    const user = await User.findById(id);
 
-    if (existingUser1 || existingUser2) {
+    if (!user) {
       return res
         .status(409)
-        .json({ msg: "User with this email already exists", status: false });
+        .json({ msg: "User does not exist", status: false });
     }
 
     const newTempRegistration = new tempSociety({
-      name,
-      mb_no,
-      email,
+      user_id: new mongoose.Types.ObjectId(id),
       society_name,
       society_add,
       society_city,
@@ -54,9 +48,9 @@ const tempRegisterSociety = async (
     const savedRegistration = await newTempRegistration.save();
 
     const userSection = {
-      name: savedRegistration?.name,
-      email: savedRegistration?.email,
-      mb_no: savedRegistration?.mb_no,
+      name: user?.name,
+      email: user?.email,
+      mb_no: user?.mb_no,
     };
 
     const societySection = {
