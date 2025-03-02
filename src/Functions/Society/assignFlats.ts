@@ -9,8 +9,6 @@ const assignFlat = async (user, tempUser) => {
       society_code: tempUser.society_code,
     });
 
-    console.log("user", user);
-    console.log("society", society);
     if (!society) {
       throw new Error("Society not found");
     }
@@ -38,11 +36,9 @@ const assignFlat = async (user, tempUser) => {
 
     const savedFlat = await newFlat.save();
 
-    // Update society remaining flats
     society.remaining_flats -= 1;
     await society.save();
 
-    // Assign flat reference to user
     user.society_code = society.society_code;
     user.flat = savedFlat;
 
