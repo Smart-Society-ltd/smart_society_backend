@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-import { User } from "../../../Schema/AuthModels/userModel.js";
-import { Society } from "../../../Schema/AuthModels/societyModel.js";
-import Project from "../../../Schema/AnnualActionPlanModel/plansModel.js";
+import Project from "../../Schema/AnnualActionPlanModel/plansModel.js";
 import { Types } from "mongoose";
 
 interface ProjectRequestBody {
@@ -15,27 +13,11 @@ const getParticularProject = async (
   try {
     const { project_id } = req.params;
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
-
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const society = await Society.findOne({ society_code: user.society_code });
-    if (!society) {
-      return res.status(404).json({ errorMsg: "Society does not exist" });
-    }
-
     const project = await Project.findById(project_id);
 
     if (!project) {
       return res.status(404).json({ errorMsg: "Project not found" });
     }
-
-    // if (!society.admin_ids.includes(user._id.toString()) && !project.team.includes(user._id)) {
-    //   return res.status(403).json({ errorMsg: "Access denied to this project" });
-    // }
 
     return res.status(200).json({
       msg: "Project fetched successfully",

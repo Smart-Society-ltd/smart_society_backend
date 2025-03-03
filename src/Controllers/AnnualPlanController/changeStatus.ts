@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-import { User } from "../../../Schema/AuthModels/userModel.js";
-import { Society } from "../../../Schema/AuthModels/societyModel.js";
-import Project from "../../../Schema/AnnualActionPlanModel/plansModel.js";
+import Project from "../../Schema/AnnualActionPlanModel/plansModel.js";
 import { Types } from "mongoose";
 
 interface ProjectRequestBody {
@@ -15,25 +13,16 @@ const changeStatus = async (
 ) => {
   try {
     const { project_id, status } = req.body;
-
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
-
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const society = await Society.findOne({ society_code: user.society_code });
-    if (!society || !society.admin_ids.includes(user._id.toString())) {
-      return res.status(403).json({
-        errorMsg: "Only an admin is allowed to change project status",
-      });
-    }
+    const { user } = req.validatedUser;
 
     const project = await Project.findById(project_id);
     if (!project) {
       return res.status(404).json({ errorMsg: "Project not found" });
     }
+    
+    if (!user._id.equals(project.responsible_person) && user.role !== "admin") {
+      return res.status(403).json({ errorMsg: "Only the responsible person or an admin can change the status." });
+    }    
 
     project.status = status;
     await project.save();

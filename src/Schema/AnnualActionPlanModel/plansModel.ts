@@ -1,24 +1,22 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 
 export interface IAnnualPlan extends Document {
-  annual_plan_id: Types.ObjectId;
   name: string;
   description: string;
   start_date: Date;
   end_date: Date;
   responsible_person: Types.ObjectId;
-  work_distribution: Types.ObjectId[];
+  assigned_members: Types.ObjectId[];
   budget_allocation: number;
   status: "Planned" | "In Progress" | "Completed";
   priority: "Low" | "Medium" | "High";
+  year: string;
+  society_code: string;
+  created_by: Types.ObjectId;
 }
 
 const plansSchema = new Schema<IAnnualPlan>(
   {
-    annual_plan_id: {
-      type: Schema.Types.ObjectId,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
@@ -38,9 +36,8 @@ const plansSchema = new Schema<IAnnualPlan>(
     responsible_person: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      // required: true,
     },
-    work_distribution: [
+    assigned_members: [
       {
         type: Schema.Types.ObjectId,
         ref: "User",
@@ -60,6 +57,18 @@ const plansSchema = new Schema<IAnnualPlan>(
       type: String,
       enum: ["Low", "Medium", "High"],
       default: "Medium",
+    },
+    year: {
+      type: String,
+      required: true,
+    },
+    society_code: {
+      type: String,
+      required: true,
+    },
+    created_by: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   { timestamps: true }
