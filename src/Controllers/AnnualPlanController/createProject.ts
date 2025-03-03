@@ -31,6 +31,18 @@ const createProject = async (
 
     const { user } = req.validatedAdmin;
 
+    const existingProject = await Project.findOne({
+      name,
+      society_code: user?.society_code,
+    });
+
+    if (existingProject) {
+      return res.status(400).json({
+        errorMsg: "A project with the same name already exists.",
+        status: false,
+      });
+    }
+
     const newProject = new Project({
       name,
       description,
