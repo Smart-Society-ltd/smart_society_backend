@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.post("/folder/create", authenticateToken, validateAdmin, folderCreation);
 router.post("/file/add", authenticateToken, validateAdmin, uploadSSDocument, uploadDocument);
-router.get("/folder/get/:society_code", authenticateToken, validateUser, getFolders);
+router.get("/folder/get", authenticateToken, validateUser, getFolders);
 router.post("/file/get", authenticateToken, validateUser, getDocuments);
 router.delete("/file/delete", authenticateToken, validateAdmin, deleteFile);
 
