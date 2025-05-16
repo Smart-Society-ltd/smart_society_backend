@@ -30,8 +30,8 @@ app.listen(process.env.PORT, () => {
 main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect(process.env.DB_URI);
-  // await mongoose.connect(process.env.DB_URI_ATLAS);
+  // await mongoose.connect(process.env.DB_URI);
+  await mongoose.connect(process.env.DB_URI_ATLAS);
   console.log("Successfully conected to database");
 }
 
