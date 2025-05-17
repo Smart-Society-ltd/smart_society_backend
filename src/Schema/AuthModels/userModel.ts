@@ -10,6 +10,7 @@ const userSchema = new Schema(
     flat_no: { type: String },
     flat: { type: mongoose.Schema.Types.ObjectId, ref: "Flat" },
     isVerified: { type: Boolean, default: false },
+    isSocietyAdded: { type: Boolean, default: false },
     verifyToken: { type: String },
     verifyTokenExpiry: { type: Date },
     forgetPasswordToken: { type: String },

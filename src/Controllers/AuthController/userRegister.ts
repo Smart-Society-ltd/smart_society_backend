@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { User } from "../../Schema/AuthModels/userModel.js";
 import TempUser from "../../Schema/AuthModels/tempUserModel.js";
-import { checkUser, checkSociety } from "../../Functions/CheckUserSociety/checkUserSociety.js";
+import {
+  checkUser,
+  checkSociety,
+} from "../../Functions/CheckUserSociety/checkUserSociety.js";
 
 interface UserRegisterRequestBody {
   name: string;
@@ -9,7 +12,7 @@ interface UserRegisterRequestBody {
   email: string;
   society_code?: string;
   flat_no?: string;
-  floor_no?: string; 
+  floor_no?: string;
   flat_type?: string;
 }
 
@@ -18,7 +21,8 @@ const userRegister = async (
   res: Response
 ) => {
   try {
-    const { name, mb_no, email, society_code, flat_no, floor_no, flat_type } = req.body;
+    const { name, mb_no, email, society_code, flat_no, floor_no, flat_type } =
+      req.body;
 
     // Check required fields
     if (!name || !mb_no || !email) {
@@ -35,7 +39,7 @@ const userRegister = async (
     if (!user) {
       // Check if user exists with this email
       user = await checkUser({ email });
-      
+
       if (user) {
         return res.status(409).json({
           errorMsg: "User with this email already registered",
@@ -48,6 +52,7 @@ const userRegister = async (
         name,
         mb_no,
         email,
+        isSocietyAdded: true,
       });
 
       user = await newUser.save();
@@ -65,14 +70,15 @@ const userRegister = async (
       // Check if all society-related fields are provided
       if (!flat_no || !floor_no || !flat_type) {
         return res.status(400).json({
-          errorMsg: "All society details (society_code, flat_no, floor_no, flat_type) are required",
+          errorMsg:
+            "All society details (society_code, flat_no, floor_no, flat_type) are required",
           status: false,
         });
       }
 
       // Check if society exists
       const society = await checkSociety({ society_code });
-      
+
       if (!society) {
         return res.status(404).json({
           errorMsg: "Society not found with this code",
@@ -126,7 +132,10 @@ const userRegister = async (
     console.error("Error processing user registration:", error);
     return res
       .status(500)
-      .json({ errorMsg: "Failed to process registration", error: error.message });
+      .json({
+        errorMsg: "Failed to process registration",
+        error: error.message,
+      });
   }
 };
 
