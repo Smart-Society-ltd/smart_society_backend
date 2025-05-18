@@ -7,6 +7,7 @@ import verifyOtp from "../../Controllers/AuthController/userLogin.js";
 import userRegister from "../../Controllers/AuthController/userRegister.js";
 import { pendingUsers, processUsers } from "../../Controllers/AuthController/pendingUserRequest.js";
 import assignSociety from "../../Controllers/AuthController/societyAssign.js";
+import getUserSession from "../../Controllers/AuthController/sessionAPI.js";
 
 import authMiddleware from '../../MiddleWare/authMiddlewar.js';
 import validateAdmin from "../../MiddleWare/validateAdmin.js";
@@ -14,6 +15,7 @@ import validateUserAndSociety from "../../MiddleWare/validateUserSociety.js";
 
 const router = express.Router();
 
+router.get("/session", getUserSession);
 router.post("/sendotp", sendOtp);
 // router.post("/verifyotp", verifyOtp);
 router.post("/registerSociety/tempRegisterSociety", registerSociety);

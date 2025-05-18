@@ -5,6 +5,7 @@ import {
   checkUser,
   checkSociety,
 } from "../../Functions/CheckUserSociety/checkUserSociety.js";
+import generateToken from "../../Functions/JWT/generateToken.js";
 
 interface UserRegisterRequestBody {
   name: string;
@@ -34,7 +35,7 @@ const userRegister = async (
 
     // First check if user already exists with this mobile number
     let user = await checkUser({ mb_no });
-    let isNewUser = false;
+    // let isNewUser = false;
 
     if (!user) {
       // Check if user exists with this email
@@ -56,14 +57,20 @@ const userRegister = async (
       });
 
       user = await newUser.save();
-      isNewUser = true;
-    } else if (user.email !== email) {
-      // If user exists with this mobile but email doesn't match
-      return res.status(409).json({
-        errorMsg: "Mobile number already registered with a different email",
-        status: false,
-      });
+      // isNewUser = true;
+    } else {
+      if (user.name !== name) {
+        user.name = name;
+        await user.save();
+      }
+      if (user.email !== email) {
+        user.email = email;
+        await user.save();
+      }
     }
+
+    // Generate token for authentication
+    const token = generateToken(user);
 
     // If society details are provided, process society assignment
     if (society_code) {
@@ -108,6 +115,7 @@ const userRegister = async (
       });
 
       await newTempUser.save();
+      console.log("User is", user);
 
       return res.status(200).json({
         msg: "User registered and society request sent to admin successfully",
@@ -119,23 +127,23 @@ const userRegister = async (
           society_name: society.society_name,
         },
         status: true,
+        token,
       });
     }
 
-    // If no society details provided, just return the user registration info
+    // If no society details provided, just return the user registration info with token
     return res.status(200).json({
-      msg: isNewUser ? "User registered successfully" : "User already exists",
+      msg: "User registered successfully",
       user,
       status: true,
+      token,
     });
   } catch (error) {
     console.error("Error processing user registration:", error);
-    return res
-      .status(500)
-      .json({
-        errorMsg: "Failed to process registration",
-        error: error.message,
-      });
+    return res.status(500).json({
+      errorMsg: "Failed to process registration",
+      error: error.message,
+    });
   }
 };
 

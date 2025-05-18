@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../../Schema/AuthModels/userModel.js";
 import tempSociety from "../../Schema/AuthModels/tempRegistrationModel.js";
 import { checkUser } from "../../Functions/CheckUserSociety/checkUserSociety.js";
+import generateToken from "../../Functions/JWT/generateToken.js";
 
 // Combined interface for society registration
 interface RegisterSocietyRequestBody {
@@ -9,8 +10,9 @@ interface RegisterSocietyRequestBody {
   name: string;
   mb_no: string;
   email: string;
-  
+
   // Society-specific fields
+  isSocietyAdded: boolean;
   society_name?: string;
   society_add?: string;
   society_city?: string;
@@ -23,15 +25,15 @@ const registerSociety = async (
   res: Response
 ) => {
   try {
-    const { 
-      name, 
-      mb_no, 
+    const {
+      name,
+      mb_no,
       email,
       society_name,
       society_add,
       society_city,
       society_state,
-      society_pincode
+      society_pincode,
     } = req.body;
 
     // Check required fields
@@ -43,10 +45,23 @@ const registerSociety = async (
     }
 
     // Check society fields if provided
-    if (society_name || society_add || society_city || society_state || society_pincode) {
-      if (!society_name || !society_add || !society_city || !society_state || !society_pincode) {
+    if (
+      society_name ||
+      society_add ||
+      society_city ||
+      society_state ||
+      society_pincode
+    ) {
+      if (
+        !society_name ||
+        !society_add ||
+        !society_city ||
+        !society_state ||
+        !society_pincode
+      ) {
         return res.status(400).json({
-          errorMsg: "All society details (name, address, city, state, pincode) are required",
+          errorMsg:
+            "All society details (name, address, city, state, pincode) are required",
           status: false,
         });
       }
@@ -54,13 +69,12 @@ const registerSociety = async (
 
     // First check if user already exists with this mobile number
     let user = await checkUser({ mb_no });
-    let isNewUser = false;
-    
+
     // Create or update user
     if (!user) {
       // Check if user exists with this email
       const emailUser = await checkUser({ email });
-      
+
       if (emailUser) {
         return res.status(409).json({
           errorMsg: "User with this email already registered",
@@ -72,27 +86,43 @@ const registerSociety = async (
       const newUser = new User({
         name,
         mb_no,
-        email
+        email,
+        isSocietyAdded: true,
       });
 
       user = await newUser.save();
-      isNewUser = true;
-    } else if (user.email !== email) {
-      // If user exists with this mobile but email doesn't match
-      return res.status(409).json({
-        errorMsg: "Mobile number already registered with a different email",
-        status: false,
-      });
-    } else {
+      // isNewUser = true;
+    }
+    // else if (user.email !== email) {
+    //   // If user exists with this mobile but email doesn't match
+    //   return res.status(409).json({
+    //     errorMsg: "Mobile number already registered with a different email",
+    //     status: false,
+    //   });
+    // }
+    else {
       // Update existing user if needed
       if (user.name !== name) {
         user.name = name;
         await user.save();
       }
+      if (user.email !== email) {
+        user.email = email;
+        await user.save();
+      }
     }
 
+    // Generate token for authentication
+    const token = generateToken(user);
+
     // If society details are provided, create society registration
-    if (society_name && society_add && society_city && society_state && society_pincode) {
+    if (
+      society_name &&
+      society_add &&
+      society_city &&
+      society_state &&
+      society_pincode
+    ) {
       // Create temporary society registration
       const newTempRegistration = new tempSociety({
         user_id: user._id,
@@ -109,6 +139,7 @@ const registerSociety = async (
         name: user.name,
         email: user.email,
         mb_no: user.mb_no,
+        isSocietyAdded: true,
       };
 
       const societySection = {
@@ -125,21 +156,24 @@ const registerSociety = async (
         data: {
           user: userSection,
           society: societySection,
-        }
+        },
+        token,
       });
     } else {
-      // If no society details, just return the user info
+      // If no society details, just return the user info with token
       return res.status(200).json({
-        msg: isNewUser ? "User registered successfully" : "User already exists",
+        msg: "Society registered successfully",
         status: true,
-        user
+        user,
+        token,
       });
     }
   } catch (error) {
     console.error("Error processing registration:", error);
-    return res
-      .status(500)
-      .json({ errorMsg: "Failed to process registration", error: error.message });
+    return res.status(500).json({
+      errorMsg: "Failed to process registration",
+      error: error.message,
+    });
   }
 };
 

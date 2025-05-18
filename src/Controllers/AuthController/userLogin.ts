@@ -7,7 +7,7 @@ import { checkUser } from "../../Functions/CheckUserSociety/checkUserSociety.js"
 interface VerifyOtpRequestBody {
   mb_no: string;
   otp: string;
-  source: "login" | "userRegister" | "societyRegister"; // Source of the request
+  source: "login" | "userRegister" | "societyRegister";
 }
 
 const verifyOtp = async (
@@ -45,7 +45,6 @@ const verifyOtp = async (
 
     // Different handling based on source
     if (source === "login") {
-      // For login, user must exist
       if (!existingUser) {
         return res.status(404).json({
           errorMsg: "User with this number does not exist",
