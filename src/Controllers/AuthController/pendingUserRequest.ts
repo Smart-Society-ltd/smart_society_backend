@@ -3,6 +3,7 @@ import generateToken from "../../Functions/JWT/generateToken.js";
 import TempUser from "../../Schema/AuthModels/tempUserModel.js";
 import assignFlat from "../../Functions/Society/assignFlats.js";
 import { checkUser } from "../../Functions/CheckUserSociety/checkUserSociety.js";
+import mongoose from "mongoose";
 
 const pendingUsers = async (req: Request, res: Response) => {
   try {
@@ -37,6 +38,7 @@ const pendingUsers = async (req: Request, res: Response) => {
     }
 
     const pendingUsers = await TempUser.find(searchFilter)
+      .populate("user_id", "name email mb_no") // only select needed fields
       .skip(skip)
       .limit(limit);
 
@@ -58,15 +60,29 @@ const pendingUsers = async (req: Request, res: Response) => {
   }
 };
 
-const processUsers = async (req: Request<{ id: string }>, res: Response) => {
+const processAcceptUsers = async (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
   try {
     const { id } = req.body;
-    const tempUser = await TempUser.findOne({ user_id: id });
-    const user = await checkUser({ _id: id });
 
-    if (!tempUser || !user) {
+    const objectId = new mongoose.Types.ObjectId(id);
+
+    // ✅ Find TempUser by its _id
+    const tempUser = await TempUser.findById(objectId);
+    if (!tempUser) {
       return res.status(404).json({
         errorMsg: "Registration request not found",
+        status: false,
+      });
+    }
+
+    // ✅ Get the user linked to this TempUser
+    const user = await checkUser({ _id: tempUser.user_id });
+    if (!user) {
+      return res.status(404).json({
+        errorMsg: "Associated user not found",
         status: false,
       });
     }
@@ -79,7 +95,8 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
     const savedUser = await user.save();
     const token = generateToken(user);
 
-    await TempUser.findOneAndDelete({ user_id: id });
+    // ✅ Delete temp user after approval
+    await TempUser.findByIdAndDelete(objectId);
 
     return res.status(200).json({
       msg: "User registered successfully",
@@ -96,4 +113,37 @@ const processUsers = async (req: Request<{ id: string }>, res: Response) => {
   }
 };
 
-export { pendingUsers, processUsers };
+const processRejectUsers = async (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
+  try {
+    const { id } = req.body;
+
+    const objectId = new mongoose.Types.ObjectId(id);
+
+    const tempUser = await TempUser.findById(objectId);
+    if (!tempUser) {
+      return res.status(404).json({
+        errorMsg: "Registration request not found",
+        status: false,
+      });
+    }
+
+    await TempUser.findByIdAndDelete(objectId);
+
+    return res.status(200).json({
+      msg: "Registration request rejected successfully",
+      status: true,
+    });
+  } catch (error) {
+    console.error("Error processing registration rejection:", error);
+    return res.status(500).json({
+      errorMsg: "Failed to process registration rejection",
+      error: error.message,
+    });
+  }
+};
+
+
+export { pendingUsers, processAcceptUsers, processRejectUsers };
