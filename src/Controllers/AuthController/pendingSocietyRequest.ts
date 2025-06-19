@@ -23,7 +23,7 @@ const listPendingRegistrations = async (req: Request, res: Response) => {
   }
 };
 
-const processRegistration = async (
+const processAcceptRegistration = async (
   req: Request<{ id: string }>,
   res: Response
 ) => {
@@ -109,4 +109,33 @@ const processRegistration = async (
   }
 };
 
-export { listPendingRegistrations, processRegistration };
+const processRejectRegistration = async (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
+  try {
+    const { id } = req.body;
+
+    const tempRegistration = await TempSociety.findById(id);
+    if (!tempRegistration) {
+      return res.status(404).json({
+        errorMsg: "Registration request not found",
+        status: false,
+      });
+    }
+    await TempSociety.findByIdAndDelete(id);
+    return res.status(200).json({
+      msg: "Registration request rejected successfully",
+      status: true,
+    }); 
+  } catch (error) {
+    console.error("Error rejecting registration:", error);
+    return res.status(500).json({ 
+      errorMsg: "Failed to reject registration",
+      status: false,
+      error: error.message,
+    });
+  }
+};
+
+export { listPendingRegistrations, processAcceptRegistration, processRejectRegistration };

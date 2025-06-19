@@ -11,13 +11,10 @@ interface tempUserInterface extends Document {
 const tempUserSchema = new mongoose.Schema(
   {
     user_id: {
-      type: String,
-      required: true,
-    },
-    user_name: {
-      type: String,
-      required: true,
-    },
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User", // link to User model
+  required: true,
+},
     society_code: {
       type: String,
     },
