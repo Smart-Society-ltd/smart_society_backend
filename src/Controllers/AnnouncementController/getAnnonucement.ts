@@ -1,32 +1,44 @@
 import { Request, Response } from "express";
-import { User } from "../../Schema/AuthModels/userModel.js";
 import { Society } from "../../Schema/AuthModels/societyModel.js";
 import Announcement from "../../Schema/AnnonucementModel/announcemenetModel.js";
 
 const getAnnouncement = async (req: Request, res: Response) => {
   try {
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
-
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
+    const { user } = req.validatedUser;
+    const { month, year, search } = req.query;
 
     const society = await Society.findOne({ society_code: user.society_code });
-
-    const announcements = await Announcement.find({
-      society_code: user.society_code,
-    }).sort({ createdAt: -1 });
-
-    if (announcements.length === 0) {
-      return res.status(200).json({
-        msg: "No announcements found",
-        announcements: [],
-      });
+    if (!society) {
+      return res.status(404).json({ errorMsg: "Society not found" });
     }
 
+    const query: any = {
+      society_code: user.society_code,
+    };
+
+    if (month && year) {
+      const monthInt = parseInt(month as string);
+      const yearInt = parseInt(year as string);
+
+      if (!isNaN(monthInt) && !isNaN(yearInt)) {
+        const startDate = new Date(yearInt, monthInt - 1, 1, 0, 0, 0); 
+        const endDate = new Date(yearInt, monthInt, 0, 23, 59, 59, 999);
+
+        query.createdAt = { $gte: startDate, $lte: endDate };
+      }
+    }
+
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { content: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const announcements = await Announcement.find(query).sort({ createdAt: -1 });
+
     res.status(200).json({
-      msg: "Announcements fetched successfully",
+      msg: announcements.length ? "Announcements fetched successfully" : "No announcements found",
       announcements,
     });
   } catch (error) {

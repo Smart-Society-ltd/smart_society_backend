@@ -13,12 +13,7 @@ const deleteAnnouncement = async (req: Request, res: Response) => {
       return res.status(400).json({ errorMsg: "Announcement ID is required" });
     }
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
-
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
+    const { user } = req.validateAdmin;
 
     const society = await Society.findOne({ society_code: user.society_code });
 

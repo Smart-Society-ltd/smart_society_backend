@@ -1,16 +1,10 @@
 import { Request, Response } from "express";
-import { User } from "../../Schema/AuthModels/userModel.js";
 import { Society } from "../../Schema/AuthModels/societyModel.js";
 import Complaint from "../../Schema/ComplaintModel/complaintModel.js";
 
 const getUnresolvedComplaints = async (req: Request, res: Response) => {
   try {
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
-
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
+    const {user} = req.validateUser;
 
     const society = await Society.findOne({ society_code: user.society_code });
 

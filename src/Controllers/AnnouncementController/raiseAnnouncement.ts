@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { User } from "../../Schema/AuthModels/userModel.js";
 import { Society } from "../../Schema/AuthModels/societyModel.js";
 import Announcement from "../../Schema/AnnonucementModel/announcemenetModel.js";
 
@@ -7,12 +6,7 @@ const raiseAnnouncement = async (req: Request, res: Response) => {
   try {
     const { title, content } = req.body;
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
-
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
+    const { user } = req.validateAdmin;
 
     const society = await Society.findOne({ society_code: user.society_code });
 

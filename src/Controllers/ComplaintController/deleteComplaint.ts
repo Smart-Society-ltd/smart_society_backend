@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
-import { User } from "../../Schema/AuthModels/userModel.js";
-import { Society } from "../../Schema/AuthModels/societyModel.js";
 import Complaint from "../../Schema/ComplaintModel/complaintModel.js";
 import { s3 } from "../../Config/s3.js";
-import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 const deleteComplaint = async (req: Request, res: Response) => {
   try {
@@ -13,14 +11,7 @@ const deleteComplaint = async (req: Request, res: Response) => {
       return res.status(400).json({ errorMsg: "Complaint ID is required" });
     }
 
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId);
-
-    if (!user) {
-      return res.status(401).json({ errorMsg: "Unauthorized user" });
-    }
-
-    const society = await Society.findOne({ society_code: user.society_code });
+    const { user } = req.validatedUser;
 
     const complaint = await Complaint.findById(id);
 

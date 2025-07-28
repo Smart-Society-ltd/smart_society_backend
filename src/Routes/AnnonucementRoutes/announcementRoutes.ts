@@ -5,11 +5,13 @@ import deleteAnnouncement from "../../Controllers/AnnouncementController/deleteA
 
 import uploadAnnouncementPhoto from "../../MiddleWare/s3ForAnnouncement.js";
 import authenticateToken from "../../MiddleWare/authMiddlewar.js";
+import validateAdmin from "../../MiddleWare/validateAdmin.js";
+import validateUser from "../../MiddleWare/validateUser.js";
 
 const router = express.Router();
 
-router.post("/raise", authenticateToken, uploadAnnouncementPhoto, raiseAnnouncement);
-router.get("/get", authenticateToken, getAnnouncement);
-router.delete("/delete", authenticateToken, deleteAnnouncement);
+router.post("/raise", authenticateToken, validateAdmin, uploadAnnouncementPhoto, raiseAnnouncement);
+router.get("/get", authenticateToken, validateUser, getAnnouncement);
+router.delete("/delete", authenticateToken, validateAdmin, deleteAnnouncement);
 
 export default router;
