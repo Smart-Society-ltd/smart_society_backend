@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
 import { Society } from "../../Schema/AuthModels/societyModel.js";
 import Flat from "../../Schema/AuthModels/flatsModel.js";
-import TempUser from "../../Schema/AuthModels/tempUserModel.js";
 
 const assignFlat = async (user, tempUser) => {
   try {
     const society = await Society.findOne({
       society_code: tempUser.society_code,
     });
+
+    console.log("Temp User:", tempUser);
 
     if (!society) {
       throw new Error("Society not found");
@@ -31,6 +31,12 @@ const assignFlat = async (user, tempUser) => {
       society_code: tempUser.society_code,
       flat_type: tempUser.flat_type,
       floor_no: tempUser.floor_no,
+
+      // 🆕 Required fields
+      flat_area: tempUser.flat_area || 1000, // default or fetched value
+      family_members: tempUser.family_members || 3, // default or passed value
+
+      // 💡 Add user as the only resident for now
       residents: [user.name],
     });
 
@@ -39,6 +45,7 @@ const assignFlat = async (user, tempUser) => {
     society.remaining_flats -= 1;
     await society.save();
 
+    // update user data
     user.society_code = society.society_code;
     user.flat = savedFlat;
 
@@ -46,7 +53,7 @@ const assignFlat = async (user, tempUser) => {
 
     return true;
   } catch (error) {
-    console.error("Error assigning flat:");
+    console.error("Error assigning flat:", error);
     throw new Error(error.message);
   }
 };

@@ -6,6 +6,8 @@ interface FlatInterface extends Document {
   floor_no: string;
   society_code: string;
   residents: string[];
+  flat_area: number; // in sq. ft
+  family_members: number; // number of family members in the flat
 }
 
 const flatSchema = new mongoose.Schema({
@@ -24,6 +26,15 @@ const flatSchema = new mongoose.Schema({
   society_code: {
     type: String,
     required: true,
+  },
+  flat_area: {
+    type: Number, // in sq. ft
+    required: true,
+  },
+  family_members: {
+    type: Number,
+    required: true,
+    min: 1,
   },
   residents: {
     type: [String],

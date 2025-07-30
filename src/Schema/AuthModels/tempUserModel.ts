@@ -6,15 +6,17 @@ interface tempUserInterface extends Document {
   flat_no: string;
   floor_no: string;
   flat_type: string;
+  flat_area: number;
+  family_members: number;
 }
 
 const tempUserSchema = new mongoose.Schema(
   {
     user_id: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "User", // link to User model
-  required: true,
-},
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // link to User model
+      required: true,
+    },
     society_code: {
       type: String,
     },
@@ -26,6 +28,15 @@ const tempUserSchema = new mongoose.Schema(
     },
     flat_type: {
       type: String,
+    },
+    flat_area: {
+      type: Number,
+      required: true,
+    },
+    family_members: {
+      type: Number,
+      required: true,
+      min: 1,
     },
   },
   { timestamps: true }

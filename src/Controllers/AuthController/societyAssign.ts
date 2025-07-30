@@ -8,6 +8,9 @@ interface SocietyAssignRequestBody {
   flat_no: string;
   floor_no: string;
   flat_type: string;
+  flat_area: number;
+  family_members: number;
+  residents: string[]; // Usually user ID(s)
 }
 
 const assignSociety = async (
@@ -15,19 +18,32 @@ const assignSociety = async (
   res: Response
 ) => {
   try {
-    const { id, society_code, flat_no, floor_no, flat_type } = req.body;
+    const {
+      userId,
+      society_code,
+      flat_no,
+      floor_no,
+      flat_type,
+      flat_area,
+      family_members,
+      residents,
+    } = req.body;
+
     const { user, society } = req.validatedData;
 
     const admin_id = society?.admin_ids[0];
     const admin = await User.findOne({ _id: admin_id });
 
     const newTempUser = new TempUser({
-      user_id: id,
+      user_id: userId,
       user_name: user?.name,
       society_code,
       flat_no,
       flat_type,
       floor_no,
+      flat_area,
+      family_members,
+      residents,
     });
 
     await newTempUser.save();

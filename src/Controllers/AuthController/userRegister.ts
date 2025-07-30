@@ -22,7 +22,7 @@ const userRegister = async (
   res: Response
 ) => {
   try {
-    const { name, mb_no, email, society_code, flat_no, floor_no, flat_type } =
+    const { name, mb_no, email, society_code, flat_no, floor_no, flat_type, family_members, flat_area } =
       req.body;
 
     // Check required fields
@@ -75,10 +75,10 @@ const userRegister = async (
     // If society details are provided, process society assignment
     if (society_code) {
       // Check if all society-related fields are provided
-      if (!flat_no || !floor_no || !flat_type) {
+      if (!flat_no || !floor_no || !flat_type || !flat_area || !family_members) {
         return res.status(400).json({
           errorMsg:
-            "All society details (society_code, flat_no, floor_no, flat_type) are required",
+            "All society details (society_code, flat_no, floor_no, flat_type, flat_area, family_members) are required",
           status: false,
         });
       }
@@ -111,6 +111,8 @@ const userRegister = async (
         flat_no,
         flat_type,
         floor_no,
+        flat_area,
+        family_members,
       });
 
       await newTempUser.save();
